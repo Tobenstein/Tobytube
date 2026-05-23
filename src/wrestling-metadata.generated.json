@@ -1,0 +1,3612 @@
+{
+  "wrestlemania-x-seven": {
+    "source": "wikipedia",
+    "page": "https://en.wikipedia.org/wiki/WrestleMania_X-Seven",
+    "title": "WrestleMania X-Seven",
+    "summary": "WrestleMania X-Seven, also known as WrestleMania 17, was a 2001 professional wrestling pay-per-view (PPV) event produced by the World Wrestling Federation. It was the 17th annual WrestleMania and took place on April 1, 2001, at the Reliant Astrodome in Houston, Texas, marking the first WrestleMania held in the U.S. state of Texas. Twelve matches were contested at the event, including one broadcast exclusively on the Sunday Night Heat pre-show.",
+    "posterUrl": "https://upload.wikimedia.org/wikipedia/en/8/87/WrestleManiaX-Seven.jpg",
+    "caption": "Promotional poster featuring Stone Cold Steve Austin, The Rock, and the Reliant Astrodome",
+    "tagline": "Houston We Have a Problem...",
+    "promotion": "World Wrestling Federation",
+    "date": "2001-04-01",
+    "venue": "Reliant Astrodome",
+    "city": "Houston, Texas",
+    "attendance": "67,925",
+    "buyrate": "1,040,000",
+    "eventSeries": "WrestleMania",
+    "previousEvent": "No Way Out",
+    "nextEvent": "Backlash",
+    "matches": [
+      {
+        "order": 1,
+        "match": "X-Factor (X-Pac and Justin Credible) (with Albert) defeated Steve Blackman and Grand Master Sexay",
+        "stipulation": "Tag team match",
+        "time": "2:46"
+      },
+      {
+        "order": 2,
+        "match": "Chris Jericho (c) defeated William Regal",
+        "stipulation": "Singles match for the WWF Intercontinental Championship",
+        "time": "7:40"
+      },
+      {
+        "order": 3,
+        "match": "Tazz and The APA (Bradshaw and Faarooq) (with Jacqueline) defeated Right to Censor (The Goodfather, Val Venis and Bull Buchanan) (with Steven Richards)",
+        "stipulation": "Six-man tag team match",
+        "time": "3:56"
+      },
+      {
+        "order": 4,
+        "match": "Kane defeated Raven (c) and Big Show",
+        "stipulation": "Triple threat Hardcore match for the WWF Hardcore Championship",
+        "time": "9:28"
+      },
+      {
+        "order": 5,
+        "match": "Eddie Guerrero (with Perry Saturn) defeated Test (c)",
+        "stipulation": "Singles match for the WWF European Championship",
+        "time": "8:32"
+      },
+      {
+        "order": 6,
+        "match": "Kurt Angle defeated Chris Benoit",
+        "stipulation": "Singles match",
+        "time": "14:10"
+      },
+      {
+        "order": 7,
+        "match": "Chyna defeated Ivory (c)",
+        "stipulation": "Singles match for the WWF Women's Championship",
+        "time": "2:38"
+      },
+      {
+        "order": 8,
+        "match": "Shane McMahon (with Linda McMahon) defeated Mr. McMahon (with Stephanie McMahon and Trish Stratus)",
+        "stipulation": "Street Fight with Mick Foley as special guest referee",
+        "time": "14:11"
+      },
+      {
+        "order": 9,
+        "match": "Edge and Christian defeated The Dudley Boyz (Bubba Ray Dudley and D-Von Dudley) (c) and The Hardy Boyz (Matt Hardy and Jeff Hardy)",
+        "stipulation": "Tables, Ladders, and Chairs match for the WWF Tag Team Championship",
+        "time": "15:50"
+      },
+      {
+        "order": 10,
+        "match": "The Iron Sheik won by last eliminating Hillbilly Jim",
+        "stipulation": "Gimmick Battle Royal",
+        "time": "3:50"
+      },
+      {
+        "order": 11,
+        "match": "The Undertaker defeated Triple H",
+        "stipulation": "Singles match",
+        "time": "18:27"
+      },
+      {
+        "order": 12,
+        "match": "Stone Cold Steve Austin defeated The Rock (c)",
+        "stipulation": "No Disqualification match for the WWF Championship",
+        "time": "28:08"
+      }
+    ],
+    "spoilerSafeMatches": [
+      {
+        "order": 1,
+        "match": "X-Factor (X-Pac and Justin Credible) (with Albert) vs Steve Blackman and Grand Master Sexay",
+        "stipulation": "Tag team match",
+        "time": "2:46",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 2,
+        "match": "Chris Jericho (c) vs William Regal",
+        "stipulation": "Singles match for the WWF Intercontinental Championship",
+        "time": "7:40",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 3,
+        "match": "Tazz and The APA (Bradshaw and Faarooq) (with Jacqueline) vs Right to Censor (The Goodfather, Val Venis and Bull Buchanan) (with Steven Richards)",
+        "stipulation": "Six-man tag team match",
+        "time": "3:56",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 4,
+        "match": "Raven (c) vs Kane vs Big Show",
+        "stipulation": "Triple threat Hardcore match for the WWF Hardcore Championship",
+        "time": "9:28",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 5,
+        "match": "Test (c) vs Eddie Guerrero (with Perry Saturn)",
+        "stipulation": "Singles match for the WWF European Championship",
+        "time": "8:32",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 6,
+        "match": "Chris Benoit vs Kurt Angle",
+        "stipulation": "Singles match",
+        "time": "14:10",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 7,
+        "match": "Ivory (c) vs Chyna",
+        "stipulation": "Singles match for the WWF Women's Championship",
+        "time": "2:38",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 8,
+        "match": "Shane McMahon (with Linda McMahon) vs Mr. McMahon (with Stephanie McMahon and Trish Stratus)",
+        "stipulation": "Street Fight with Mick Foley as special guest referee",
+        "time": "14:11",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 9,
+        "match": "The Dudley Boyz (Bubba Ray Dudley and D-Von Dudley) (c) and The Hardy Boyz (Matt Hardy and Jeff Hardy) vs Edge and Christian",
+        "stipulation": "Tables, Ladders, and Chairs match for the WWF Tag Team Championship",
+        "time": "15:50",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 10,
+        "match": "The Iron Sheik vs Hillbilly Jim",
+        "stipulation": "Gimmick Battle Royal",
+        "time": "3:50",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 11,
+        "match": "The Undertaker vs Triple H",
+        "stipulation": "Singles match",
+        "time": "18:27",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 12,
+        "match": "The Rock (c) vs Stone Cold Steve Austin",
+        "stipulation": "No Disqualification match for the WWF Championship",
+        "time": "28:08",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      }
+    ]
+  },
+  "wrestling-wwe-wwe-ppv-2001-04-01": {
+    "source": "wikipedia",
+    "page": "https://en.wikipedia.org/wiki/WrestleMania_X-Seven",
+    "title": "WrestleMania X-Seven",
+    "summary": "WrestleMania X-Seven, also known as WrestleMania 17, was a 2001 professional wrestling pay-per-view (PPV) event produced by the World Wrestling Federation. It was the 17th annual WrestleMania and took place on April 1, 2001, at the Reliant Astrodome in Houston, Texas, marking the first WrestleMania held in the U.S. state of Texas. Twelve matches were contested at the event, including one broadcast exclusively on the Sunday Night Heat pre-show.",
+    "posterUrl": "https://upload.wikimedia.org/wikipedia/en/8/87/WrestleManiaX-Seven.jpg",
+    "caption": "Promotional poster featuring Stone Cold Steve Austin, The Rock, and the Reliant Astrodome",
+    "tagline": "Houston We Have a Problem...",
+    "promotion": "World Wrestling Federation",
+    "date": "2001-04-01",
+    "venue": "Reliant Astrodome",
+    "city": "Houston, Texas",
+    "attendance": "67,925",
+    "buyrate": "1,040,000",
+    "eventSeries": "WrestleMania",
+    "previousEvent": "No Way Out",
+    "nextEvent": "Backlash",
+    "matches": [
+      {
+        "order": 1,
+        "match": "X-Factor (X-Pac and Justin Credible) (with Albert) defeated Steve Blackman and Grand Master Sexay",
+        "stipulation": "Tag team match",
+        "time": "2:46"
+      },
+      {
+        "order": 2,
+        "match": "Chris Jericho (c) defeated William Regal",
+        "stipulation": "Singles match for the WWF Intercontinental Championship",
+        "time": "7:40"
+      },
+      {
+        "order": 3,
+        "match": "Tazz and The APA (Bradshaw and Faarooq) (with Jacqueline) defeated Right to Censor (The Goodfather, Val Venis and Bull Buchanan) (with Steven Richards)",
+        "stipulation": "Six-man tag team match",
+        "time": "3:56"
+      },
+      {
+        "order": 4,
+        "match": "Kane defeated Raven (c) and Big Show",
+        "stipulation": "Triple threat Hardcore match for the WWF Hardcore Championship",
+        "time": "9:28"
+      },
+      {
+        "order": 5,
+        "match": "Eddie Guerrero (with Perry Saturn) defeated Test (c)",
+        "stipulation": "Singles match for the WWF European Championship",
+        "time": "8:32"
+      },
+      {
+        "order": 6,
+        "match": "Kurt Angle defeated Chris Benoit",
+        "stipulation": "Singles match",
+        "time": "14:10"
+      },
+      {
+        "order": 7,
+        "match": "Chyna defeated Ivory (c)",
+        "stipulation": "Singles match for the WWF Women's Championship",
+        "time": "2:38"
+      },
+      {
+        "order": 8,
+        "match": "Shane McMahon (with Linda McMahon) defeated Mr. McMahon (with Stephanie McMahon and Trish Stratus)",
+        "stipulation": "Street Fight with Mick Foley as special guest referee",
+        "time": "14:11"
+      },
+      {
+        "order": 9,
+        "match": "Edge and Christian defeated The Dudley Boyz (Bubba Ray Dudley and D-Von Dudley) (c) and The Hardy Boyz (Matt Hardy and Jeff Hardy)",
+        "stipulation": "Tables, Ladders, and Chairs match for the WWF Tag Team Championship",
+        "time": "15:50"
+      },
+      {
+        "order": 10,
+        "match": "The Iron Sheik won by last eliminating Hillbilly Jim",
+        "stipulation": "Gimmick Battle Royal",
+        "time": "3:50"
+      },
+      {
+        "order": 11,
+        "match": "The Undertaker defeated Triple H",
+        "stipulation": "Singles match",
+        "time": "18:27"
+      },
+      {
+        "order": 12,
+        "match": "Stone Cold Steve Austin defeated The Rock (c)",
+        "stipulation": "No Disqualification match for the WWF Championship",
+        "time": "28:08"
+      }
+    ],
+    "spoilerSafeMatches": [
+      {
+        "order": 1,
+        "match": "X-Factor (X-Pac and Justin Credible) (with Albert) vs Steve Blackman and Grand Master Sexay",
+        "stipulation": "Tag team match",
+        "time": "2:46",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 2,
+        "match": "Chris Jericho (c) vs William Regal",
+        "stipulation": "Singles match for the WWF Intercontinental Championship",
+        "time": "7:40",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 3,
+        "match": "Tazz and The APA (Bradshaw and Faarooq) (with Jacqueline) vs Right to Censor (The Goodfather, Val Venis and Bull Buchanan) (with Steven Richards)",
+        "stipulation": "Six-man tag team match",
+        "time": "3:56",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 4,
+        "match": "Raven (c) vs Kane vs Big Show",
+        "stipulation": "Triple threat Hardcore match for the WWF Hardcore Championship",
+        "time": "9:28",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 5,
+        "match": "Test (c) vs Eddie Guerrero (with Perry Saturn)",
+        "stipulation": "Singles match for the WWF European Championship",
+        "time": "8:32",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 6,
+        "match": "Chris Benoit vs Kurt Angle",
+        "stipulation": "Singles match",
+        "time": "14:10",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 7,
+        "match": "Ivory (c) vs Chyna",
+        "stipulation": "Singles match for the WWF Women's Championship",
+        "time": "2:38",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 8,
+        "match": "Shane McMahon (with Linda McMahon) vs Mr. McMahon (with Stephanie McMahon and Trish Stratus)",
+        "stipulation": "Street Fight with Mick Foley as special guest referee",
+        "time": "14:11",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 9,
+        "match": "The Dudley Boyz (Bubba Ray Dudley and D-Von Dudley) (c) and The Hardy Boyz (Matt Hardy and Jeff Hardy) vs Edge and Christian",
+        "stipulation": "Tables, Ladders, and Chairs match for the WWF Tag Team Championship",
+        "time": "15:50",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 10,
+        "match": "The Iron Sheik vs Hillbilly Jim",
+        "stipulation": "Gimmick Battle Royal",
+        "time": "3:50",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 11,
+        "match": "The Undertaker vs Triple H",
+        "stipulation": "Singles match",
+        "time": "18:27",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 12,
+        "match": "The Rock (c) vs Stone Cold Steve Austin",
+        "stipulation": "No Disqualification match for the WWF Championship",
+        "time": "28:08",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      }
+    ]
+  },
+  "wwe-wwe-ppv-2001-04-01": {
+    "source": "wikipedia",
+    "page": "https://en.wikipedia.org/wiki/WrestleMania_X-Seven",
+    "title": "WrestleMania X-Seven",
+    "summary": "WrestleMania X-Seven, also known as WrestleMania 17, was a 2001 professional wrestling pay-per-view (PPV) event produced by the World Wrestling Federation. It was the 17th annual WrestleMania and took place on April 1, 2001, at the Reliant Astrodome in Houston, Texas, marking the first WrestleMania held in the U.S. state of Texas. Twelve matches were contested at the event, including one broadcast exclusively on the Sunday Night Heat pre-show.",
+    "posterUrl": "https://upload.wikimedia.org/wikipedia/en/8/87/WrestleManiaX-Seven.jpg",
+    "caption": "Promotional poster featuring Stone Cold Steve Austin, The Rock, and the Reliant Astrodome",
+    "tagline": "Houston We Have a Problem...",
+    "promotion": "World Wrestling Federation",
+    "date": "2001-04-01",
+    "venue": "Reliant Astrodome",
+    "city": "Houston, Texas",
+    "attendance": "67,925",
+    "buyrate": "1,040,000",
+    "eventSeries": "WrestleMania",
+    "previousEvent": "No Way Out",
+    "nextEvent": "Backlash",
+    "matches": [
+      {
+        "order": 1,
+        "match": "X-Factor (X-Pac and Justin Credible) (with Albert) defeated Steve Blackman and Grand Master Sexay",
+        "stipulation": "Tag team match",
+        "time": "2:46"
+      },
+      {
+        "order": 2,
+        "match": "Chris Jericho (c) defeated William Regal",
+        "stipulation": "Singles match for the WWF Intercontinental Championship",
+        "time": "7:40"
+      },
+      {
+        "order": 3,
+        "match": "Tazz and The APA (Bradshaw and Faarooq) (with Jacqueline) defeated Right to Censor (The Goodfather, Val Venis and Bull Buchanan) (with Steven Richards)",
+        "stipulation": "Six-man tag team match",
+        "time": "3:56"
+      },
+      {
+        "order": 4,
+        "match": "Kane defeated Raven (c) and Big Show",
+        "stipulation": "Triple threat Hardcore match for the WWF Hardcore Championship",
+        "time": "9:28"
+      },
+      {
+        "order": 5,
+        "match": "Eddie Guerrero (with Perry Saturn) defeated Test (c)",
+        "stipulation": "Singles match for the WWF European Championship",
+        "time": "8:32"
+      },
+      {
+        "order": 6,
+        "match": "Kurt Angle defeated Chris Benoit",
+        "stipulation": "Singles match",
+        "time": "14:10"
+      },
+      {
+        "order": 7,
+        "match": "Chyna defeated Ivory (c)",
+        "stipulation": "Singles match for the WWF Women's Championship",
+        "time": "2:38"
+      },
+      {
+        "order": 8,
+        "match": "Shane McMahon (with Linda McMahon) defeated Mr. McMahon (with Stephanie McMahon and Trish Stratus)",
+        "stipulation": "Street Fight with Mick Foley as special guest referee",
+        "time": "14:11"
+      },
+      {
+        "order": 9,
+        "match": "Edge and Christian defeated The Dudley Boyz (Bubba Ray Dudley and D-Von Dudley) (c) and The Hardy Boyz (Matt Hardy and Jeff Hardy)",
+        "stipulation": "Tables, Ladders, and Chairs match for the WWF Tag Team Championship",
+        "time": "15:50"
+      },
+      {
+        "order": 10,
+        "match": "The Iron Sheik won by last eliminating Hillbilly Jim",
+        "stipulation": "Gimmick Battle Royal",
+        "time": "3:50"
+      },
+      {
+        "order": 11,
+        "match": "The Undertaker defeated Triple H",
+        "stipulation": "Singles match",
+        "time": "18:27"
+      },
+      {
+        "order": 12,
+        "match": "Stone Cold Steve Austin defeated The Rock (c)",
+        "stipulation": "No Disqualification match for the WWF Championship",
+        "time": "28:08"
+      }
+    ],
+    "spoilerSafeMatches": [
+      {
+        "order": 1,
+        "match": "X-Factor (X-Pac and Justin Credible) (with Albert) vs Steve Blackman and Grand Master Sexay",
+        "stipulation": "Tag team match",
+        "time": "2:46",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 2,
+        "match": "Chris Jericho (c) vs William Regal",
+        "stipulation": "Singles match for the WWF Intercontinental Championship",
+        "time": "7:40",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 3,
+        "match": "Tazz and The APA (Bradshaw and Faarooq) (with Jacqueline) vs Right to Censor (The Goodfather, Val Venis and Bull Buchanan) (with Steven Richards)",
+        "stipulation": "Six-man tag team match",
+        "time": "3:56",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 4,
+        "match": "Raven (c) vs Kane vs Big Show",
+        "stipulation": "Triple threat Hardcore match for the WWF Hardcore Championship",
+        "time": "9:28",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 5,
+        "match": "Test (c) vs Eddie Guerrero (with Perry Saturn)",
+        "stipulation": "Singles match for the WWF European Championship",
+        "time": "8:32",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 6,
+        "match": "Chris Benoit vs Kurt Angle",
+        "stipulation": "Singles match",
+        "time": "14:10",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 7,
+        "match": "Ivory (c) vs Chyna",
+        "stipulation": "Singles match for the WWF Women's Championship",
+        "time": "2:38",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 8,
+        "match": "Shane McMahon (with Linda McMahon) vs Mr. McMahon (with Stephanie McMahon and Trish Stratus)",
+        "stipulation": "Street Fight with Mick Foley as special guest referee",
+        "time": "14:11",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 9,
+        "match": "The Dudley Boyz (Bubba Ray Dudley and D-Von Dudley) (c) and The Hardy Boyz (Matt Hardy and Jeff Hardy) vs Edge and Christian",
+        "stipulation": "Tables, Ladders, and Chairs match for the WWF Tag Team Championship",
+        "time": "15:50",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 10,
+        "match": "The Iron Sheik vs Hillbilly Jim",
+        "stipulation": "Gimmick Battle Royal",
+        "time": "3:50",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 11,
+        "match": "The Undertaker vs Triple H",
+        "stipulation": "Singles match",
+        "time": "18:27",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 12,
+        "match": "The Rock (c) vs Stone Cold Steve Austin",
+        "stipulation": "No Disqualification match for the WWF Championship",
+        "time": "28:08",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      }
+    ]
+  },
+  "starrcade-1997": {
+    "source": "wikipedia",
+    "page": "https://en.wikipedia.org/wiki/Starrcade_(1997)",
+    "title": "Starrcade (1997)",
+    "summary": "The 1997 Starrcade was the 15th annual Starrcade professional wrestling pay-per-view (PPV) event produced by World Championship Wrestling (WCW). It was held on December 28, 1997, at the MCI Center in Washington, D.C.",
+    "posterUrl": "https://upload.wikimedia.org/wikipedia/en/4/4c/WCWstarrcade1997poster.JPG",
+    "caption": "",
+    "tagline": "",
+    "promotion": "",
+    "date": "",
+    "venue": "",
+    "city": "",
+    "attendance": "",
+    "buyrate": "",
+    "eventSeries": "",
+    "previousEvent": "",
+    "nextEvent": "",
+    "matches": [
+      {
+        "order": 1,
+        "match": "Eddie Guerrero (c) defeated Dean Malenko",
+        "stipulation": "Singles match for the WCW Cruiserweight Championship",
+        "time": "14:57"
+      },
+      {
+        "order": 2,
+        "match": "Randy Savage, Scott Norton and Vincent (with Miss Elizabeth) defeated Ray Traylor and The Steiner Brothers (Rick Steiner and Scott Steiner) (with Ted DiBiase)",
+        "stipulation": "Six-man tag team match",
+        "time": "11:06"
+      },
+      {
+        "order": 3,
+        "match": "Goldberg defeated Steve McMichael",
+        "stipulation": "Singles match",
+        "time": "6:00"
+      },
+      {
+        "order": 4,
+        "match": "Saturn (with Raven) defeated Chris Benoit",
+        "stipulation": "Raven's Rules match",
+        "time": "10:50"
+      },
+      {
+        "order": 5,
+        "match": "Buff Bagwell defeated Lex Luger",
+        "stipulation": "Singles match",
+        "time": "16:36"
+      },
+      {
+        "order": 6,
+        "match": "Diamond Dallas Page defeated Curt Hennig (c)",
+        "stipulation": "Singles match for the WCW United States Heavyweight Championship",
+        "time": "10:52"
+      },
+      {
+        "order": 7,
+        "match": "Larry Zbyszko defeated Eric Bischoff (with Scott Hall) by disqualification",
+        "stipulation": "Singles match with Bret Hart as Special Guest Referee",
+        "time": "11:12"
+      },
+      {
+        "order": 8,
+        "match": "Sting defeated Hollywood Hogan (c)",
+        "stipulation": "Singles match for the WCW World Heavyweight Championship",
+        "time": "12:53"
+      }
+    ]
+  },
+  "wrestlemania-13": {
+    "source": "wikipedia",
+    "page": "https://en.wikipedia.org/wiki/WrestleMania_13",
+    "title": "WrestleMania 13",
+    "summary": "WrestleMania 13 was a 1997 professional wrestling pay-per-view (PPV) event produced by the World Wrestling Federation. It was the 13th annual WrestleMania and was presented by PlayStation. The event was held on March 23, 1997, at the Rosemont Horizon in the Chicago suburb of Rosemont, Illinois. This was the second WrestleMania held at this venue after the middle portion of WrestleMania 2 in 1986. It would also be the final WrestleMania with Vince McMahon on commentary.",
+    "posterUrl": "https://upload.wikimedia.org/wikipedia/en/a/ad/WrestleMania13.jpg",
+    "caption": "Promotional poster",
+    "tagline": "Heat!",
+    "promotion": "World Wrestling Federation",
+    "date": "March 23, 1997",
+    "venue": "Rosemont Horizon",
+    "city": "Rosemont, Illinois",
+    "attendance": "18,197",
+    "buyrate": "North America: 237,000",
+    "eventSeries": "WrestleMania",
+    "previousEvent": "In Your House 13: Final Four",
+    "nextEvent": "In Your House 14: Revenge of the 'Taker",
+    "matches": [
+      {
+        "order": 1,
+        "match": "Billy Gunn defeated Flash Funk (with Funkette Tracy and Funkette Nadine) via pinfall",
+        "stipulation": "Singles match",
+        "time": "7:05"
+      },
+      {
+        "order": 2,
+        "match": "The Headbangers (Mosh and Thrasher) defeated Doug Furnas and Phil LaFon, The Godwinns (Henry O. Godwinn and Phineas I. Godwinn) (with Hillbilly Jim) and The New Blackjacks (Blackjack Bradshaw and Blackjack Windham) via pinfall",
+        "stipulation": "Four-Way Elimination match to determine #1 contenders for the WWF Tag Team Championship",
+        "time": "10:39"
+      },
+      {
+        "order": 3,
+        "match": "Rocky Maivia (c) defeated The Sultan (with Bob Backlund and The Iron Sheik) via pinfall",
+        "stipulation": "Singles match for the WWF Intercontinental Championship",
+        "time": "9:47"
+      },
+      {
+        "order": 4,
+        "match": "Hunter Hearst Helmsley (with Chyna) defeated Goldust (with Marlena) via pinfall",
+        "stipulation": "Singles match",
+        "time": "14:29"
+      },
+      {
+        "order": 5,
+        "match": "Owen Hart and The British Bulldog (c) vs. Mankind and Vader (with Paul Bearer) ended in a double countout",
+        "stipulation": "Tag team match for the WWF Tag Team Championship",
+        "time": "16:08"
+      },
+      {
+        "order": 6,
+        "match": "Bret Hart defeated Stone Cold Steve Austin via technical submission",
+        "stipulation": "No Disqualification Submission match with Ken Shamrock as special guest referee",
+        "time": "22:05"
+      },
+      {
+        "order": 7,
+        "match": "Ahmed Johnson and The Legion of Doom (Hawk and Animal) defeated The Nation of Domination (Faarooq, Crush and Savio Vega) (with Clarence Mason, D'Lo Brown, J. C. Ice and Wolfie D) via pinfall",
+        "stipulation": "Chicago Street Fight",
+        "time": "10:46"
+      },
+      {
+        "order": 8,
+        "match": "The Undertaker defeated Sycho Sid (c) via pinfall",
+        "stipulation": "No Disqualification match for the WWF Championship",
+        "time": "21:20"
+      }
+    ],
+    "spoilerSafeMatches": [
+      {
+        "order": 1,
+        "match": "Billy Gunn vs Flash Funk (with Funkette Tracy and Funkette Nadine)",
+        "stipulation": "Singles match",
+        "time": "7:05",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 2,
+        "match": "The Headbangers (Mosh and Thrasher) vs Doug Furnas and Phil LaFon, The Godwinns (Henry O. Godwinn and Phineas I. Godwinn) (with Hillbilly Jim) and The New Blackjacks (Blackjack Bradshaw and Blackjack Windham)",
+        "stipulation": "Four-Way Elimination match to determine #1 contenders for the WWF Tag Team Championship",
+        "time": "10:39",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 3,
+        "match": "Rocky Maivia (c) vs The Sultan (with Bob Backlund and The Iron Sheik)",
+        "stipulation": "Singles match for the WWF Intercontinental Championship",
+        "time": "9:47",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 4,
+        "match": "Goldust (with Marlena) vs Hunter Hearst Helmsley (with Chyna)",
+        "stipulation": "Singles match",
+        "time": "14:29",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 5,
+        "match": "Owen Hart and The British Bulldog (c) vs Mankind and Vader (with Paul Bearer)",
+        "stipulation": "Tag team match for the WWF Tag Team Championship",
+        "time": "16:08",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 6,
+        "match": "Stone Cold Steve Austin vs Bret Hart",
+        "stipulation": "No Disqualification Submission match with Ken Shamrock as special guest referee",
+        "time": "22:05",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 7,
+        "match": "Ahmed Johnson and The Legion of Doom (Hawk and Animal) vs The Nation of Domination (Faarooq, Crush and Savio Vega) (with Clarence Mason, D'Lo Brown, J. C. Ice and Wolfie D)",
+        "stipulation": "Chicago Street Fight",
+        "time": "10:46",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 8,
+        "match": "Sycho Sid (c) vs The Undertaker",
+        "stipulation": "No Disqualification match for the WWF Championship",
+        "time": "21:20",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      }
+    ]
+  },
+  "wrestlemania-xiv": {
+    "source": "wikipedia",
+    "page": "https://en.wikipedia.org/wiki/WrestleMania_XIV",
+    "title": "WrestleMania XIV",
+    "summary": "WrestleMania XIV, also promoted as WrestleMania dX raided, was a 1998 professional wrestling pay-per-view (PPV) event produced by the World Wrestling Federation. It was the 14th annual WrestleMania and took place on March 29, 1998, at the FleetCenter in Boston, Massachusetts. A total of eight matches were held at the event.",
+    "posterUrl": "https://upload.wikimedia.org/wikipedia/en/3/3d/WrestleManiaXIV.jpg",
+    "caption": "Promotional poster featuring \"Stone Cold\" Steve Austin, Mike Tyson, and Shawn Michaels",
+    "tagline": "The greatest PPV attraction of all time!",
+    "promotion": "World Wrestling Federation",
+    "date": "March 29, 1998",
+    "venue": "FleetCenter",
+    "city": "Boston, Massachusetts",
+    "attendance": "19,028",
+    "buyrate": "North America: 730,000",
+    "eventSeries": "WrestleMania",
+    "previousEvent": "No Way Out of Texas: In Your House",
+    "nextEvent": "Unforgiven: In Your House",
+    "matches": [
+      {
+        "order": 1,
+        "match": "LOD 2000 (Hawk and Animal) (with Sunny) won by last eliminating The Midnight Express (Bodacious Bart and Bombastic Bob) (with Jim Cornette)",
+        "stipulation": "Tag Team Battle Royal to determine the #1 contenders to the WWF Tag Team Championship",
+        "time": "8:19"
+      },
+      {
+        "order": 2,
+        "match": "Taka Michinoku (c) defeated Aguila",
+        "stipulation": "Singles match for the WWF Light Heavyweight Championship",
+        "time": "5:57"
+      },
+      {
+        "order": 3,
+        "match": "Triple H (c) (with Chyna) defeated Owen Hart",
+        "stipulation": "Singles match for the WWF European Championship <br>",
+        "time": "11:29"
+      },
+      {
+        "order": 4,
+        "match": "Marc Mero and Sable defeated The Artist Formerly Known as Goldust and Luna Vachon",
+        "stipulation": "Mixed tag team match",
+        "time": "9:11"
+      },
+      {
+        "order": 5,
+        "match": "The Rock (c) (with The Nation of Domination) defeated Ken Shamrock by disqualification",
+        "stipulation": "Singles match for the WWF Intercontinental Championship <br>",
+        "time": "4:49"
+      },
+      {
+        "order": 6,
+        "match": "Cactus Jack and Chainsaw Charlie defeated The New Age Outlaws (Road Dogg and Billy Gunn) (c)",
+        "stipulation": "Dumpster match for the WWF Tag Team Championship",
+        "time": "10:01"
+      },
+      {
+        "order": 7,
+        "match": "The Undertaker defeated Kane (with Paul Bearer)",
+        "stipulation": "Singles match",
+        "time": "17:05"
+      },
+      {
+        "order": 8,
+        "match": "Stone Cold Steve Austin defeated Shawn Michaels (c)",
+        "stipulation": "Singles match for the WWF Championship with Mike Tyson as special ring enforcer",
+        "time": "20:08"
+      }
+    ],
+    "spoilerSafeMatches": [
+      {
+        "order": 1,
+        "match": "The Midnight Express (Bodacious Bart and Bombastic Bob) (with Jim Cornette) vs LOD 2000 (Hawk and Animal) (with Sunny)",
+        "stipulation": "Tag Team Battle Royal to determine the #1 contenders to the WWF Tag Team Championship",
+        "time": "8:19",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 2,
+        "match": "Taka Michinoku (c) vs Aguila",
+        "stipulation": "Singles match for the WWF Light Heavyweight Championship",
+        "time": "5:57",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 3,
+        "match": "Triple H (c) (with Chyna) vs Owen Hart",
+        "stipulation": "Singles match for the WWF European Championship <br>",
+        "time": "11:29",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 4,
+        "match": "The Artist Formerly Known as Goldust and Luna Vachon vs Marc Mero and Sable",
+        "stipulation": "Mixed tag team match",
+        "time": "9:11",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 5,
+        "match": "The Rock (c) (with The Nation of Domination) vs Ken Shamrock",
+        "stipulation": "Singles match for the WWF Intercontinental Championship <br>",
+        "time": "4:49",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 6,
+        "match": "The New Age Outlaws (Road Dogg and Billy Gunn) (c) vs Cactus Jack and Chainsaw Charlie",
+        "stipulation": "Dumpster match for the WWF Tag Team Championship",
+        "time": "10:01",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 7,
+        "match": "Kane (with Paul Bearer) vs The Undertaker",
+        "stipulation": "Singles match",
+        "time": "17:05",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 8,
+        "match": "Shawn Michaels (c) vs Stone Cold Steve Austin",
+        "stipulation": "Singles match for the WWF Championship with Mike Tyson as special ring enforcer",
+        "time": "20:08",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      }
+    ]
+  },
+  "wrestlemania-xv": {
+    "source": "wikipedia",
+    "page": "https://en.wikipedia.org/wiki/WrestleMania_XV",
+    "title": "WrestleMania XV",
+    "summary": "WrestleMania XV was a 1999 professional wrestling pay-per-view (PPV) event produced by the World Wrestling Federation. It was the 15th annual WrestleMania and took place on March 28, 1999, at the First Union Center in Philadelphia, Pennsylvania. Ten professional wrestling matches were scheduled on the event's card. The ticket sales of 20,276 drew a gross of $1,437,050.",
+    "posterUrl": "https://upload.wikimedia.org/wikipedia/en/5/57/WrestleManiaXV.jpg",
+    "caption": "Promotional poster featuring various WWF wrestlers",
+    "tagline": "The Ragin' Climax",
+    "promotion": "World Wrestling Federation",
+    "date": "March 28, 1999",
+    "venue": "First Union Center",
+    "city": "Philadelphia, Pennsylvania",
+    "attendance": "20,276",
+    "buyrate": "North America: 800,000",
+    "eventSeries": "WrestleMania",
+    "previousEvent": "St. Valentine's Day Massacre: In Your House",
+    "nextEvent": "Backlash",
+    "matches": [
+      {
+        "order": 1,
+        "match": "Jacqueline (with Terri Runnels) defeated Ivory (with D'Lo Brown) by pinfall",
+        "stipulation": "Singles match",
+        "time": "1:23"
+      },
+      {
+        "order": 2,
+        "match": "D'Lo Brown and Test won when Droz and The Godfather eliminated each other",
+        "stipulation": "Battle Royal to determine #1 contenders to the WWF Tag Team Championship",
+        "time": "4:14"
+      },
+      {
+        "order": 3,
+        "match": "Hardcore Holly defeated Billy Gunn (c) and Al Snow by pinfall",
+        "stipulation": "Triple threat Hardcore match for the WWF Hardcore Championship",
+        "time": "7:06"
+      },
+      {
+        "order": 4,
+        "match": "Owen Hart and Jeff Jarrett (c) (with Debra) defeated D'Lo Brown and Test (with Ivory) by pinfall",
+        "stipulation": "Tag team match for the WWF Tag Team Championship",
+        "time": "3:58"
+      },
+      {
+        "order": 5,
+        "match": "Butterbean defeated Bart Gunn by KO",
+        "stipulation": "Brawl for All match<br>",
+        "time": "0:35<br>"
+      },
+      {
+        "order": 6,
+        "match": "Mankind defeated Big Show by disqualification",
+        "stipulation": "Singles match<br>",
+        "time": "6:50"
+      },
+      {
+        "order": 7,
+        "match": "Road Dogg (c) defeated Goldust (with The Blue Meanie and Ryan Shamrock), Ken Shamrock, and Val Venis",
+        "stipulation": "Four corners elimination match for the WWF Intercontinental Championship",
+        "time": "9:47"
+      },
+      {
+        "order": 8,
+        "match": "Kane (with Chyna) defeated Triple H by disqualification",
+        "stipulation": "Singles match",
+        "time": "11:33"
+      },
+      {
+        "order": 9,
+        "match": "Sable (c) defeated Tori by pinfall",
+        "stipulation": "Singles match for the WWF Women's Championship",
+        "time": "5:06"
+      },
+      {
+        "order": 10,
+        "match": "Shane McMahon (c) (with Test) defeated X-Pac by pinfall",
+        "stipulation": "Singles match for the WWF European Championship",
+        "time": "8:41"
+      },
+      {
+        "order": 11,
+        "match": "The Undertaker (with Paul Bearer) defeated Big Boss Man by pinfall",
+        "stipulation": "Hell in a Cell match",
+        "time": "9:46"
+      },
+      {
+        "order": 12,
+        "match": "Stone Cold Steve Austin defeated The Rock (c) by pinfall",
+        "stipulation": "No Disqualification match for the WWF Championship<br>",
+        "time": "16:52"
+      }
+    ],
+    "spoilerSafeMatches": [
+      {
+        "order": 1,
+        "match": "Jacqueline (with Terri Runnels) vs Ivory (with D'Lo Brown)",
+        "stipulation": "Singles match",
+        "time": "1:23",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 2,
+        "match": "D'Lo Brown and Test won when Droz and The Godfather eliminated each other",
+        "stipulation": "Battle Royal to determine #1 contenders to the WWF Tag Team Championship",
+        "time": "4:14",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 3,
+        "match": "Billy Gunn (c) vs Hardcore Holly vs Al Snow",
+        "stipulation": "Triple threat Hardcore match for the WWF Hardcore Championship",
+        "time": "7:06",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 4,
+        "match": "Owen Hart and Jeff Jarrett (c) (with Debra) vs D'Lo Brown and Test (with Ivory)",
+        "stipulation": "Tag team match for the WWF Tag Team Championship",
+        "time": "3:58",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 5,
+        "match": "Butterbean vs Bart Gunn",
+        "stipulation": "Brawl for All match<br>",
+        "time": "0:35<br>",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 6,
+        "match": "Big Show vs Mankind",
+        "stipulation": "Singles match<br>",
+        "time": "6:50",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 7,
+        "match": "Road Dogg (c) vs Goldust (with The Blue Meanie and Ryan Shamrock), Ken Shamrock, and Val Venis",
+        "stipulation": "Four corners elimination match for the WWF Intercontinental Championship",
+        "time": "9:47",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 8,
+        "match": "Triple H vs Kane (with Chyna)",
+        "stipulation": "Singles match",
+        "time": "11:33",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 9,
+        "match": "Sable (c) vs Tori",
+        "stipulation": "Singles match for the WWF Women's Championship",
+        "time": "5:06",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 10,
+        "match": "Shane McMahon (c) (with Test) vs X-Pac",
+        "stipulation": "Singles match for the WWF European Championship",
+        "time": "8:41",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 11,
+        "match": "The Undertaker (with Paul Bearer) vs Big Boss Man",
+        "stipulation": "Hell in a Cell match",
+        "time": "9:46",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 12,
+        "match": "The Rock (c) vs Stone Cold Steve Austin",
+        "stipulation": "No Disqualification match for the WWF Championship<br>",
+        "time": "16:52",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      }
+    ]
+  },
+  "wrestlemania-2000": {
+    "source": "wikipedia",
+    "page": "https://en.wikipedia.org/wiki/WrestleMania_2000",
+    "title": "WrestleMania 2000",
+    "summary": "WrestleMania 2000, also known as WrestleMania 16, was a professional wrestling pay-per-view (PPV) event produced by the World Wrestling Federation. It was the 16th annual WrestleMania, and took place on April 2, 2000, at the Arrowhead Pond of Anaheim in Anaheim, California. This was the second WrestleMania at this venue, after WrestleMania XII in 1996. A total of nine matches were contested on the event's card.",
+    "posterUrl": "https://upload.wikimedia.org/wikipedia/en/a/ab/WM2000Poster.jpeg",
+    "caption": "Promotional poster featuring various WWF personnel",
+    "tagline": "A McMahon in Every Corner",
+    "promotion": "World Wrestling Federation",
+    "date": "2000-04-02",
+    "venue": "Arrowhead Pond of Anaheim",
+    "city": "Anaheim, California",
+    "attendance": "19,776",
+    "buyrate": "North America: 824,000",
+    "eventSeries": "WrestleMania",
+    "previousEvent": "No Way Out",
+    "nextEvent": "Backlash",
+    "matches": [
+      {
+        "order": 1,
+        "match": "Big Boss Man and Bull Buchanan defeated The Godfather and D'Lo Brown (with Ice-T and the Ho Train)",
+        "stipulation": "Tag team match",
+        "time": "9:08"
+      },
+      {
+        "order": 2,
+        "match": "Hardcore Holly won by last defeating Crash Holly (c)",
+        "stipulation": "Hardcore battle royal for the WWF Hardcore Championship",
+        "time": "15:00"
+      },
+      {
+        "order": 3,
+        "match": "T & A (Test and Albert) (with Trish Stratus) defeated Head Cheese (Al Snow and Steve Blackman) (with Chester McCheeserton)",
+        "stipulation": "Tag team match",
+        "time": "7:04"
+      },
+      {
+        "order": 4,
+        "match": "Edge and Christian defeated The Dudley Boyz (Bubba Ray Dudley and D-Von Dudley) (c) and The Hardy Boyz (Matt Hardy and Jeff Hardy)",
+        "stipulation": "Triangle ladder match for the WWF Tag Team Championship",
+        "time": "23:30"
+      },
+      {
+        "order": 5,
+        "match": "Terri Runnels (with The Fabulous Moolah) defeated The Kat (with Mae Young)",
+        "stipulation": "Catfight with Val Venis as special guest referee",
+        "time": "2:24"
+      },
+      {
+        "order": 6,
+        "match": "Chyna and Too Cool (Grand Master Sexay and Scotty 2 Hotty) defeated The Radicalz (Perry Saturn, Dean Malenko and Eddie Guerrero)",
+        "stipulation": "Six-person intergender tag team match",
+        "time": "9:38"
+      },
+      {
+        "order": 7,
+        "match": "First Fall (Intercontinental title):<br>Chris Benoit defeated Chris Jericho (pinned) and Kurt Angle (c)<br>Second Fall (European title):<br>Chris Jericho defeated Chris Benoit (pinned) and Kurt Angle (c)",
+        "stipulation": "Two-fall Triple threat match for the WWF Intercontinental and WWF European Championships",
+        "time": "13:48"
+      },
+      {
+        "order": 8,
+        "match": "Kane and Rikishi (with Paul Bearer) defeated D-Generation X (X-Pac and Road Dogg) (with Tori)",
+        "stipulation": "Tag team match",
+        "time": "4:00"
+      },
+      {
+        "order": 9,
+        "match": "Triple H (c) (with Stephanie McMahon-Helmsley) defeated The Rock (with Mr. McMahon), Mick Foley (with Linda McMahon) and Big Show (with Shane McMahon)",
+        "stipulation": "Fatal 4-Way elimination match for the WWF Championship",
+        "time": "38:00"
+      }
+    ],
+    "spoilerSafeMatches": [
+      {
+        "order": 1,
+        "match": "The Godfather and D'Lo Brown (with Ice-T and the Ho Train) vs Big Boss Man and Bull Buchanan",
+        "stipulation": "Tag team match",
+        "time": "9:08",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 2,
+        "match": "Hardcore Holly won",
+        "stipulation": "Hardcore battle royal for the WWF Hardcore Championship",
+        "time": "15:00",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 3,
+        "match": "T & A (Test and Albert) (with Trish Stratus) vs Head Cheese (Al Snow and Steve Blackman) (with Chester McCheeserton)",
+        "stipulation": "Tag team match",
+        "time": "7:04",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 4,
+        "match": "The Dudley Boyz (Bubba Ray Dudley and D-Von Dudley) (c) and The Hardy Boyz (Matt Hardy and Jeff Hardy) vs Edge and Christian",
+        "stipulation": "Triangle ladder match for the WWF Tag Team Championship",
+        "time": "23:30",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 5,
+        "match": "The Kat (with Mae Young) vs Terri Runnels (with The Fabulous Moolah)",
+        "stipulation": "Catfight with Val Venis as special guest referee",
+        "time": "2:24",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 6,
+        "match": "Chyna and Too Cool (Grand Master Sexay and Scotty 2 Hotty) vs The Radicalz (Perry Saturn, Dean Malenko and Eddie Guerrero)",
+        "stipulation": "Six-person intergender tag team match",
+        "time": "9:38",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 7,
+        "match": "Kurt Angle (c)<br>Second Fall (European title):<br>Chris Jericho defeated Chris Benoit (pinned) vs First Fall (Intercontinental title):<br>Chris Benoit vs Chris Jericho (pinned) vs Kurt Angle (c)",
+        "stipulation": "Two-fall Triple threat match for the WWF Intercontinental and WWF European Championships",
+        "time": "13:48",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 8,
+        "match": "D-Generation X (X-Pac and Road Dogg) (with Tori) vs Kane and Rikishi (with Paul Bearer)",
+        "stipulation": "Tag team match",
+        "time": "4:00",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 9,
+        "match": "Triple H (c) (with Stephanie McMahon-Helmsley) vs The Rock (with Mr. McMahon), Mick Foley (with Linda McMahon) and Big Show (with Shane McMahon)",
+        "stipulation": "Fatal 4-Way elimination match for the WWF Championship",
+        "time": "38:00",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      }
+    ]
+  },
+  "wrestling-wwe-wwe-ppv-2000-04-02": {
+    "source": "wikipedia",
+    "page": "https://en.wikipedia.org/wiki/WrestleMania_2000",
+    "title": "WrestleMania 2000",
+    "summary": "WrestleMania 2000, also known as WrestleMania 16, was a professional wrestling pay-per-view (PPV) event produced by the World Wrestling Federation. It was the 16th annual WrestleMania, and took place on April 2, 2000, at the Arrowhead Pond of Anaheim in Anaheim, California. This was the second WrestleMania at this venue, after WrestleMania XII in 1996. A total of nine matches were contested on the event's card.",
+    "posterUrl": "https://upload.wikimedia.org/wikipedia/en/a/ab/WM2000Poster.jpeg",
+    "caption": "Promotional poster featuring various WWF personnel",
+    "tagline": "A McMahon in Every Corner",
+    "promotion": "World Wrestling Federation",
+    "date": "2000-04-02",
+    "venue": "Arrowhead Pond of Anaheim",
+    "city": "Anaheim, California",
+    "attendance": "19,776",
+    "buyrate": "North America: 824,000",
+    "eventSeries": "WrestleMania",
+    "previousEvent": "No Way Out",
+    "nextEvent": "Backlash",
+    "matches": [
+      {
+        "order": 1,
+        "match": "Big Boss Man and Bull Buchanan defeated The Godfather and D'Lo Brown (with Ice-T and the Ho Train)",
+        "stipulation": "Tag team match",
+        "time": "9:08"
+      },
+      {
+        "order": 2,
+        "match": "Hardcore Holly won by last defeating Crash Holly (c)",
+        "stipulation": "Hardcore battle royal for the WWF Hardcore Championship",
+        "time": "15:00"
+      },
+      {
+        "order": 3,
+        "match": "T & A (Test and Albert) (with Trish Stratus) defeated Head Cheese (Al Snow and Steve Blackman) (with Chester McCheeserton)",
+        "stipulation": "Tag team match",
+        "time": "7:04"
+      },
+      {
+        "order": 4,
+        "match": "Edge and Christian defeated The Dudley Boyz (Bubba Ray Dudley and D-Von Dudley) (c) and The Hardy Boyz (Matt Hardy and Jeff Hardy)",
+        "stipulation": "Triangle ladder match for the WWF Tag Team Championship",
+        "time": "23:30"
+      },
+      {
+        "order": 5,
+        "match": "Terri Runnels (with The Fabulous Moolah) defeated The Kat (with Mae Young)",
+        "stipulation": "Catfight with Val Venis as special guest referee",
+        "time": "2:24"
+      },
+      {
+        "order": 6,
+        "match": "Chyna and Too Cool (Grand Master Sexay and Scotty 2 Hotty) defeated The Radicalz (Perry Saturn, Dean Malenko and Eddie Guerrero)",
+        "stipulation": "Six-person intergender tag team match",
+        "time": "9:38"
+      },
+      {
+        "order": 7,
+        "match": "First Fall (Intercontinental title):<br>Chris Benoit defeated Chris Jericho (pinned) and Kurt Angle (c)<br>Second Fall (European title):<br>Chris Jericho defeated Chris Benoit (pinned) and Kurt Angle (c)",
+        "stipulation": "Two-fall Triple threat match for the WWF Intercontinental and WWF European Championships",
+        "time": "13:48"
+      },
+      {
+        "order": 8,
+        "match": "Kane and Rikishi (with Paul Bearer) defeated D-Generation X (X-Pac and Road Dogg) (with Tori)",
+        "stipulation": "Tag team match",
+        "time": "4:00"
+      },
+      {
+        "order": 9,
+        "match": "Triple H (c) (with Stephanie McMahon-Helmsley) defeated The Rock (with Mr. McMahon), Mick Foley (with Linda McMahon) and Big Show (with Shane McMahon)",
+        "stipulation": "Fatal 4-Way elimination match for the WWF Championship",
+        "time": "38:00"
+      }
+    ],
+    "spoilerSafeMatches": [
+      {
+        "order": 1,
+        "match": "The Godfather and D'Lo Brown (with Ice-T and the Ho Train) vs Big Boss Man and Bull Buchanan",
+        "stipulation": "Tag team match",
+        "time": "9:08",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 2,
+        "match": "Hardcore Holly won",
+        "stipulation": "Hardcore battle royal for the WWF Hardcore Championship",
+        "time": "15:00",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 3,
+        "match": "T & A (Test and Albert) (with Trish Stratus) vs Head Cheese (Al Snow and Steve Blackman) (with Chester McCheeserton)",
+        "stipulation": "Tag team match",
+        "time": "7:04",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 4,
+        "match": "The Dudley Boyz (Bubba Ray Dudley and D-Von Dudley) (c) and The Hardy Boyz (Matt Hardy and Jeff Hardy) vs Edge and Christian",
+        "stipulation": "Triangle ladder match for the WWF Tag Team Championship",
+        "time": "23:30",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 5,
+        "match": "The Kat (with Mae Young) vs Terri Runnels (with The Fabulous Moolah)",
+        "stipulation": "Catfight with Val Venis as special guest referee",
+        "time": "2:24",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 6,
+        "match": "Chyna and Too Cool (Grand Master Sexay and Scotty 2 Hotty) vs The Radicalz (Perry Saturn, Dean Malenko and Eddie Guerrero)",
+        "stipulation": "Six-person intergender tag team match",
+        "time": "9:38",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 7,
+        "match": "Kurt Angle (c)<br>Second Fall (European title):<br>Chris Jericho defeated Chris Benoit (pinned) vs First Fall (Intercontinental title):<br>Chris Benoit vs Chris Jericho (pinned) vs Kurt Angle (c)",
+        "stipulation": "Two-fall Triple threat match for the WWF Intercontinental and WWF European Championships",
+        "time": "13:48",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 8,
+        "match": "D-Generation X (X-Pac and Road Dogg) (with Tori) vs Kane and Rikishi (with Paul Bearer)",
+        "stipulation": "Tag team match",
+        "time": "4:00",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 9,
+        "match": "Triple H (c) (with Stephanie McMahon-Helmsley) vs The Rock (with Mr. McMahon), Mick Foley (with Linda McMahon) and Big Show (with Shane McMahon)",
+        "stipulation": "Fatal 4-Way elimination match for the WWF Championship",
+        "time": "38:00",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      }
+    ]
+  },
+  "wwe-wwe-ppv-2000-04-02": {
+    "source": "wikipedia",
+    "page": "https://en.wikipedia.org/wiki/WrestleMania_2000",
+    "title": "WrestleMania 2000",
+    "summary": "WrestleMania 2000, also known as WrestleMania 16, was a professional wrestling pay-per-view (PPV) event produced by the World Wrestling Federation. It was the 16th annual WrestleMania, and took place on April 2, 2000, at the Arrowhead Pond of Anaheim in Anaheim, California. This was the second WrestleMania at this venue, after WrestleMania XII in 1996. A total of nine matches were contested on the event's card.",
+    "posterUrl": "https://upload.wikimedia.org/wikipedia/en/a/ab/WM2000Poster.jpeg",
+    "caption": "Promotional poster featuring various WWF personnel",
+    "tagline": "A McMahon in Every Corner",
+    "promotion": "World Wrestling Federation",
+    "date": "2000-04-02",
+    "venue": "Arrowhead Pond of Anaheim",
+    "city": "Anaheim, California",
+    "attendance": "19,776",
+    "buyrate": "North America: 824,000",
+    "eventSeries": "WrestleMania",
+    "previousEvent": "No Way Out",
+    "nextEvent": "Backlash",
+    "matches": [
+      {
+        "order": 1,
+        "match": "Big Boss Man and Bull Buchanan defeated The Godfather and D'Lo Brown (with Ice-T and the Ho Train)",
+        "stipulation": "Tag team match",
+        "time": "9:08"
+      },
+      {
+        "order": 2,
+        "match": "Hardcore Holly won by last defeating Crash Holly (c)",
+        "stipulation": "Hardcore battle royal for the WWF Hardcore Championship",
+        "time": "15:00"
+      },
+      {
+        "order": 3,
+        "match": "T & A (Test and Albert) (with Trish Stratus) defeated Head Cheese (Al Snow and Steve Blackman) (with Chester McCheeserton)",
+        "stipulation": "Tag team match",
+        "time": "7:04"
+      },
+      {
+        "order": 4,
+        "match": "Edge and Christian defeated The Dudley Boyz (Bubba Ray Dudley and D-Von Dudley) (c) and The Hardy Boyz (Matt Hardy and Jeff Hardy)",
+        "stipulation": "Triangle ladder match for the WWF Tag Team Championship",
+        "time": "23:30"
+      },
+      {
+        "order": 5,
+        "match": "Terri Runnels (with The Fabulous Moolah) defeated The Kat (with Mae Young)",
+        "stipulation": "Catfight with Val Venis as special guest referee",
+        "time": "2:24"
+      },
+      {
+        "order": 6,
+        "match": "Chyna and Too Cool (Grand Master Sexay and Scotty 2 Hotty) defeated The Radicalz (Perry Saturn, Dean Malenko and Eddie Guerrero)",
+        "stipulation": "Six-person intergender tag team match",
+        "time": "9:38"
+      },
+      {
+        "order": 7,
+        "match": "First Fall (Intercontinental title):<br>Chris Benoit defeated Chris Jericho (pinned) and Kurt Angle (c)<br>Second Fall (European title):<br>Chris Jericho defeated Chris Benoit (pinned) and Kurt Angle (c)",
+        "stipulation": "Two-fall Triple threat match for the WWF Intercontinental and WWF European Championships",
+        "time": "13:48"
+      },
+      {
+        "order": 8,
+        "match": "Kane and Rikishi (with Paul Bearer) defeated D-Generation X (X-Pac and Road Dogg) (with Tori)",
+        "stipulation": "Tag team match",
+        "time": "4:00"
+      },
+      {
+        "order": 9,
+        "match": "Triple H (c) (with Stephanie McMahon-Helmsley) defeated The Rock (with Mr. McMahon), Mick Foley (with Linda McMahon) and Big Show (with Shane McMahon)",
+        "stipulation": "Fatal 4-Way elimination match for the WWF Championship",
+        "time": "38:00"
+      }
+    ],
+    "spoilerSafeMatches": [
+      {
+        "order": 1,
+        "match": "The Godfather and D'Lo Brown (with Ice-T and the Ho Train) vs Big Boss Man and Bull Buchanan",
+        "stipulation": "Tag team match",
+        "time": "9:08",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 2,
+        "match": "Hardcore Holly won",
+        "stipulation": "Hardcore battle royal for the WWF Hardcore Championship",
+        "time": "15:00",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 3,
+        "match": "T & A (Test and Albert) (with Trish Stratus) vs Head Cheese (Al Snow and Steve Blackman) (with Chester McCheeserton)",
+        "stipulation": "Tag team match",
+        "time": "7:04",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 4,
+        "match": "The Dudley Boyz (Bubba Ray Dudley and D-Von Dudley) (c) and The Hardy Boyz (Matt Hardy and Jeff Hardy) vs Edge and Christian",
+        "stipulation": "Triangle ladder match for the WWF Tag Team Championship",
+        "time": "23:30",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 5,
+        "match": "The Kat (with Mae Young) vs Terri Runnels (with The Fabulous Moolah)",
+        "stipulation": "Catfight with Val Venis as special guest referee",
+        "time": "2:24",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 6,
+        "match": "Chyna and Too Cool (Grand Master Sexay and Scotty 2 Hotty) vs The Radicalz (Perry Saturn, Dean Malenko and Eddie Guerrero)",
+        "stipulation": "Six-person intergender tag team match",
+        "time": "9:38",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 7,
+        "match": "Kurt Angle (c)<br>Second Fall (European title):<br>Chris Jericho defeated Chris Benoit (pinned) vs First Fall (Intercontinental title):<br>Chris Benoit vs Chris Jericho (pinned) vs Kurt Angle (c)",
+        "stipulation": "Two-fall Triple threat match for the WWF Intercontinental and WWF European Championships",
+        "time": "13:48",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 8,
+        "match": "D-Generation X (X-Pac and Road Dogg) (with Tori) vs Kane and Rikishi (with Paul Bearer)",
+        "stipulation": "Tag team match",
+        "time": "4:00",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 9,
+        "match": "Triple H (c) (with Stephanie McMahon-Helmsley) vs The Rock (with Mr. McMahon), Mick Foley (with Linda McMahon) and Big Show (with Shane McMahon)",
+        "stipulation": "Fatal 4-Way elimination match for the WWF Championship",
+        "time": "38:00",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      }
+    ]
+  },
+  "wrestlemania-x8": {
+    "source": "wikipedia",
+    "page": "https://en.wikipedia.org/wiki/WrestleMania_X8",
+    "title": "WrestleMania X8",
+    "summary": "WrestleMania X8, also known as WrestleMania 18, was a 2002 professional wrestling pay-per-view (PPV) event produced by the World Wrestling Federation. It was the 18th annual WrestleMania and took place on St Patrick’s Day, March 17, 2002, at the SkyDome in Toronto, Ontario, Canada, the second WrestleMania at that venue after WrestleMania VI in 1990. The event marked the last WrestleMania of the Attitude Era, the last one held under the WWF name before the company was renamed to the WWE, and the last one held before the introduction of the brand extension just a week after the event. This was the last WrestleMania to be held outside the United States until 2027 when it will be hosted in Saudi Arabia and the venue, renamed to Rogers Centre in 2005, would not host another WWE event until 2025 when Elimination Chamber took place.",
+    "posterUrl": "https://upload.wikimedia.org/wikipedia/en/0/04/Wwewrestlemaniax8.jpeg",
+    "caption": "Promotional poster featuring Hollywood Hulk Hogan and The Rock",
+    "tagline": "Icon vs. Icon <br> The Absolute Best Ever <br> The One and Only",
+    "promotion": "World Wrestling Federation",
+    "date": "2002-03-17",
+    "venue": "SkyDome",
+    "city": "Toronto, Ontario, Canada",
+    "attendance": "68,237",
+    "buyrate": "860,000",
+    "eventSeries": "WrestleMania",
+    "previousEvent": "No Way Out",
+    "nextEvent": "Backlash",
+    "matches": [
+      {
+        "order": 1,
+        "match": "Rikishi, Scotty 2 Hotty and Albert defeated Mr. Perfect, Lance Storm and Test",
+        "stipulation": "Six-man tag team match with Jacqueline as special guest referee",
+        "time": "3:06"
+      },
+      {
+        "order": 2,
+        "match": "Rob Van Dam defeated William Regal (c)",
+        "stipulation": "Singles match for the WWF Intercontinental Championship",
+        "time": "6:22"
+      },
+      {
+        "order": 3,
+        "match": "Diamond Dallas Page (c) defeated Christian",
+        "stipulation": "Singles match for the WWF European Championship",
+        "time": "6:10"
+      },
+      {
+        "order": 4,
+        "match": "Maven (c) vs. Goldust ended when Spike Dudley pinned Maven due to 24/7 rule",
+        "stipulation": "Hardcore match for the WWF Hardcore Championship",
+        "time": "3:17"
+      },
+      {
+        "order": 5,
+        "match": "Kurt Angle defeated Kane",
+        "stipulation": "Singles match",
+        "time": "10:45"
+      },
+      {
+        "order": 6,
+        "match": "The Undertaker defeated Ric Flair",
+        "stipulation": "No Disqualification match",
+        "time": "18:47"
+      },
+      {
+        "order": 7,
+        "match": "Edge defeated Booker T",
+        "stipulation": "Singles match",
+        "time": "6:32"
+      },
+      {
+        "order": 8,
+        "match": "Stone Cold Steve Austin defeated Scott Hall (with Kevin Nash)",
+        "stipulation": "Singles match",
+        "time": "9:51"
+      },
+      {
+        "order": 9,
+        "match": "Billy and Chuck (Billy Gunn and Chuck Palumbo) (c) defeated The APA (Faarooq and Bradshaw), The Dudley Boyz (Bubba Ray Dudley and D-Von Dudley) (with Stacy Keibler) and The Hardy Boyz (Matt Hardy and Jeff Hardy)",
+        "stipulation": "Four corners elimination match for the WWF Tag Team Championship",
+        "time": "13:50"
+      },
+      {
+        "order": 10,
+        "match": "The Rock defeated Hollywood Hulk Hogan",
+        "stipulation": "Singles match",
+        "time": "16:24"
+      },
+      {
+        "order": 11,
+        "match": "Jazz (c) defeated Trish Stratus and Lita",
+        "stipulation": "Triple threat match for the WWF Women's Championship",
+        "time": "6:16"
+      },
+      {
+        "order": 12,
+        "match": "Triple H defeated Chris Jericho (c) (with Stephanie McMahon)",
+        "stipulation": "Singles match for the Undisputed WWF Championship",
+        "time": "18:41"
+      }
+    ],
+    "spoilerSafeMatches": [
+      {
+        "order": 1,
+        "match": "Mr. Perfect, Lance Storm and Test vs Rikishi, Scotty 2 Hotty and Albert",
+        "stipulation": "Six-man tag team match with Jacqueline as special guest referee",
+        "time": "3:06",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 2,
+        "match": "William Regal (c) vs Rob Van Dam",
+        "stipulation": "Singles match for the WWF Intercontinental Championship",
+        "time": "6:22",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 3,
+        "match": "Diamond Dallas Page (c) vs Christian",
+        "stipulation": "Singles match for the WWF European Championship",
+        "time": "6:10",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 4,
+        "match": "Maven (c) vs. Goldust ended when Spike Dudley pinned Maven due to 24/7 rule",
+        "stipulation": "Hardcore match for the WWF Hardcore Championship",
+        "time": "3:17",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 5,
+        "match": "Kurt Angle vs Kane",
+        "stipulation": "Singles match",
+        "time": "10:45",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 6,
+        "match": "The Undertaker vs Ric Flair",
+        "stipulation": "No Disqualification match",
+        "time": "18:47",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 7,
+        "match": "Booker T vs Edge",
+        "stipulation": "Singles match",
+        "time": "6:32",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 8,
+        "match": "Stone Cold Steve Austin vs Scott Hall (with Kevin Nash)",
+        "stipulation": "Singles match",
+        "time": "9:51",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 9,
+        "match": "Billy and Chuck (Billy Gunn and Chuck Palumbo) (c) vs The APA (Faarooq and Bradshaw), The Dudley Boyz (Bubba Ray Dudley and D-Von Dudley) (with Stacy Keibler) and The Hardy Boyz (Matt Hardy and Jeff Hardy)",
+        "stipulation": "Four corners elimination match for the WWF Tag Team Championship",
+        "time": "13:50",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 10,
+        "match": "The Rock vs Hollywood Hulk Hogan",
+        "stipulation": "Singles match",
+        "time": "16:24",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 11,
+        "match": "Jazz (c) vs Trish Stratus vs Lita",
+        "stipulation": "Triple threat match for the WWF Women's Championship",
+        "time": "6:16",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 12,
+        "match": "Chris Jericho (c) (with Stephanie McMahon) vs Triple H",
+        "stipulation": "Singles match for the Undisputed WWF Championship",
+        "time": "18:41",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      }
+    ]
+  },
+  "wrestling-wwe-wwe-ppv-2002-03-17": {
+    "source": "wikipedia",
+    "page": "https://en.wikipedia.org/wiki/WrestleMania_X8",
+    "title": "WrestleMania X8",
+    "summary": "WrestleMania X8, also known as WrestleMania 18, was a 2002 professional wrestling pay-per-view (PPV) event produced by the World Wrestling Federation. It was the 18th annual WrestleMania and took place on St Patrick’s Day, March 17, 2002, at the SkyDome in Toronto, Ontario, Canada, the second WrestleMania at that venue after WrestleMania VI in 1990. The event marked the last WrestleMania of the Attitude Era, the last one held under the WWF name before the company was renamed to the WWE, and the last one held before the introduction of the brand extension just a week after the event. This was the last WrestleMania to be held outside the United States until 2027 when it will be hosted in Saudi Arabia and the venue, renamed to Rogers Centre in 2005, would not host another WWE event until 2025 when Elimination Chamber took place.",
+    "posterUrl": "https://upload.wikimedia.org/wikipedia/en/0/04/Wwewrestlemaniax8.jpeg",
+    "caption": "Promotional poster featuring Hollywood Hulk Hogan and The Rock",
+    "tagline": "Icon vs. Icon <br> The Absolute Best Ever <br> The One and Only",
+    "promotion": "World Wrestling Federation",
+    "date": "2002-03-17",
+    "venue": "SkyDome",
+    "city": "Toronto, Ontario, Canada",
+    "attendance": "68,237",
+    "buyrate": "860,000",
+    "eventSeries": "WrestleMania",
+    "previousEvent": "No Way Out",
+    "nextEvent": "Backlash",
+    "matches": [
+      {
+        "order": 1,
+        "match": "Rikishi, Scotty 2 Hotty and Albert defeated Mr. Perfect, Lance Storm and Test",
+        "stipulation": "Six-man tag team match with Jacqueline as special guest referee",
+        "time": "3:06"
+      },
+      {
+        "order": 2,
+        "match": "Rob Van Dam defeated William Regal (c)",
+        "stipulation": "Singles match for the WWF Intercontinental Championship",
+        "time": "6:22"
+      },
+      {
+        "order": 3,
+        "match": "Diamond Dallas Page (c) defeated Christian",
+        "stipulation": "Singles match for the WWF European Championship",
+        "time": "6:10"
+      },
+      {
+        "order": 4,
+        "match": "Maven (c) vs. Goldust ended when Spike Dudley pinned Maven due to 24/7 rule",
+        "stipulation": "Hardcore match for the WWF Hardcore Championship",
+        "time": "3:17"
+      },
+      {
+        "order": 5,
+        "match": "Kurt Angle defeated Kane",
+        "stipulation": "Singles match",
+        "time": "10:45"
+      },
+      {
+        "order": 6,
+        "match": "The Undertaker defeated Ric Flair",
+        "stipulation": "No Disqualification match",
+        "time": "18:47"
+      },
+      {
+        "order": 7,
+        "match": "Edge defeated Booker T",
+        "stipulation": "Singles match",
+        "time": "6:32"
+      },
+      {
+        "order": 8,
+        "match": "Stone Cold Steve Austin defeated Scott Hall (with Kevin Nash)",
+        "stipulation": "Singles match",
+        "time": "9:51"
+      },
+      {
+        "order": 9,
+        "match": "Billy and Chuck (Billy Gunn and Chuck Palumbo) (c) defeated The APA (Faarooq and Bradshaw), The Dudley Boyz (Bubba Ray Dudley and D-Von Dudley) (with Stacy Keibler) and The Hardy Boyz (Matt Hardy and Jeff Hardy)",
+        "stipulation": "Four corners elimination match for the WWF Tag Team Championship",
+        "time": "13:50"
+      },
+      {
+        "order": 10,
+        "match": "The Rock defeated Hollywood Hulk Hogan",
+        "stipulation": "Singles match",
+        "time": "16:24"
+      },
+      {
+        "order": 11,
+        "match": "Jazz (c) defeated Trish Stratus and Lita",
+        "stipulation": "Triple threat match for the WWF Women's Championship",
+        "time": "6:16"
+      },
+      {
+        "order": 12,
+        "match": "Triple H defeated Chris Jericho (c) (with Stephanie McMahon)",
+        "stipulation": "Singles match for the Undisputed WWF Championship",
+        "time": "18:41"
+      }
+    ],
+    "spoilerSafeMatches": [
+      {
+        "order": 1,
+        "match": "Mr. Perfect, Lance Storm and Test vs Rikishi, Scotty 2 Hotty and Albert",
+        "stipulation": "Six-man tag team match with Jacqueline as special guest referee",
+        "time": "3:06",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 2,
+        "match": "William Regal (c) vs Rob Van Dam",
+        "stipulation": "Singles match for the WWF Intercontinental Championship",
+        "time": "6:22",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 3,
+        "match": "Diamond Dallas Page (c) vs Christian",
+        "stipulation": "Singles match for the WWF European Championship",
+        "time": "6:10",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 4,
+        "match": "Maven (c) vs. Goldust ended when Spike Dudley pinned Maven due to 24/7 rule",
+        "stipulation": "Hardcore match for the WWF Hardcore Championship",
+        "time": "3:17",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 5,
+        "match": "Kurt Angle vs Kane",
+        "stipulation": "Singles match",
+        "time": "10:45",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 6,
+        "match": "The Undertaker vs Ric Flair",
+        "stipulation": "No Disqualification match",
+        "time": "18:47",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 7,
+        "match": "Booker T vs Edge",
+        "stipulation": "Singles match",
+        "time": "6:32",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 8,
+        "match": "Stone Cold Steve Austin vs Scott Hall (with Kevin Nash)",
+        "stipulation": "Singles match",
+        "time": "9:51",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 9,
+        "match": "Billy and Chuck (Billy Gunn and Chuck Palumbo) (c) vs The APA (Faarooq and Bradshaw), The Dudley Boyz (Bubba Ray Dudley and D-Von Dudley) (with Stacy Keibler) and The Hardy Boyz (Matt Hardy and Jeff Hardy)",
+        "stipulation": "Four corners elimination match for the WWF Tag Team Championship",
+        "time": "13:50",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 10,
+        "match": "The Rock vs Hollywood Hulk Hogan",
+        "stipulation": "Singles match",
+        "time": "16:24",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 11,
+        "match": "Jazz (c) vs Trish Stratus vs Lita",
+        "stipulation": "Triple threat match for the WWF Women's Championship",
+        "time": "6:16",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 12,
+        "match": "Chris Jericho (c) (with Stephanie McMahon) vs Triple H",
+        "stipulation": "Singles match for the Undisputed WWF Championship",
+        "time": "18:41",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      }
+    ]
+  },
+  "wwe-wwe-ppv-2002-03-17": {
+    "source": "wikipedia",
+    "page": "https://en.wikipedia.org/wiki/WrestleMania_X8",
+    "title": "WrestleMania X8",
+    "summary": "WrestleMania X8, also known as WrestleMania 18, was a 2002 professional wrestling pay-per-view (PPV) event produced by the World Wrestling Federation. It was the 18th annual WrestleMania and took place on St Patrick’s Day, March 17, 2002, at the SkyDome in Toronto, Ontario, Canada, the second WrestleMania at that venue after WrestleMania VI in 1990. The event marked the last WrestleMania of the Attitude Era, the last one held under the WWF name before the company was renamed to the WWE, and the last one held before the introduction of the brand extension just a week after the event. This was the last WrestleMania to be held outside the United States until 2027 when it will be hosted in Saudi Arabia and the venue, renamed to Rogers Centre in 2005, would not host another WWE event until 2025 when Elimination Chamber took place.",
+    "posterUrl": "https://upload.wikimedia.org/wikipedia/en/0/04/Wwewrestlemaniax8.jpeg",
+    "caption": "Promotional poster featuring Hollywood Hulk Hogan and The Rock",
+    "tagline": "Icon vs. Icon <br> The Absolute Best Ever <br> The One and Only",
+    "promotion": "World Wrestling Federation",
+    "date": "2002-03-17",
+    "venue": "SkyDome",
+    "city": "Toronto, Ontario, Canada",
+    "attendance": "68,237",
+    "buyrate": "860,000",
+    "eventSeries": "WrestleMania",
+    "previousEvent": "No Way Out",
+    "nextEvent": "Backlash",
+    "matches": [
+      {
+        "order": 1,
+        "match": "Rikishi, Scotty 2 Hotty and Albert defeated Mr. Perfect, Lance Storm and Test",
+        "stipulation": "Six-man tag team match with Jacqueline as special guest referee",
+        "time": "3:06"
+      },
+      {
+        "order": 2,
+        "match": "Rob Van Dam defeated William Regal (c)",
+        "stipulation": "Singles match for the WWF Intercontinental Championship",
+        "time": "6:22"
+      },
+      {
+        "order": 3,
+        "match": "Diamond Dallas Page (c) defeated Christian",
+        "stipulation": "Singles match for the WWF European Championship",
+        "time": "6:10"
+      },
+      {
+        "order": 4,
+        "match": "Maven (c) vs. Goldust ended when Spike Dudley pinned Maven due to 24/7 rule",
+        "stipulation": "Hardcore match for the WWF Hardcore Championship",
+        "time": "3:17"
+      },
+      {
+        "order": 5,
+        "match": "Kurt Angle defeated Kane",
+        "stipulation": "Singles match",
+        "time": "10:45"
+      },
+      {
+        "order": 6,
+        "match": "The Undertaker defeated Ric Flair",
+        "stipulation": "No Disqualification match",
+        "time": "18:47"
+      },
+      {
+        "order": 7,
+        "match": "Edge defeated Booker T",
+        "stipulation": "Singles match",
+        "time": "6:32"
+      },
+      {
+        "order": 8,
+        "match": "Stone Cold Steve Austin defeated Scott Hall (with Kevin Nash)",
+        "stipulation": "Singles match",
+        "time": "9:51"
+      },
+      {
+        "order": 9,
+        "match": "Billy and Chuck (Billy Gunn and Chuck Palumbo) (c) defeated The APA (Faarooq and Bradshaw), The Dudley Boyz (Bubba Ray Dudley and D-Von Dudley) (with Stacy Keibler) and The Hardy Boyz (Matt Hardy and Jeff Hardy)",
+        "stipulation": "Four corners elimination match for the WWF Tag Team Championship",
+        "time": "13:50"
+      },
+      {
+        "order": 10,
+        "match": "The Rock defeated Hollywood Hulk Hogan",
+        "stipulation": "Singles match",
+        "time": "16:24"
+      },
+      {
+        "order": 11,
+        "match": "Jazz (c) defeated Trish Stratus and Lita",
+        "stipulation": "Triple threat match for the WWF Women's Championship",
+        "time": "6:16"
+      },
+      {
+        "order": 12,
+        "match": "Triple H defeated Chris Jericho (c) (with Stephanie McMahon)",
+        "stipulation": "Singles match for the Undisputed WWF Championship",
+        "time": "18:41"
+      }
+    ],
+    "spoilerSafeMatches": [
+      {
+        "order": 1,
+        "match": "Mr. Perfect, Lance Storm and Test vs Rikishi, Scotty 2 Hotty and Albert",
+        "stipulation": "Six-man tag team match with Jacqueline as special guest referee",
+        "time": "3:06",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 2,
+        "match": "William Regal (c) vs Rob Van Dam",
+        "stipulation": "Singles match for the WWF Intercontinental Championship",
+        "time": "6:22",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 3,
+        "match": "Diamond Dallas Page (c) vs Christian",
+        "stipulation": "Singles match for the WWF European Championship",
+        "time": "6:10",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 4,
+        "match": "Maven (c) vs. Goldust ended when Spike Dudley pinned Maven due to 24/7 rule",
+        "stipulation": "Hardcore match for the WWF Hardcore Championship",
+        "time": "3:17",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 5,
+        "match": "Kurt Angle vs Kane",
+        "stipulation": "Singles match",
+        "time": "10:45",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 6,
+        "match": "The Undertaker vs Ric Flair",
+        "stipulation": "No Disqualification match",
+        "time": "18:47",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 7,
+        "match": "Booker T vs Edge",
+        "stipulation": "Singles match",
+        "time": "6:32",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 8,
+        "match": "Stone Cold Steve Austin vs Scott Hall (with Kevin Nash)",
+        "stipulation": "Singles match",
+        "time": "9:51",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 9,
+        "match": "Billy and Chuck (Billy Gunn and Chuck Palumbo) (c) vs The APA (Faarooq and Bradshaw), The Dudley Boyz (Bubba Ray Dudley and D-Von Dudley) (with Stacy Keibler) and The Hardy Boyz (Matt Hardy and Jeff Hardy)",
+        "stipulation": "Four corners elimination match for the WWF Tag Team Championship",
+        "time": "13:50",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 10,
+        "match": "The Rock vs Hollywood Hulk Hogan",
+        "stipulation": "Singles match",
+        "time": "16:24",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 11,
+        "match": "Jazz (c) vs Trish Stratus vs Lita",
+        "stipulation": "Triple threat match for the WWF Women's Championship",
+        "time": "6:16",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 12,
+        "match": "Chris Jericho (c) (with Stephanie McMahon) vs Triple H",
+        "stipulation": "Singles match for the Undisputed WWF Championship",
+        "time": "18:41",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      }
+    ]
+  },
+  "wrestlemania-xix": {
+    "source": "wikipedia",
+    "page": "https://en.wikipedia.org/wiki/WrestleMania_XIX",
+    "title": "WrestleMania XIX",
+    "summary": "WrestleMania XIX, retroactively known as WrestleMania Seattle was a 2003 professional wrestling pay-per-view (PPV) event produced by World Wrestling Entertainment (WWE). It was the 19th annual WrestleMania and took place on March 30, 2003, at Safeco Field in Seattle, Washington, becoming the first WrestleMania held in the U.S. state of Washington. WrestleMania XIX was the first WrestleMania to be promoted under the WWE name after the promotion was renamed from World Wrestling Federation (WWF) in May 2002, making this the first WrestleMania of the Ruthless Aggression Era. It was also the first WrestleMania to take place after WWE introduced the brand extension in March 2002, in which the roster was divided between the Raw and SmackDown! brands; the event was held for wrestlers from both.",
+    "posterUrl": "https://upload.wikimedia.org/wikipedia/en/c/cf/WrestleManiaXIX.jpg",
+    "caption": "Promotional poster featuring the Space Needle among various WWE wrestlers",
+    "tagline": "Dare to Dream",
+    "promotion": "World Wrestling Entertainment",
+    "date": "2003-03-30",
+    "venue": "Safeco Field",
+    "city": "Seattle, Washington",
+    "attendance": "54,097",
+    "buyrate": "560,000",
+    "eventSeries": "WrestleMania",
+    "previousEvent": "No Way Out",
+    "nextEvent": "Backlash",
+    "matches": [
+      {
+        "order": 1,
+        "match": "Chief Morley and Lance Storm (c) (with The Dudley Boyz) defeated Kane and Rob Van Dam by pinfall",
+        "stipulation": "Tag team match for the World Tag Team Championship",
+        "time": "7:02"
+      },
+      {
+        "order": 2,
+        "match": "Matt Hardy (c) (with Shannon Moore) defeated Rey Mysterio by pinfall",
+        "stipulation": "Singles match for the WWE Cruiserweight Championship",
+        "time": "5:37"
+      },
+      {
+        "order": 3,
+        "match": "The Undertaker defeated Big Show and A-Train by pinfall",
+        "stipulation": "Handicap match",
+        "time": "9:42"
+      },
+      {
+        "order": 4,
+        "match": "Trish Stratus defeated Victoria (c) (with Steven Richards) and Jazz by pinfall",
+        "stipulation": "Triple threat match for the WWE Women's Championship",
+        "time": "7:17"
+      },
+      {
+        "order": 5,
+        "match": "Team Angle (Shelton Benjamin and Charlie Haas) (c) defeated Rhyno and Chris Benoit and Los Guerreros (Eddie and Chavo) by pinfall",
+        "stipulation": "Triple threat tag team match for the WWE Tag Team Championship",
+        "time": "8:48"
+      },
+      {
+        "order": 6,
+        "match": "Shawn Michaels defeated Chris Jericho by pinfall",
+        "stipulation": "Singles match",
+        "time": "22:35"
+      },
+      {
+        "order": 7,
+        "match": "Triple H (c) (with Ric Flair) defeated Booker T by pinfall",
+        "stipulation": "Singles match for the World Heavyweight Championship",
+        "time": "18:45"
+      },
+      {
+        "order": 8,
+        "match": "Hulk Hogan defeated Mr. McMahon by pinfall",
+        "stipulation": "Street Fight<br>",
+        "time": "20:47"
+      },
+      {
+        "order": 9,
+        "match": "The Rock defeated Stone Cold Steve Austin by pinfall",
+        "stipulation": "Singles match",
+        "time": "17:55"
+      },
+      {
+        "order": 10,
+        "match": "Brock Lesnar defeated Kurt Angle (c) by pinfall",
+        "stipulation": "Singles match for the WWE Championship<br>",
+        "time": "21:08"
+      }
+    ],
+    "spoilerSafeMatches": [
+      {
+        "order": 1,
+        "match": "Chief Morley and Lance Storm (c) (with The Dudley Boyz) vs Kane and Rob Van Dam",
+        "stipulation": "Tag team match for the World Tag Team Championship",
+        "time": "7:02",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 2,
+        "match": "Matt Hardy (c) (with Shannon Moore) vs Rey Mysterio",
+        "stipulation": "Singles match for the WWE Cruiserweight Championship",
+        "time": "5:37",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 3,
+        "match": "Big Show and A-Train vs The Undertaker",
+        "stipulation": "Handicap match",
+        "time": "9:42",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 4,
+        "match": "Victoria (c) (with Steven Richards) vs Trish Stratus vs Jazz",
+        "stipulation": "Triple threat match for the WWE Women's Championship",
+        "time": "7:17",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 5,
+        "match": "Team Angle (Shelton Benjamin and Charlie Haas) (c) vs Rhyno vs Chris Benoit vs Los Guerreros (Eddie vs Chavo)",
+        "stipulation": "Triple threat tag team match for the WWE Tag Team Championship",
+        "time": "8:48",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 6,
+        "match": "Chris Jericho vs Shawn Michaels",
+        "stipulation": "Singles match",
+        "time": "22:35",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 7,
+        "match": "Triple H (c) (with Ric Flair) vs Booker T",
+        "stipulation": "Singles match for the World Heavyweight Championship",
+        "time": "18:45",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 8,
+        "match": "Hulk Hogan vs Mr. McMahon",
+        "stipulation": "Street Fight<br>",
+        "time": "20:47",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 9,
+        "match": "Stone Cold Steve Austin vs The Rock",
+        "stipulation": "Singles match",
+        "time": "17:55",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 10,
+        "match": "Kurt Angle (c) vs Brock Lesnar",
+        "stipulation": "Singles match for the WWE Championship<br>",
+        "time": "21:08",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      }
+    ]
+  },
+  "wrestling-wwe-wwe-ppv-2003-03-30": {
+    "source": "wikipedia",
+    "page": "https://en.wikipedia.org/wiki/WrestleMania_XIX",
+    "title": "WrestleMania XIX",
+    "summary": "WrestleMania XIX, retroactively known as WrestleMania Seattle was a 2003 professional wrestling pay-per-view (PPV) event produced by World Wrestling Entertainment (WWE). It was the 19th annual WrestleMania and took place on March 30, 2003, at Safeco Field in Seattle, Washington, becoming the first WrestleMania held in the U.S. state of Washington. WrestleMania XIX was the first WrestleMania to be promoted under the WWE name after the promotion was renamed from World Wrestling Federation (WWF) in May 2002, making this the first WrestleMania of the Ruthless Aggression Era. It was also the first WrestleMania to take place after WWE introduced the brand extension in March 2002, in which the roster was divided between the Raw and SmackDown! brands; the event was held for wrestlers from both.",
+    "posterUrl": "https://upload.wikimedia.org/wikipedia/en/c/cf/WrestleManiaXIX.jpg",
+    "caption": "Promotional poster featuring the Space Needle among various WWE wrestlers",
+    "tagline": "Dare to Dream",
+    "promotion": "World Wrestling Entertainment",
+    "date": "2003-03-30",
+    "venue": "Safeco Field",
+    "city": "Seattle, Washington",
+    "attendance": "54,097",
+    "buyrate": "560,000",
+    "eventSeries": "WrestleMania",
+    "previousEvent": "No Way Out",
+    "nextEvent": "Backlash",
+    "matches": [
+      {
+        "order": 1,
+        "match": "Chief Morley and Lance Storm (c) (with The Dudley Boyz) defeated Kane and Rob Van Dam by pinfall",
+        "stipulation": "Tag team match for the World Tag Team Championship",
+        "time": "7:02"
+      },
+      {
+        "order": 2,
+        "match": "Matt Hardy (c) (with Shannon Moore) defeated Rey Mysterio by pinfall",
+        "stipulation": "Singles match for the WWE Cruiserweight Championship",
+        "time": "5:37"
+      },
+      {
+        "order": 3,
+        "match": "The Undertaker defeated Big Show and A-Train by pinfall",
+        "stipulation": "Handicap match",
+        "time": "9:42"
+      },
+      {
+        "order": 4,
+        "match": "Trish Stratus defeated Victoria (c) (with Steven Richards) and Jazz by pinfall",
+        "stipulation": "Triple threat match for the WWE Women's Championship",
+        "time": "7:17"
+      },
+      {
+        "order": 5,
+        "match": "Team Angle (Shelton Benjamin and Charlie Haas) (c) defeated Rhyno and Chris Benoit and Los Guerreros (Eddie and Chavo) by pinfall",
+        "stipulation": "Triple threat tag team match for the WWE Tag Team Championship",
+        "time": "8:48"
+      },
+      {
+        "order": 6,
+        "match": "Shawn Michaels defeated Chris Jericho by pinfall",
+        "stipulation": "Singles match",
+        "time": "22:35"
+      },
+      {
+        "order": 7,
+        "match": "Triple H (c) (with Ric Flair) defeated Booker T by pinfall",
+        "stipulation": "Singles match for the World Heavyweight Championship",
+        "time": "18:45"
+      },
+      {
+        "order": 8,
+        "match": "Hulk Hogan defeated Mr. McMahon by pinfall",
+        "stipulation": "Street Fight<br>",
+        "time": "20:47"
+      },
+      {
+        "order": 9,
+        "match": "The Rock defeated Stone Cold Steve Austin by pinfall",
+        "stipulation": "Singles match",
+        "time": "17:55"
+      },
+      {
+        "order": 10,
+        "match": "Brock Lesnar defeated Kurt Angle (c) by pinfall",
+        "stipulation": "Singles match for the WWE Championship<br>",
+        "time": "21:08"
+      }
+    ],
+    "spoilerSafeMatches": [
+      {
+        "order": 1,
+        "match": "Chief Morley and Lance Storm (c) (with The Dudley Boyz) vs Kane and Rob Van Dam",
+        "stipulation": "Tag team match for the World Tag Team Championship",
+        "time": "7:02",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 2,
+        "match": "Matt Hardy (c) (with Shannon Moore) vs Rey Mysterio",
+        "stipulation": "Singles match for the WWE Cruiserweight Championship",
+        "time": "5:37",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 3,
+        "match": "Big Show and A-Train vs The Undertaker",
+        "stipulation": "Handicap match",
+        "time": "9:42",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 4,
+        "match": "Victoria (c) (with Steven Richards) vs Trish Stratus vs Jazz",
+        "stipulation": "Triple threat match for the WWE Women's Championship",
+        "time": "7:17",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 5,
+        "match": "Team Angle (Shelton Benjamin and Charlie Haas) (c) vs Rhyno vs Chris Benoit vs Los Guerreros (Eddie vs Chavo)",
+        "stipulation": "Triple threat tag team match for the WWE Tag Team Championship",
+        "time": "8:48",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 6,
+        "match": "Chris Jericho vs Shawn Michaels",
+        "stipulation": "Singles match",
+        "time": "22:35",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 7,
+        "match": "Triple H (c) (with Ric Flair) vs Booker T",
+        "stipulation": "Singles match for the World Heavyweight Championship",
+        "time": "18:45",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 8,
+        "match": "Hulk Hogan vs Mr. McMahon",
+        "stipulation": "Street Fight<br>",
+        "time": "20:47",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 9,
+        "match": "Stone Cold Steve Austin vs The Rock",
+        "stipulation": "Singles match",
+        "time": "17:55",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 10,
+        "match": "Kurt Angle (c) vs Brock Lesnar",
+        "stipulation": "Singles match for the WWE Championship<br>",
+        "time": "21:08",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      }
+    ]
+  },
+  "wwe-wwe-ppv-2003-03-30": {
+    "source": "wikipedia",
+    "page": "https://en.wikipedia.org/wiki/WrestleMania_XIX",
+    "title": "WrestleMania XIX",
+    "summary": "WrestleMania XIX, retroactively known as WrestleMania Seattle was a 2003 professional wrestling pay-per-view (PPV) event produced by World Wrestling Entertainment (WWE). It was the 19th annual WrestleMania and took place on March 30, 2003, at Safeco Field in Seattle, Washington, becoming the first WrestleMania held in the U.S. state of Washington. WrestleMania XIX was the first WrestleMania to be promoted under the WWE name after the promotion was renamed from World Wrestling Federation (WWF) in May 2002, making this the first WrestleMania of the Ruthless Aggression Era. It was also the first WrestleMania to take place after WWE introduced the brand extension in March 2002, in which the roster was divided between the Raw and SmackDown! brands; the event was held for wrestlers from both.",
+    "posterUrl": "https://upload.wikimedia.org/wikipedia/en/c/cf/WrestleManiaXIX.jpg",
+    "caption": "Promotional poster featuring the Space Needle among various WWE wrestlers",
+    "tagline": "Dare to Dream",
+    "promotion": "World Wrestling Entertainment",
+    "date": "2003-03-30",
+    "venue": "Safeco Field",
+    "city": "Seattle, Washington",
+    "attendance": "54,097",
+    "buyrate": "560,000",
+    "eventSeries": "WrestleMania",
+    "previousEvent": "No Way Out",
+    "nextEvent": "Backlash",
+    "matches": [
+      {
+        "order": 1,
+        "match": "Chief Morley and Lance Storm (c) (with The Dudley Boyz) defeated Kane and Rob Van Dam by pinfall",
+        "stipulation": "Tag team match for the World Tag Team Championship",
+        "time": "7:02"
+      },
+      {
+        "order": 2,
+        "match": "Matt Hardy (c) (with Shannon Moore) defeated Rey Mysterio by pinfall",
+        "stipulation": "Singles match for the WWE Cruiserweight Championship",
+        "time": "5:37"
+      },
+      {
+        "order": 3,
+        "match": "The Undertaker defeated Big Show and A-Train by pinfall",
+        "stipulation": "Handicap match",
+        "time": "9:42"
+      },
+      {
+        "order": 4,
+        "match": "Trish Stratus defeated Victoria (c) (with Steven Richards) and Jazz by pinfall",
+        "stipulation": "Triple threat match for the WWE Women's Championship",
+        "time": "7:17"
+      },
+      {
+        "order": 5,
+        "match": "Team Angle (Shelton Benjamin and Charlie Haas) (c) defeated Rhyno and Chris Benoit and Los Guerreros (Eddie and Chavo) by pinfall",
+        "stipulation": "Triple threat tag team match for the WWE Tag Team Championship",
+        "time": "8:48"
+      },
+      {
+        "order": 6,
+        "match": "Shawn Michaels defeated Chris Jericho by pinfall",
+        "stipulation": "Singles match",
+        "time": "22:35"
+      },
+      {
+        "order": 7,
+        "match": "Triple H (c) (with Ric Flair) defeated Booker T by pinfall",
+        "stipulation": "Singles match for the World Heavyweight Championship",
+        "time": "18:45"
+      },
+      {
+        "order": 8,
+        "match": "Hulk Hogan defeated Mr. McMahon by pinfall",
+        "stipulation": "Street Fight<br>",
+        "time": "20:47"
+      },
+      {
+        "order": 9,
+        "match": "The Rock defeated Stone Cold Steve Austin by pinfall",
+        "stipulation": "Singles match",
+        "time": "17:55"
+      },
+      {
+        "order": 10,
+        "match": "Brock Lesnar defeated Kurt Angle (c) by pinfall",
+        "stipulation": "Singles match for the WWE Championship<br>",
+        "time": "21:08"
+      }
+    ],
+    "spoilerSafeMatches": [
+      {
+        "order": 1,
+        "match": "Chief Morley and Lance Storm (c) (with The Dudley Boyz) vs Kane and Rob Van Dam",
+        "stipulation": "Tag team match for the World Tag Team Championship",
+        "time": "7:02",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 2,
+        "match": "Matt Hardy (c) (with Shannon Moore) vs Rey Mysterio",
+        "stipulation": "Singles match for the WWE Cruiserweight Championship",
+        "time": "5:37",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 3,
+        "match": "Big Show and A-Train vs The Undertaker",
+        "stipulation": "Handicap match",
+        "time": "9:42",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 4,
+        "match": "Victoria (c) (with Steven Richards) vs Trish Stratus vs Jazz",
+        "stipulation": "Triple threat match for the WWE Women's Championship",
+        "time": "7:17",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 5,
+        "match": "Team Angle (Shelton Benjamin and Charlie Haas) (c) vs Rhyno vs Chris Benoit vs Los Guerreros (Eddie vs Chavo)",
+        "stipulation": "Triple threat tag team match for the WWE Tag Team Championship",
+        "time": "8:48",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 6,
+        "match": "Chris Jericho vs Shawn Michaels",
+        "stipulation": "Singles match",
+        "time": "22:35",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 7,
+        "match": "Triple H (c) (with Ric Flair) vs Booker T",
+        "stipulation": "Singles match for the World Heavyweight Championship",
+        "time": "18:45",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 8,
+        "match": "Hulk Hogan vs Mr. McMahon",
+        "stipulation": "Street Fight<br>",
+        "time": "20:47",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 9,
+        "match": "Stone Cold Steve Austin vs The Rock",
+        "stipulation": "Singles match",
+        "time": "17:55",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 10,
+        "match": "Kurt Angle (c) vs Brock Lesnar",
+        "stipulation": "Singles match for the WWE Championship<br>",
+        "time": "21:08",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      }
+    ]
+  },
+  "wrestlemania-xx": {
+    "source": "wikipedia",
+    "page": "https://en.wikipedia.org/wiki/WrestleMania_XX",
+    "title": "WrestleMania XX",
+    "summary": "WrestleMania XX was a 2004 professional wrestling pay-per-view (PPV) event produced by World Wrestling Entertainment (WWE). It was the 20th annual WrestleMania and took place on March 14, 2004, at Madison Square Garden in New York City, New York, held for wrestlers from the promotion's Raw and SmackDown! brand divisions. This was the third WrestleMania at Madison Square Garden, after WrestleMania I in 1985 and WrestleMania X in 1994, and the fourth of six WrestleManias in the New York metropolitan area, alongside WrestleMania I, 2, X, 29, and 35. The calendar date of March 14 is the earliest date for a WrestleMania.",
+    "posterUrl": "https://upload.wikimedia.org/wikipedia/en/b/b3/WrestleManiaXX.jpg",
+    "caption": "Promotional poster",
+    "tagline": "Where It All Begins... Again.",
+    "promotion": "World Wrestling Entertainment",
+    "date": "2004-03-14",
+    "venue": "Madison Square Garden",
+    "city": "New York City, New York",
+    "attendance": "20,000",
+    "buyrate": "1,020,000",
+    "eventSeries": "WrestleMania",
+    "previousEvent": "No Way Out",
+    "nextEvent": "Backlash",
+    "matches": [
+      {
+        "order": 1,
+        "match": "John Cena defeated Big Show (c) by pinfall",
+        "stipulation": "Singles match for the WWE United States Championship",
+        "time": "9:12"
+      },
+      {
+        "order": 2,
+        "match": "Rob Van Dam and Booker T (c) defeated Garrison Cade and Mark Jindrak, The Dudley Boyz (Bubba Ray Dudley and D-Von Dudley) and La Résistance (René Duprée and Rob Conway) by pinfall",
+        "stipulation": "Fatal four-way tag team match for the World Tag Team Championship",
+        "time": "7:52"
+      },
+      {
+        "order": 3,
+        "match": "Christian defeated Chris Jericho by pinfall",
+        "stipulation": "Singles match",
+        "time": "14:43"
+      },
+      {
+        "order": 4,
+        "match": "Evolution (Randy Orton, Batista and Ric Flair) defeated Rock 'n' Sock Connection (The Rock and Mick Foley) by pinfall",
+        "stipulation": "3-on-2 Handicap match",
+        "time": "17:01"
+      },
+      {
+        "order": 5,
+        "match": "Torrie Wilson and Sable defeated Miss Jackie and Stacy Keibler",
+        "stipulation": "Playboy Evening Gown Women's Tag Team match",
+        "time": "2:33"
+      },
+      {
+        "order": 6,
+        "match": "Chavo Guerrero (c) (with Chavo Guerrero Sr.) defeated Akio, Billy Kidman, Funaki, Jamie Noble, Nunzio, Rey Mysterio, Shannon Moore, Tajiri and Último Dragón",
+        "stipulation": "Cruiserweight Open for the WWE Cruiserweight Championship",
+        "time": "10:30"
+      },
+      {
+        "order": 7,
+        "match": "Goldberg defeated Brock Lesnar by pinfall",
+        "stipulation": "Singles match with \"Stone Cold\" Steve Austin as special guest referee",
+        "time": "13:43"
+      },
+      {
+        "order": 8,
+        "match": "Too Cool (Rikishi and Scotty 2 Hotty) (c) defeated World's Greatest Tag Team (Shelton Benjamin and Charlie Haas), Basham Brothers (Doug Basham and Danny Basham) and The APA (Faarooq and Bradshaw) by pinfall",
+        "stipulation": "Fatal four-way tag team match for the WWE Tag Team Championship",
+        "time": "6:02"
+      },
+      {
+        "order": 9,
+        "match": "Victoria (c) defeated Molly Holly by pinfall",
+        "stipulation": "Hair vs. Title match for the WWE Women's Championship",
+        "time": "4:52"
+      },
+      {
+        "order": 10,
+        "match": "Eddie Guerrero (c) defeated Kurt Angle by pinfall",
+        "stipulation": "Singles match for the WWE Championship",
+        "time": "21:34"
+      },
+      {
+        "order": 11,
+        "match": "The Undertaker (with Paul Bearer) defeated Kane by pinfall",
+        "stipulation": "Singles match",
+        "time": "7:46"
+      },
+      {
+        "order": 12,
+        "match": "Chris Benoit defeated Triple H (c) and Shawn Michaels by submission",
+        "stipulation": "Triple threat match for the World Heavyweight Championship",
+        "time": "24:47"
+      }
+    ],
+    "spoilerSafeMatches": [
+      {
+        "order": 1,
+        "match": "Big Show (c) vs John Cena",
+        "stipulation": "Singles match for the WWE United States Championship",
+        "time": "9:12",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 2,
+        "match": "Rob Van Dam and Booker T (c) vs Garrison Cade and Mark Jindrak, The Dudley Boyz (Bubba Ray Dudley and D-Von Dudley) and La Résistance (René Duprée and Rob Conway)",
+        "stipulation": "Fatal four-way tag team match for the World Tag Team Championship",
+        "time": "7:52",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 3,
+        "match": "Chris Jericho vs Christian",
+        "stipulation": "Singles match",
+        "time": "14:43",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 4,
+        "match": "Evolution (Randy Orton, Batista and Ric Flair) vs Rock 'n' Sock Connection (The Rock and Mick Foley)",
+        "stipulation": "3-on-2 Handicap match",
+        "time": "17:01",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 5,
+        "match": "Miss Jackie and Stacy Keibler vs Torrie Wilson and Sable",
+        "stipulation": "Playboy Evening Gown Women's Tag Team match",
+        "time": "2:33",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 6,
+        "match": "Chavo Guerrero (c) (with Chavo Guerrero Sr.) vs Akio, Billy Kidman, Funaki, Jamie Noble, Nunzio, Rey Mysterio, Shannon Moore, Tajiri and Último Dragón",
+        "stipulation": "Cruiserweight Open for the WWE Cruiserweight Championship",
+        "time": "10:30",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 7,
+        "match": "Brock Lesnar vs Goldberg",
+        "stipulation": "Singles match with \"Stone Cold\" Steve Austin as special guest referee",
+        "time": "13:43",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 8,
+        "match": "Too Cool (Rikishi and Scotty 2 Hotty) (c) vs World's Greatest Tag Team (Shelton Benjamin and Charlie Haas), Basham Brothers (Doug Basham and Danny Basham) and The APA (Faarooq and Bradshaw)",
+        "stipulation": "Fatal four-way tag team match for the WWE Tag Team Championship",
+        "time": "6:02",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 9,
+        "match": "Victoria (c) vs Molly Holly",
+        "stipulation": "Hair vs. Title match for the WWE Women's Championship",
+        "time": "4:52",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 10,
+        "match": "Eddie Guerrero (c) vs Kurt Angle",
+        "stipulation": "Singles match for the WWE Championship",
+        "time": "21:34",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 11,
+        "match": "The Undertaker (with Paul Bearer) vs Kane",
+        "stipulation": "Singles match",
+        "time": "7:46",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 12,
+        "match": "Triple H (c) vs Chris Benoit vs Shawn Michaels",
+        "stipulation": "Triple threat match for the World Heavyweight Championship",
+        "time": "24:47",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      }
+    ]
+  },
+  "wrestling-wwe-wwe-ppv-2004-03-14": {
+    "source": "wikipedia",
+    "page": "https://en.wikipedia.org/wiki/WrestleMania_XX",
+    "title": "WrestleMania XX",
+    "summary": "WrestleMania XX was a 2004 professional wrestling pay-per-view (PPV) event produced by World Wrestling Entertainment (WWE). It was the 20th annual WrestleMania and took place on March 14, 2004, at Madison Square Garden in New York City, New York, held for wrestlers from the promotion's Raw and SmackDown! brand divisions. This was the third WrestleMania at Madison Square Garden, after WrestleMania I in 1985 and WrestleMania X in 1994, and the fourth of six WrestleManias in the New York metropolitan area, alongside WrestleMania I, 2, X, 29, and 35. The calendar date of March 14 is the earliest date for a WrestleMania.",
+    "posterUrl": "https://upload.wikimedia.org/wikipedia/en/b/b3/WrestleManiaXX.jpg",
+    "caption": "Promotional poster",
+    "tagline": "Where It All Begins... Again.",
+    "promotion": "World Wrestling Entertainment",
+    "date": "2004-03-14",
+    "venue": "Madison Square Garden",
+    "city": "New York City, New York",
+    "attendance": "20,000",
+    "buyrate": "1,020,000",
+    "eventSeries": "WrestleMania",
+    "previousEvent": "No Way Out",
+    "nextEvent": "Backlash",
+    "matches": [
+      {
+        "order": 1,
+        "match": "John Cena defeated Big Show (c) by pinfall",
+        "stipulation": "Singles match for the WWE United States Championship",
+        "time": "9:12"
+      },
+      {
+        "order": 2,
+        "match": "Rob Van Dam and Booker T (c) defeated Garrison Cade and Mark Jindrak, The Dudley Boyz (Bubba Ray Dudley and D-Von Dudley) and La Résistance (René Duprée and Rob Conway) by pinfall",
+        "stipulation": "Fatal four-way tag team match for the World Tag Team Championship",
+        "time": "7:52"
+      },
+      {
+        "order": 3,
+        "match": "Christian defeated Chris Jericho by pinfall",
+        "stipulation": "Singles match",
+        "time": "14:43"
+      },
+      {
+        "order": 4,
+        "match": "Evolution (Randy Orton, Batista and Ric Flair) defeated Rock 'n' Sock Connection (The Rock and Mick Foley) by pinfall",
+        "stipulation": "3-on-2 Handicap match",
+        "time": "17:01"
+      },
+      {
+        "order": 5,
+        "match": "Torrie Wilson and Sable defeated Miss Jackie and Stacy Keibler",
+        "stipulation": "Playboy Evening Gown Women's Tag Team match",
+        "time": "2:33"
+      },
+      {
+        "order": 6,
+        "match": "Chavo Guerrero (c) (with Chavo Guerrero Sr.) defeated Akio, Billy Kidman, Funaki, Jamie Noble, Nunzio, Rey Mysterio, Shannon Moore, Tajiri and Último Dragón",
+        "stipulation": "Cruiserweight Open for the WWE Cruiserweight Championship",
+        "time": "10:30"
+      },
+      {
+        "order": 7,
+        "match": "Goldberg defeated Brock Lesnar by pinfall",
+        "stipulation": "Singles match with \"Stone Cold\" Steve Austin as special guest referee",
+        "time": "13:43"
+      },
+      {
+        "order": 8,
+        "match": "Too Cool (Rikishi and Scotty 2 Hotty) (c) defeated World's Greatest Tag Team (Shelton Benjamin and Charlie Haas), Basham Brothers (Doug Basham and Danny Basham) and The APA (Faarooq and Bradshaw) by pinfall",
+        "stipulation": "Fatal four-way tag team match for the WWE Tag Team Championship",
+        "time": "6:02"
+      },
+      {
+        "order": 9,
+        "match": "Victoria (c) defeated Molly Holly by pinfall",
+        "stipulation": "Hair vs. Title match for the WWE Women's Championship",
+        "time": "4:52"
+      },
+      {
+        "order": 10,
+        "match": "Eddie Guerrero (c) defeated Kurt Angle by pinfall",
+        "stipulation": "Singles match for the WWE Championship",
+        "time": "21:34"
+      },
+      {
+        "order": 11,
+        "match": "The Undertaker (with Paul Bearer) defeated Kane by pinfall",
+        "stipulation": "Singles match",
+        "time": "7:46"
+      },
+      {
+        "order": 12,
+        "match": "Chris Benoit defeated Triple H (c) and Shawn Michaels by submission",
+        "stipulation": "Triple threat match for the World Heavyweight Championship",
+        "time": "24:47"
+      }
+    ],
+    "spoilerSafeMatches": [
+      {
+        "order": 1,
+        "match": "Big Show (c) vs John Cena",
+        "stipulation": "Singles match for the WWE United States Championship",
+        "time": "9:12",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 2,
+        "match": "Rob Van Dam and Booker T (c) vs Garrison Cade and Mark Jindrak, The Dudley Boyz (Bubba Ray Dudley and D-Von Dudley) and La Résistance (René Duprée and Rob Conway)",
+        "stipulation": "Fatal four-way tag team match for the World Tag Team Championship",
+        "time": "7:52",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 3,
+        "match": "Chris Jericho vs Christian",
+        "stipulation": "Singles match",
+        "time": "14:43",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 4,
+        "match": "Evolution (Randy Orton, Batista and Ric Flair) vs Rock 'n' Sock Connection (The Rock and Mick Foley)",
+        "stipulation": "3-on-2 Handicap match",
+        "time": "17:01",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 5,
+        "match": "Miss Jackie and Stacy Keibler vs Torrie Wilson and Sable",
+        "stipulation": "Playboy Evening Gown Women's Tag Team match",
+        "time": "2:33",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 6,
+        "match": "Chavo Guerrero (c) (with Chavo Guerrero Sr.) vs Akio, Billy Kidman, Funaki, Jamie Noble, Nunzio, Rey Mysterio, Shannon Moore, Tajiri and Último Dragón",
+        "stipulation": "Cruiserweight Open for the WWE Cruiserweight Championship",
+        "time": "10:30",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 7,
+        "match": "Brock Lesnar vs Goldberg",
+        "stipulation": "Singles match with \"Stone Cold\" Steve Austin as special guest referee",
+        "time": "13:43",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 8,
+        "match": "Too Cool (Rikishi and Scotty 2 Hotty) (c) vs World's Greatest Tag Team (Shelton Benjamin and Charlie Haas), Basham Brothers (Doug Basham and Danny Basham) and The APA (Faarooq and Bradshaw)",
+        "stipulation": "Fatal four-way tag team match for the WWE Tag Team Championship",
+        "time": "6:02",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 9,
+        "match": "Victoria (c) vs Molly Holly",
+        "stipulation": "Hair vs. Title match for the WWE Women's Championship",
+        "time": "4:52",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 10,
+        "match": "Eddie Guerrero (c) vs Kurt Angle",
+        "stipulation": "Singles match for the WWE Championship",
+        "time": "21:34",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 11,
+        "match": "The Undertaker (with Paul Bearer) vs Kane",
+        "stipulation": "Singles match",
+        "time": "7:46",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 12,
+        "match": "Triple H (c) vs Chris Benoit vs Shawn Michaels",
+        "stipulation": "Triple threat match for the World Heavyweight Championship",
+        "time": "24:47",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      }
+    ]
+  },
+  "wwe-wwe-ppv-2004-03-14": {
+    "source": "wikipedia",
+    "page": "https://en.wikipedia.org/wiki/WrestleMania_XX",
+    "title": "WrestleMania XX",
+    "summary": "WrestleMania XX was a 2004 professional wrestling pay-per-view (PPV) event produced by World Wrestling Entertainment (WWE). It was the 20th annual WrestleMania and took place on March 14, 2004, at Madison Square Garden in New York City, New York, held for wrestlers from the promotion's Raw and SmackDown! brand divisions. This was the third WrestleMania at Madison Square Garden, after WrestleMania I in 1985 and WrestleMania X in 1994, and the fourth of six WrestleManias in the New York metropolitan area, alongside WrestleMania I, 2, X, 29, and 35. The calendar date of March 14 is the earliest date for a WrestleMania.",
+    "posterUrl": "https://upload.wikimedia.org/wikipedia/en/b/b3/WrestleManiaXX.jpg",
+    "caption": "Promotional poster",
+    "tagline": "Where It All Begins... Again.",
+    "promotion": "World Wrestling Entertainment",
+    "date": "2004-03-14",
+    "venue": "Madison Square Garden",
+    "city": "New York City, New York",
+    "attendance": "20,000",
+    "buyrate": "1,020,000",
+    "eventSeries": "WrestleMania",
+    "previousEvent": "No Way Out",
+    "nextEvent": "Backlash",
+    "matches": [
+      {
+        "order": 1,
+        "match": "John Cena defeated Big Show (c) by pinfall",
+        "stipulation": "Singles match for the WWE United States Championship",
+        "time": "9:12"
+      },
+      {
+        "order": 2,
+        "match": "Rob Van Dam and Booker T (c) defeated Garrison Cade and Mark Jindrak, The Dudley Boyz (Bubba Ray Dudley and D-Von Dudley) and La Résistance (René Duprée and Rob Conway) by pinfall",
+        "stipulation": "Fatal four-way tag team match for the World Tag Team Championship",
+        "time": "7:52"
+      },
+      {
+        "order": 3,
+        "match": "Christian defeated Chris Jericho by pinfall",
+        "stipulation": "Singles match",
+        "time": "14:43"
+      },
+      {
+        "order": 4,
+        "match": "Evolution (Randy Orton, Batista and Ric Flair) defeated Rock 'n' Sock Connection (The Rock and Mick Foley) by pinfall",
+        "stipulation": "3-on-2 Handicap match",
+        "time": "17:01"
+      },
+      {
+        "order": 5,
+        "match": "Torrie Wilson and Sable defeated Miss Jackie and Stacy Keibler",
+        "stipulation": "Playboy Evening Gown Women's Tag Team match",
+        "time": "2:33"
+      },
+      {
+        "order": 6,
+        "match": "Chavo Guerrero (c) (with Chavo Guerrero Sr.) defeated Akio, Billy Kidman, Funaki, Jamie Noble, Nunzio, Rey Mysterio, Shannon Moore, Tajiri and Último Dragón",
+        "stipulation": "Cruiserweight Open for the WWE Cruiserweight Championship",
+        "time": "10:30"
+      },
+      {
+        "order": 7,
+        "match": "Goldberg defeated Brock Lesnar by pinfall",
+        "stipulation": "Singles match with \"Stone Cold\" Steve Austin as special guest referee",
+        "time": "13:43"
+      },
+      {
+        "order": 8,
+        "match": "Too Cool (Rikishi and Scotty 2 Hotty) (c) defeated World's Greatest Tag Team (Shelton Benjamin and Charlie Haas), Basham Brothers (Doug Basham and Danny Basham) and The APA (Faarooq and Bradshaw) by pinfall",
+        "stipulation": "Fatal four-way tag team match for the WWE Tag Team Championship",
+        "time": "6:02"
+      },
+      {
+        "order": 9,
+        "match": "Victoria (c) defeated Molly Holly by pinfall",
+        "stipulation": "Hair vs. Title match for the WWE Women's Championship",
+        "time": "4:52"
+      },
+      {
+        "order": 10,
+        "match": "Eddie Guerrero (c) defeated Kurt Angle by pinfall",
+        "stipulation": "Singles match for the WWE Championship",
+        "time": "21:34"
+      },
+      {
+        "order": 11,
+        "match": "The Undertaker (with Paul Bearer) defeated Kane by pinfall",
+        "stipulation": "Singles match",
+        "time": "7:46"
+      },
+      {
+        "order": 12,
+        "match": "Chris Benoit defeated Triple H (c) and Shawn Michaels by submission",
+        "stipulation": "Triple threat match for the World Heavyweight Championship",
+        "time": "24:47"
+      }
+    ],
+    "spoilerSafeMatches": [
+      {
+        "order": 1,
+        "match": "Big Show (c) vs John Cena",
+        "stipulation": "Singles match for the WWE United States Championship",
+        "time": "9:12",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 2,
+        "match": "Rob Van Dam and Booker T (c) vs Garrison Cade and Mark Jindrak, The Dudley Boyz (Bubba Ray Dudley and D-Von Dudley) and La Résistance (René Duprée and Rob Conway)",
+        "stipulation": "Fatal four-way tag team match for the World Tag Team Championship",
+        "time": "7:52",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 3,
+        "match": "Chris Jericho vs Christian",
+        "stipulation": "Singles match",
+        "time": "14:43",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 4,
+        "match": "Evolution (Randy Orton, Batista and Ric Flair) vs Rock 'n' Sock Connection (The Rock and Mick Foley)",
+        "stipulation": "3-on-2 Handicap match",
+        "time": "17:01",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 5,
+        "match": "Miss Jackie and Stacy Keibler vs Torrie Wilson and Sable",
+        "stipulation": "Playboy Evening Gown Women's Tag Team match",
+        "time": "2:33",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 6,
+        "match": "Chavo Guerrero (c) (with Chavo Guerrero Sr.) vs Akio, Billy Kidman, Funaki, Jamie Noble, Nunzio, Rey Mysterio, Shannon Moore, Tajiri and Último Dragón",
+        "stipulation": "Cruiserweight Open for the WWE Cruiserweight Championship",
+        "time": "10:30",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 7,
+        "match": "Brock Lesnar vs Goldberg",
+        "stipulation": "Singles match with \"Stone Cold\" Steve Austin as special guest referee",
+        "time": "13:43",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 8,
+        "match": "Too Cool (Rikishi and Scotty 2 Hotty) (c) vs World's Greatest Tag Team (Shelton Benjamin and Charlie Haas), Basham Brothers (Doug Basham and Danny Basham) and The APA (Faarooq and Bradshaw)",
+        "stipulation": "Fatal four-way tag team match for the WWE Tag Team Championship",
+        "time": "6:02",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 9,
+        "match": "Victoria (c) vs Molly Holly",
+        "stipulation": "Hair vs. Title match for the WWE Women's Championship",
+        "time": "4:52",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 10,
+        "match": "Eddie Guerrero (c) vs Kurt Angle",
+        "stipulation": "Singles match for the WWE Championship",
+        "time": "21:34",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 11,
+        "match": "The Undertaker (with Paul Bearer) vs Kane",
+        "stipulation": "Singles match",
+        "time": "7:46",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 12,
+        "match": "Triple H (c) vs Chris Benoit vs Shawn Michaels",
+        "stipulation": "Triple threat match for the World Heavyweight Championship",
+        "time": "24:47",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      }
+    ]
+  },
+  "wrestlemania-21": {
+    "source": "wikipedia",
+    "page": "https://en.wikipedia.org/wiki/WrestleMania_21",
+    "title": "WrestleMania 21",
+    "summary": "WrestleMania 21, also promoted as WrestleMania Goes Hollywood, was a 2005 professional wrestling pay-per-view (PPV) event produced by World Wrestling Entertainment (WWE). It was the 21st annual WrestleMania and took place on April 3, 2005, at the Staples Center in Los Angeles, California, held for wrestlers from the promotion's Raw and SmackDown! brand divisions.",
+    "posterUrl": "https://upload.wikimedia.org/wikipedia/en/9/9d/Wwewrestlemania21.jpeg",
+    "caption": "Promotional poster featuring the Staples Center",
+    "tagline": "WrestleMania Goes Hollywood",
+    "promotion": "World Wrestling Entertainment",
+    "date": "2005-04-03",
+    "venue": "Staples Center",
+    "city": "Los Angeles, California",
+    "attendance": "20,193",
+    "buyrate": "1,090,000",
+    "eventSeries": "WrestleMania",
+    "previousEvent": "No Way Out",
+    "nextEvent": "Backlash",
+    "matches": [
+      {
+        "order": 1,
+        "match": "Booker T won by last eliminating Chris Masters",
+        "stipulation": "30-man Interpromotional battle royal",
+        "time": "11:20"
+      },
+      {
+        "order": 2,
+        "match": "Rey Mysterio defeated Eddie Guerrero by pinfall",
+        "stipulation": "Singles match",
+        "time": "12:23"
+      },
+      {
+        "order": 3,
+        "match": "Edge defeated Chris Jericho, Shelton Benjamin, Chris Benoit, Christian (with Tyson Tomko), and Kane",
+        "stipulation": "Inaugural Money in the Bank ladder match",
+        "time": "15:17"
+      },
+      {
+        "order": 4,
+        "match": "The Undertaker defeated Randy Orton by pinfall",
+        "stipulation": "Singles match",
+        "time": "14:06"
+      },
+      {
+        "order": 5,
+        "match": "Trish Stratus (c) defeated Christy Hemme (with Lita) by pinfall",
+        "stipulation": "Singles match for the WWE Women's Championship",
+        "time": "4:41"
+      },
+      {
+        "order": 6,
+        "match": "Kurt Angle defeated Shawn Michaels by submission",
+        "stipulation": "Singles match",
+        "time": "27:26"
+      },
+      {
+        "order": 7,
+        "match": "Akebono defeated Big Show by throwing him out of the ring",
+        "stipulation": "Sumo match",
+        "time": "1:02"
+      },
+      {
+        "order": 8,
+        "match": "John Cena defeated John \"Bradshaw\" Layfield (c) by pinfall",
+        "stipulation": "Singles match for the WWE Championship",
+        "time": "11:26"
+      },
+      {
+        "order": 9,
+        "match": "Batista defeated Triple H (c) (with Ric Flair) by pinfall",
+        "stipulation": "Singles match for the World Heavyweight Championship",
+        "time": "21:34"
+      }
+    ],
+    "spoilerSafeMatches": [
+      {
+        "order": 1,
+        "match": "Booker T vs Chris Masters",
+        "stipulation": "30-man Interpromotional battle royal",
+        "time": "11:20",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 2,
+        "match": "Eddie Guerrero vs Rey Mysterio",
+        "stipulation": "Singles match",
+        "time": "12:23",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 3,
+        "match": "Edge vs Chris Jericho, Shelton Benjamin, Chris Benoit, Christian (with Tyson Tomko), and Kane",
+        "stipulation": "Inaugural Money in the Bank ladder match",
+        "time": "15:17",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 4,
+        "match": "Randy Orton vs The Undertaker",
+        "stipulation": "Singles match",
+        "time": "14:06",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 5,
+        "match": "Trish Stratus (c) vs Christy Hemme (with Lita)",
+        "stipulation": "Singles match for the WWE Women's Championship",
+        "time": "4:41",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 6,
+        "match": "Shawn Michaels vs Kurt Angle",
+        "stipulation": "Singles match",
+        "time": "27:26",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 7,
+        "match": "Big Show vs Akebono",
+        "stipulation": "Sumo match",
+        "time": "1:02",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 8,
+        "match": "John \"Bradshaw\" Layfield (c) vs John Cena",
+        "stipulation": "Singles match for the WWE Championship",
+        "time": "11:26",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 9,
+        "match": "Triple H (c) (with Ric Flair) vs Batista",
+        "stipulation": "Singles match for the World Heavyweight Championship",
+        "time": "21:34",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      }
+    ]
+  },
+  "wrestling-wwe-wwe-ppv-2005-04-03": {
+    "source": "wikipedia",
+    "page": "https://en.wikipedia.org/wiki/WrestleMania_21",
+    "title": "WrestleMania 21",
+    "summary": "WrestleMania 21, also promoted as WrestleMania Goes Hollywood, was a 2005 professional wrestling pay-per-view (PPV) event produced by World Wrestling Entertainment (WWE). It was the 21st annual WrestleMania and took place on April 3, 2005, at the Staples Center in Los Angeles, California, held for wrestlers from the promotion's Raw and SmackDown! brand divisions.",
+    "posterUrl": "https://upload.wikimedia.org/wikipedia/en/9/9d/Wwewrestlemania21.jpeg",
+    "caption": "Promotional poster featuring the Staples Center",
+    "tagline": "WrestleMania Goes Hollywood",
+    "promotion": "World Wrestling Entertainment",
+    "date": "2005-04-03",
+    "venue": "Staples Center",
+    "city": "Los Angeles, California",
+    "attendance": "20,193",
+    "buyrate": "1,090,000",
+    "eventSeries": "WrestleMania",
+    "previousEvent": "No Way Out",
+    "nextEvent": "Backlash",
+    "matches": [
+      {
+        "order": 1,
+        "match": "Booker T won by last eliminating Chris Masters",
+        "stipulation": "30-man Interpromotional battle royal",
+        "time": "11:20"
+      },
+      {
+        "order": 2,
+        "match": "Rey Mysterio defeated Eddie Guerrero by pinfall",
+        "stipulation": "Singles match",
+        "time": "12:23"
+      },
+      {
+        "order": 3,
+        "match": "Edge defeated Chris Jericho, Shelton Benjamin, Chris Benoit, Christian (with Tyson Tomko), and Kane",
+        "stipulation": "Inaugural Money in the Bank ladder match",
+        "time": "15:17"
+      },
+      {
+        "order": 4,
+        "match": "The Undertaker defeated Randy Orton by pinfall",
+        "stipulation": "Singles match",
+        "time": "14:06"
+      },
+      {
+        "order": 5,
+        "match": "Trish Stratus (c) defeated Christy Hemme (with Lita) by pinfall",
+        "stipulation": "Singles match for the WWE Women's Championship",
+        "time": "4:41"
+      },
+      {
+        "order": 6,
+        "match": "Kurt Angle defeated Shawn Michaels by submission",
+        "stipulation": "Singles match",
+        "time": "27:26"
+      },
+      {
+        "order": 7,
+        "match": "Akebono defeated Big Show by throwing him out of the ring",
+        "stipulation": "Sumo match",
+        "time": "1:02"
+      },
+      {
+        "order": 8,
+        "match": "John Cena defeated John \"Bradshaw\" Layfield (c) by pinfall",
+        "stipulation": "Singles match for the WWE Championship",
+        "time": "11:26"
+      },
+      {
+        "order": 9,
+        "match": "Batista defeated Triple H (c) (with Ric Flair) by pinfall",
+        "stipulation": "Singles match for the World Heavyweight Championship",
+        "time": "21:34"
+      }
+    ],
+    "spoilerSafeMatches": [
+      {
+        "order": 1,
+        "match": "Booker T vs Chris Masters",
+        "stipulation": "30-man Interpromotional battle royal",
+        "time": "11:20",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 2,
+        "match": "Eddie Guerrero vs Rey Mysterio",
+        "stipulation": "Singles match",
+        "time": "12:23",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 3,
+        "match": "Edge vs Chris Jericho, Shelton Benjamin, Chris Benoit, Christian (with Tyson Tomko), and Kane",
+        "stipulation": "Inaugural Money in the Bank ladder match",
+        "time": "15:17",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 4,
+        "match": "Randy Orton vs The Undertaker",
+        "stipulation": "Singles match",
+        "time": "14:06",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 5,
+        "match": "Trish Stratus (c) vs Christy Hemme (with Lita)",
+        "stipulation": "Singles match for the WWE Women's Championship",
+        "time": "4:41",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 6,
+        "match": "Shawn Michaels vs Kurt Angle",
+        "stipulation": "Singles match",
+        "time": "27:26",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 7,
+        "match": "Big Show vs Akebono",
+        "stipulation": "Sumo match",
+        "time": "1:02",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 8,
+        "match": "John \"Bradshaw\" Layfield (c) vs John Cena",
+        "stipulation": "Singles match for the WWE Championship",
+        "time": "11:26",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 9,
+        "match": "Triple H (c) (with Ric Flair) vs Batista",
+        "stipulation": "Singles match for the World Heavyweight Championship",
+        "time": "21:34",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      }
+    ]
+  },
+  "wwe-wwe-ppv-2005-04-03": {
+    "source": "wikipedia",
+    "page": "https://en.wikipedia.org/wiki/WrestleMania_21",
+    "title": "WrestleMania 21",
+    "summary": "WrestleMania 21, also promoted as WrestleMania Goes Hollywood, was a 2005 professional wrestling pay-per-view (PPV) event produced by World Wrestling Entertainment (WWE). It was the 21st annual WrestleMania and took place on April 3, 2005, at the Staples Center in Los Angeles, California, held for wrestlers from the promotion's Raw and SmackDown! brand divisions.",
+    "posterUrl": "https://upload.wikimedia.org/wikipedia/en/9/9d/Wwewrestlemania21.jpeg",
+    "caption": "Promotional poster featuring the Staples Center",
+    "tagline": "WrestleMania Goes Hollywood",
+    "promotion": "World Wrestling Entertainment",
+    "date": "2005-04-03",
+    "venue": "Staples Center",
+    "city": "Los Angeles, California",
+    "attendance": "20,193",
+    "buyrate": "1,090,000",
+    "eventSeries": "WrestleMania",
+    "previousEvent": "No Way Out",
+    "nextEvent": "Backlash",
+    "matches": [
+      {
+        "order": 1,
+        "match": "Booker T won by last eliminating Chris Masters",
+        "stipulation": "30-man Interpromotional battle royal",
+        "time": "11:20"
+      },
+      {
+        "order": 2,
+        "match": "Rey Mysterio defeated Eddie Guerrero by pinfall",
+        "stipulation": "Singles match",
+        "time": "12:23"
+      },
+      {
+        "order": 3,
+        "match": "Edge defeated Chris Jericho, Shelton Benjamin, Chris Benoit, Christian (with Tyson Tomko), and Kane",
+        "stipulation": "Inaugural Money in the Bank ladder match",
+        "time": "15:17"
+      },
+      {
+        "order": 4,
+        "match": "The Undertaker defeated Randy Orton by pinfall",
+        "stipulation": "Singles match",
+        "time": "14:06"
+      },
+      {
+        "order": 5,
+        "match": "Trish Stratus (c) defeated Christy Hemme (with Lita) by pinfall",
+        "stipulation": "Singles match for the WWE Women's Championship",
+        "time": "4:41"
+      },
+      {
+        "order": 6,
+        "match": "Kurt Angle defeated Shawn Michaels by submission",
+        "stipulation": "Singles match",
+        "time": "27:26"
+      },
+      {
+        "order": 7,
+        "match": "Akebono defeated Big Show by throwing him out of the ring",
+        "stipulation": "Sumo match",
+        "time": "1:02"
+      },
+      {
+        "order": 8,
+        "match": "John Cena defeated John \"Bradshaw\" Layfield (c) by pinfall",
+        "stipulation": "Singles match for the WWE Championship",
+        "time": "11:26"
+      },
+      {
+        "order": 9,
+        "match": "Batista defeated Triple H (c) (with Ric Flair) by pinfall",
+        "stipulation": "Singles match for the World Heavyweight Championship",
+        "time": "21:34"
+      }
+    ],
+    "spoilerSafeMatches": [
+      {
+        "order": 1,
+        "match": "Booker T vs Chris Masters",
+        "stipulation": "30-man Interpromotional battle royal",
+        "time": "11:20",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 2,
+        "match": "Eddie Guerrero vs Rey Mysterio",
+        "stipulation": "Singles match",
+        "time": "12:23",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 3,
+        "match": "Edge vs Chris Jericho, Shelton Benjamin, Chris Benoit, Christian (with Tyson Tomko), and Kane",
+        "stipulation": "Inaugural Money in the Bank ladder match",
+        "time": "15:17",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 4,
+        "match": "Randy Orton vs The Undertaker",
+        "stipulation": "Singles match",
+        "time": "14:06",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 5,
+        "match": "Trish Stratus (c) vs Christy Hemme (with Lita)",
+        "stipulation": "Singles match for the WWE Women's Championship",
+        "time": "4:41",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 6,
+        "match": "Shawn Michaels vs Kurt Angle",
+        "stipulation": "Singles match",
+        "time": "27:26",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 7,
+        "match": "Big Show vs Akebono",
+        "stipulation": "Sumo match",
+        "time": "1:02",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      },
+      {
+        "order": 8,
+        "match": "John \"Bradshaw\" Layfield (c) vs John Cena",
+        "stipulation": "Singles match for the WWE Championship",
+        "time": "11:26",
+        "resultHidden": true,
+        "originalOrder": "as-written"
+      },
+      {
+        "order": 9,
+        "match": "Triple H (c) (with Ric Flair) vs Batista",
+        "stipulation": "Singles match for the World Heavyweight Championship",
+        "time": "21:34",
+        "resultHidden": true,
+        "originalOrder": "flipped"
+      }
+    ]
+  }
+}

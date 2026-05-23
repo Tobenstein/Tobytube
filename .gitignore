@@ -1,0 +1,6 @@
+.env
+.env.*
+!.env.example
+tobytube-service-*.log
+tobytube-service-*.err.log
+cache/

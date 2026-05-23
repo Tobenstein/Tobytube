@@ -1,0 +1,6 @@
+{
+  "port": 8092,
+  "scanOnStartup": true,
+  "refreshProviders": true,
+  "mediaRoots": ["sample-media"]
+}

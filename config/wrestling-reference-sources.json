@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "sources": [
+    {
+      "id": "thesmackdownhotel-events",
+      "name": "TheSmackDownHotel PPV & Special Events Database",
+      "type": "events",
+      "url": "https://www.thesmackdownhotel.com/events-results/ppv-special/",
+      "priority": 10,
+      "notes": "Primary source for major and active promotion events. Use event detail pages for card/results/location where available."
+    },
+    {
+      "id": "cagematch-promotions",
+      "name": "Cagematch Promotions Index",
+      "type": "events",
+      "url": "https://www.cagematch.net/?id=8",
+      "priority": 20,
+      "notes": "Fallback source for defunct promotions and historical gaps. Requires a browser/session-aware adapter rather than plain HTTP."
+    },
+    {
+      "id": "wrestlingdata-events",
+      "name": "Wrestlingdata event archive",
+      "type": "events",
+      "url": "https://www.wrestlingdata.com/index.php?befehl=shows&sort=liga",
+      "priority": 15,
+      "notes": "Browser/session-aware event archive source. Promotion-year pages expose event date, type, attendance, line-up availability, and spoiler-safe card pages with venues, announcers, title matches, stipulations, champions, and participants."
+    },
+    {
+      "id": "wikipedia-title-reigns",
+      "name": "Wikipedia champion lists",
+      "type": "title-reigns",
+      "urlTemplate": "https://en.wikipedia.org/wiki/List_of_{championship_slug}_Champions",
+      "priority": 30,
+      "notes": "Parse tabled reign history: number, champion, championship change columns, and reign statistics columns."
+    }
+  ]
+}
