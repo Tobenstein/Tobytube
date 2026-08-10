@@ -32,7 +32,7 @@ let mediaWatchTimer = null;
 let mediaScanPending = false;
 let tvdbToken = null;
 let tvdbTokenExpiresAt = 0;
-const SERVER_BUILD_ID = "playback-stability-runtime-006";
+const SERVER_BUILD_ID = "windows-migration-runtime-007";
 const port = Number(process.env.PORT ?? config.port ?? 8088);
 const jellyfin = {
   url: normalizeBaseUrl(process.env.JELLYFIN_URL ?? config.jellyfin?.url),
@@ -1728,8 +1728,6 @@ function resolveConfiguredPath(configuredPath) {
 function resolveLibraryMediaPath(value) {
   const requestedPath = String(value ?? "");
   if (!requestedPath) return path.resolve("");
-  if (path.isAbsolute(requestedPath)) return path.resolve(requestedPath);
-
   const portablePath = requestedPath.replaceAll("\\", "/");
   const mediaMarker = portablePath.toLowerCase().lastIndexOf("/media/");
   if (mediaMarker >= 0) {
@@ -1741,6 +1739,8 @@ function resolveLibraryMediaPath(value) {
       if (rootName === "media") return path.join(configuredRoot, ...relativeParts);
     }
   }
+
+  if (path.isAbsolute(requestedPath)) return path.resolve(requestedPath);
 
   return path.resolve(requestedPath);
 }

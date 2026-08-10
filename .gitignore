@@ -2,10 +2,13 @@
 .env.*
 !.env.example
 config/tobytube.local.json
+config/tobytube.local.json.*.backup
 tobytube-service-*.log
 tobytube-service-*.err.log
 cache/
 node_modules/
+node_modules-linux-backup*/
+.tobytube-windows-ready
 .edge-debug*/
 tmp/
 scripts/__pycache__/

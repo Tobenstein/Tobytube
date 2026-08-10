@@ -1,0 +1,37 @@
+TOBYTUBE WINDOWS MIGRATION — DO THESE STEPS IN ORDER
+
+ON THE UBUNTU COMPUTER
+
+1. Close TobyTube and VS Code.
+2. Make sure the complete Apps/Tobytube folder and complete Media folder are on the Expansion drive.
+3. Safely eject the Expansion drive.
+
+ON THE WINDOWS COMPUTER
+
+4. Connect the Expansion drive and wait for Windows to assign it a drive letter.
+5. Open https://nodejs.org/en/download in a browser.
+6. Download and install the current LTS version of Node.js. Accept the normal/default installer choices.
+7. Open the TobyTube application folder on the Expansion drive.
+8. Double-click Migrate-Tobytube-To-Windows.cmd.
+9. If Windows asks whether PowerShell may run, allow it.
+10. When asked where the Media folder is, type its Windows path. Example: D:\Media
+    If the path shown by setup is already correct, just press Enter.
+11. Wait for “Setup is complete.” The first dependency installation can take several minutes.
+12. Press Enter when asked whether to start TobyTube.
+
+FROM THEN ON
+
+13. Start the app by double-clicking Launch-Tobytube.cmd.
+14. For development in VS Code, open the TobyTube folder, select Run and Debug, and choose
+    “Tobytube: Launch Server”.
+
+KEEP THESE FILES PRIVATE AND WITH THE LOCAL COPY
+
+- .env (provider credentials)
+- config/tobytube.local.json (this computer's media paths)
+- config/metadata-overrides.json (manual matches and edits)
+- config/collection-overrides.json (collection assignments and customisation)
+
+IF SOMETHING GOES WRONG
+
+Do not delete or reinstall the app. Take a photo or screenshot of the entire error window and send it to Codex.

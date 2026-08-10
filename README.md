@@ -2,6 +2,17 @@
 
 A personal media-server prototype focused on movies, TV, and wrestling timeline browsing.
 
+## Moving to Windows
+
+Copy the complete TobyTube application folder and the complete Media folder to the Windows PC. Do not copy `node_modules`; Windows setup installs the correct platform-specific dependencies.
+
+1. Install the current Node.js LTS release from <https://nodejs.org/>.
+2. Double-click `Migrate-Tobytube-To-Windows.cmd`.
+3. Enter the location of the Media folder when prompted. The default is `D:\Media`.
+4. When setup finishes, double-click `Launch-Tobytube.cmd` whenever you want to run the app.
+
+The migration setup creates a local Windows configuration without changing the shared defaults, backs up any previous local configuration, installs Windows FFmpeg/FFprobe components, verifies the JSON data, and optionally starts TobyTube. Stored media paths beneath the old Linux `/Media/` tree are automatically rebased onto the configured Movies, TV, and Wrestling folders.
+
 ## Current Prototype
 
 Launch the app server:

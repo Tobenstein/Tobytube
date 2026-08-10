@@ -11,6 +11,7 @@ export async function resolveMediaBinary(kind, { configuredPath = null, root = p
 
   if (process.platform === "win32") {
     candidates.push(`C:\\Program Files\\Jellyfin\\Server\\${executable}`);
+    candidates.push(path.join(root, "node_modules", packageFolderFor(kind), "win32-x64", executable));
   }
 
   const store = path.join(root, "node_modules", ".pnpm");
@@ -28,4 +29,8 @@ export async function resolveMediaBinary(kind, { configuredPath = null, root = p
     if ((await stat(candidate).catch(() => null))?.isFile()) return candidate;
   }
   return configuredPath || executable;
+}
+
+function packageFolderFor(kind) {
+  return kind === "ffmpeg" ? "@ffmpeg-installer" : "@ffprobe-installer";
 }
