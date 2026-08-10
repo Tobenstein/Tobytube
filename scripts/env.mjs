@@ -25,4 +25,10 @@ export function loadEnvFile(filePath = path.join(root, ".env")) {
 
     process.env[key] = process.env[key] ?? value;
   }
+  if (path.resolve(filePath) === path.join(root, ".env")) loadEnvFile(path.join(root, ".env.local"));
+}
+
+export function loadLocalEnvFiles() {
+  loadEnvFile(path.join(root, ".env"));
+  loadEnvFile(path.join(root, ".env.local"));
 }

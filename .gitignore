@@ -1,6 +1,15 @@
 .env
 .env.*
 !.env.example
+config/tobytube.local.json
 tobytube-service-*.log
 tobytube-service-*.err.log
 cache/
+node_modules/
+.edge-debug*/
+tmp/
+scripts/__pycache__/
+*.log
+*.err.log
+.npmrc
+config/metadata-overrides.json

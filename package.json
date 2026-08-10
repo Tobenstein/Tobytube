@@ -1,0 +1,33 @@
+{
+  "name": "tobytube",
+  "version": "1.0.0",
+  "description": "A personal media-server prototype focused on movies, TV, and wrestling timeline browsing.",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node scripts/tobytube-server.mjs",
+    "dev": "node scripts/tobytube-server.mjs",
+    "service": "node scripts/start-service.mjs",
+    "scan": "node scripts/metadata-pipeline.mjs",
+    "scan:refresh": "node scripts/metadata-pipeline.mjs --refresh-providers",
+    "posters": "node scripts/fetch-tmdb-posters.mjs",
+    "collections:manifest": "node scripts/build-curated-manifest.mjs",
+    "wrestling:split-reference": "node scripts/split-wrestling-reference.mjs",
+    "movies:details": "node scripts/fetch-movie-details.mjs",
+    "tv:details": "node scripts/fetch-tv-details.mjs",
+    "collections:mcu": "node scripts/fetch-mcu-collection.mjs",
+    "collections:criterion": "node scripts/build-criterion-collection.mjs",
+    "check:json": "node -e \"JSON.parse(require('fs').readFileSync('src/tmdb-posters.generated.json','utf8')); JSON.parse(require('fs').readFileSync('config/tobytube.config.json','utf8')); console.log('json ok')\"",
+    "test": "npm run check:json"
+  },
+  "keywords": [
+    "media",
+    "prototype",
+    "tobytube"
+  ],
+  "author": "",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
+    "@ffprobe-installer/ffprobe": "^2.1.2"
+  }
+}

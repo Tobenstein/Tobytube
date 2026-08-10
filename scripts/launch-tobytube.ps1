@@ -2,7 +2,7 @@ $ErrorActionPreference = "Stop"
 
 $root = Resolve-Path -LiteralPath (Join-Path $PSScriptRoot "..")
 $nodeCandidates = @(
-  "C:\Users\robpe\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe",
+  (Join-Path $env:USERPROFILE ".cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe"),
   "node.exe",
   "node"
 )

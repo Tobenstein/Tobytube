@@ -1,0 +1,41 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Tobytube: Start Server",
+      "type": "shell",
+      "command": "node",
+      "args": [
+        "scripts/tobytube-server.mjs"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Tobytube: Start Background Service",
+      "type": "shell",
+      "command": "node",
+      "args": [
+        "scripts/start-service.mjs"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Tobytube: Refresh TMDB Posters",
+      "type": "shell",
+      "command": "node",
+      "args": [
+        "scripts/fetch-tmdb-posters.mjs"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    }
+  ]
+}

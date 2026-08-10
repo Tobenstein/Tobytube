@@ -1,4 +1,3 @@
-import { openSync } from "node:fs";
 import { spawn } from "node:child_process";
 import http from "node:http";
 import path from "node:path";
@@ -13,16 +12,7 @@ if (await isListening(port)) {
   process.exit(0);
 }
 
-const out = openSync(path.join(root, `tobytube-service-${port}.log`), "a");
-const err = openSync(path.join(root, `tobytube-service-${port}.err.log`), "a");
-const child = spawn(process.execPath, ["scripts/tobytube-server.mjs"], {
-  cwd: root,
-  detached: true,
-  env: { ...process.env, PORT: String(port) },
-  stdio: ["ignore", out, err],
-  windowsHide: true,
-});
-child.unref();
+launchDetachedServer();
 
 for (let attempt = 0; attempt < 20; attempt += 1) {
   await delay(250);
@@ -52,4 +42,35 @@ async function isListening(candidatePort) {
 
 function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function launchDetachedServer() {
+  if (process.platform === "win32") {
+    const logPath = path.join(root, `tobytube-service-${port}.log`);
+    const command = [
+      `$env:PORT = '${port}'`,
+      `Set-Location -LiteralPath '${escapePowerShell(root)}'`,
+      `Start-Process -FilePath '${escapePowerShell(process.execPath)}' -ArgumentList 'scripts\\tobytube-server.mjs' -WorkingDirectory '${escapePowerShell(root)}' -RedirectStandardOutput '${escapePowerShell(logPath)}' -RedirectStandardError '${escapePowerShell(path.join(root, `tobytube-service-${port}.err.log`))}' -WindowStyle Hidden`,
+    ].join("; ");
+    const child = spawn("powershell.exe", ["-NoProfile", "-ExecutionPolicy", "Bypass", "-Command", command], {
+      cwd: root,
+      detached: true,
+      stdio: "ignore",
+      windowsHide: true,
+    });
+    child.unref();
+    return;
+  }
+
+  const child = spawn(process.execPath, ["scripts/tobytube-server.mjs"], {
+    cwd: root,
+    detached: true,
+    env: { ...process.env, PORT: String(port) },
+    stdio: "ignore",
+  });
+  child.unref();
+}
+
+function escapePowerShell(value) {
+  return String(value).replace(/'/g, "''");
 }
