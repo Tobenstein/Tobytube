@@ -1,0 +1,35 @@
+{
+  "activeTheme": "tobytube",
+  "themes": {
+    "tobytube": {
+      "title": "TobyTube",
+      "colors": {
+        "background": "#020110",
+        "surface": "#061127",
+        "surfaceElevated": "#11163a",
+        "text": "#dceeff",
+        "mutedText": "#9fc7eb",
+        "primary": "#7a4cff",
+        "secondary": "#ff2d8d",
+        "accent": "#6faeff",
+        "status": "#d7ff2f",
+        "danger": "#ff2f5f"
+      }
+    },
+    "pseudo-plex": {
+      "title": "Pseudo-Plex",
+      "colors": {
+        "background": "#101113",
+        "surface": "#181a1e",
+        "surfaceElevated": "#202329",
+        "text": "#f4f1ea",
+        "mutedText": "#a6adba",
+        "primary": "#d8b35d",
+        "secondary": "#7ec4cf",
+        "accent": "#ffc400",
+        "status": "#8fbd39",
+        "danger": "#da786a"
+      }
+    }
+  }
+}

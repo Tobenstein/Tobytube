@@ -1,4 +1,4 @@
-import { readFile, writeFile } from "node:fs/promises";
+import { readFile, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadEnvFile } from "./env.mjs";
@@ -19,10 +19,10 @@ const posters = await readJson(posterPath, {});
 const seasonTargets = collectSeasonTargets(reference, args);
 const showCache = new Map();
 let written = 0;
+let stillsWritten = 0;
 
 for (const target of seasonTargets) {
   const key = target.cacheKey;
-  if (posters[key]?.source === "tmdb-season") continue;
 
   const show = showCache.get(target.queryTitle) ?? (await searchTv(target.queryTitle));
   showCache.set(target.queryTitle, show);
@@ -34,22 +34,45 @@ for (const target of seasonTargets) {
   const season =
     details.seasons?.find((item) => yearFromSeason(item) === target.year) ??
     details.seasons?.find((item) => item.season_number === target.seasonNumber);
-  const posterPath = season?.poster_path ?? show.poster_path;
-  if (!posterPath) continue;
-
-  posters[key] = {
-    source: season?.poster_path ? "tmdb-season" : "tmdb",
-    tmdbId: show.id,
-    posterUrl: `https://image.tmdb.org/t/p/w342${posterPath}`,
-    seasonNumber: season?.season_number ?? null,
-    seasonName: season?.name ?? null,
-    query: target.queryTitle,
-  };
-  written += 1;
+  const posterPath = season?.poster_path ?? details.poster_path;
+  const posterSource = season?.poster_path ? "tmdb-season" : "tmdb-series-fallback";
+  if (posterPath && (!posters[key]?.posterUrl || ["tmdb", "tmdb-season", "tmdb-series-fallback"].includes(posters[key]?.source))) {
+    posters[key] = {
+      source: posterSource,
+      tmdbId: show.id,
+      posterUrl: `https://image.tmdb.org/t/p/w342${posterPath}`,
+      seasonNumber: season?.season_number ?? null,
+      seasonName: season?.name ?? null,
+      query: target.queryTitle,
+    };
+    written += 1;
+  } else if (!posterPath && posters[key]?.source === "tmdb") {
+    delete posters[key];
+  }
+  if (season?.season_number != null) {
+    const seasonDetails = await tvSeasonDetails(show.id, season.season_number);
+    for (const episode of target.episodes) {
+      const tmdbEpisode = (seasonDetails.episodes ?? []).find((entry) => entry.air_date && entry.air_date === (episode.broadcastDate ?? episode.date))
+        ?? (seasonDetails.episodes ?? []).find((entry) => Number(entry.episode_number) === Number(episode.episodeNumber));
+      if (tmdbEpisode?.overview && !episode.summary) episode.summary = tmdbEpisode.overview;
+      if (tmdbEpisode?.name) episode.sourceTitle = tmdbEpisode.name;
+      if (tmdbEpisode?.runtime && !episode.runtime) episode.runtime = `${tmdbEpisode.runtime} min`;
+      if (tmdbEpisode?.id) episode.tmdbEpisodeId = tmdbEpisode.id;
+      if (!tmdbEpisode?.still_path) continue;
+      episode.stillUrl = `https://image.tmdb.org/t/p/w780${tmdbEpisode.still_path}`;
+      episode.art = { ...(episode.art ?? {}), stillUrl: episode.stillUrl, stillSource: "tmdb-episode", tmdbEpisodeId: tmdbEpisode.id };
+      stillsWritten += 1;
+    }
+    await delay(180);
+  }
 }
 
-await writeFile(posterPath, `${JSON.stringify(posters, null, 2)}\n`);
-console.log(`Wrote ${written} wrestling season poster mappings.`);
+reference.generatedAt = new Date().toISOString();
+await Promise.all([
+  writeJsonAtomic(posterPath, posters),
+  writeJsonAtomic(referencePath, reference),
+]);
+console.log(`Wrote ${written} wrestling season poster mappings and ${stillsWritten} episode still mappings.`);
 
 function collectSeasonTargets(referenceDb, options) {
   const startYear = Number(options.startYear);
@@ -61,7 +84,7 @@ function collectSeasonTargets(referenceDb, options) {
     if (episode.promotionId !== promotionId) continue;
     const year = Number(episode.date?.slice(0, 4));
     if (year < startYear || year > endYear) continue;
-    const queryTitle = tmdbTitleForSeries(episode.seriesName);
+    const queryTitle = tmdbTitleForSeries(episode.seriesName, episode.promotionId);
     if (!queryTitle) continue;
     const cacheKey = `season-${promotionId}-${slug(episode.seriesName)}-${year}`;
     if (!seen.has(cacheKey)) {
@@ -70,18 +93,38 @@ function collectSeasonTargets(referenceDb, options) {
         queryTitle,
         seriesName: episode.seriesName,
         year,
-        seasonNumber: year,
+        seasonNumber: seasonNumberForSeries(queryTitle, year),
+        episodes: [],
       });
     }
+    seen.get(cacheKey).episodes.push(episode);
   }
 
   return [...seen.values()];
 }
 
-function tmdbTitleForSeries(seriesName = "") {
+function tmdbTitleForSeries(seriesName = "", promotionId = "") {
   const normalized = seriesName.toLowerCase();
+  if (promotionId === "tna" && normalized.includes("before the impact")) return "Before the Impact";
+  if (promotionId === "tna" && normalized.includes("xplosion")) return "TNA Xplosion";
+  if (promotionId === "tna" && (normalized.includes("weekly ppv") || normalized.includes("nwa-tna"))) return "NWA-TNA Weekly PPV";
+  if (promotionId === "tna" && normalized.includes("impact")) return "TNA iMPACT!";
+  if (promotionId === "wwe" && normalized.includes("saturday night's main event")) return "WWE Saturday Night's Main Event";
+  if (promotionId === "wwe" && normalized.includes("evolve")) return "WWE Evolve";
+  if (promotionId === "wwe" && normalized.includes("lfg")) return "WWE LFG: Legends & Future Greats";
+  if (promotionId === "wwe" && normalized.includes("main event")) return "WWE Main Event";
+  if (promotionId === "wcw" && normalized.includes("nitro")) return "WCW Monday Nitro";
+  if (promotionId === "wcw" && normalized.includes("thunder")) return "WCW Thunder";
+  if (promotionId === "wcw" && normalized.includes("saturday night")) return "WCW Saturday Night";
+  if (promotionId === "wcw" && normalized.includes("worldwide")) return "WCW Worldwide";
+  if (promotionId === "wcw" && normalized.includes("main event")) return "WCW Main Event";
+  if (promotionId === "wcw" && normalized.includes("pro")) return "WCW Pro";
+  if (promotionId === "wcw" && normalized.includes("power hour")) return "WCW Power Hour";
   if (normalized.includes("raw")) return "WWE Monday Night RAW";
   if (normalized.includes("smackdown")) return "WWE SmackDown";
+  if (normalized.includes("nxt uk")) return "WWE NXT UK";
+  if (normalized === "nxt" || normalized.includes("wwe nxt")) return "WWE NXT";
+  if (normalized.includes("205 live")) return "WWE 205 Live";
   if (normalized.includes("heat")) return "WWE Sunday Night Heat";
   if (normalized.includes("jakked")) return "WWF Jakked";
   if (normalized.includes("metal")) return "WWF Jakked";
@@ -96,7 +139,20 @@ function tmdbTitleForSeries(seriesName = "") {
   if (normalized.includes("all american")) return "WWF All American Wrestling";
   if (normalized.includes("livewire")) return "WWF LiveWire";
   if (normalized.includes("excess")) return "WWE Excess";
+  if (normalized === "dynamite" || normalized.includes("aew dynamite")) return "AEW Dynamite";
+  if (normalized === "collision" || normalized.includes("aew collision")) return "AEW Collision";
+  if (normalized === "rampage" || normalized.includes("aew rampage")) return "AEW Rampage";
+  if (normalized === "dark" || normalized.includes("aew dark")) return "AEW Dark";
+  if (normalized.includes("elevation")) return "AEW Dark: Elevation";
+  if (normalized.includes("hardcore tv")) return "ECW Hardcore TV";
+  if (normalized.includes("ecw on tnn") || normalized === "tnn") return "ECW on TNN";
   return null;
+}
+
+function seasonNumberForSeries(queryTitle, year) {
+  if (queryTitle === "NWA-TNA Weekly PPV") return 1;
+  if (queryTitle === "TNA Xplosion") return Math.max(1, year - 2001);
+  return year;
 }
 
 function yearFromSeason(season) {
@@ -107,6 +163,13 @@ function yearFromSeason(season) {
 }
 
 async function searchTv(title) {
+  const canonicalIds = {
+    "WWE Monday Night RAW": 4656,
+    "WWE SmackDown": 1549,
+    "TNA Xplosion": 628,
+    "NWA-TNA Weekly PPV": 25506,
+  };
+  if (canonicalIds[title]) return { id: canonicalIds[title] };
   const url = new URL("https://api.themoviedb.org/3/search/tv");
   const headers = tmdbHeaders();
   if (!headers.Authorization) url.searchParams.set("api_key", process.env.TMDB_API_KEY);
@@ -117,7 +180,14 @@ async function searchTv(title) {
     return null;
   }
   const json = await response.json();
-  return json.results?.[0] ?? null;
+  return (json.results ?? []).find((result) => isPlausibleSeriesResult(title, result)) ?? null;
+}
+
+function isPlausibleSeriesResult(query, result) {
+  const expected = slug(query).replace(/^(?:wwe|wwf)-/, "");
+  const actual = slug(result?.name ?? result?.original_name ?? "").replace(/^(?:wwe|wwf)-/, "");
+  if (!expected || !actual) return false;
+  return actual === expected || actual.includes(expected) || expected.includes(actual);
 }
 
 async function tvDetails(tmdbId) {
@@ -127,6 +197,18 @@ async function tvDetails(tmdbId) {
   const response = await fetch(url, { headers });
   if (!response.ok) {
     console.warn(`TMDB TV details failed for ${tmdbId}: ${response.status}`);
+    return {};
+  }
+  return response.json();
+}
+
+async function tvSeasonDetails(tmdbId, seasonNumber) {
+  const url = new URL(`https://api.themoviedb.org/3/tv/${tmdbId}/season/${seasonNumber}`);
+  const headers = tmdbHeaders();
+  if (!headers.Authorization) url.searchParams.set("api_key", process.env.TMDB_API_KEY);
+  const response = await fetch(url, { headers });
+  if (!response.ok) {
+    console.warn(`TMDB season details failed for ${tmdbId}/${seasonNumber}: ${response.status}`);
     return {};
   }
   return response.json();
@@ -147,6 +229,12 @@ async function readJson(filePath, fallback) {
   } catch {
     return fallback;
   }
+}
+
+async function writeJsonAtomic(filePath, value) {
+  const temporaryPath = `${filePath}.tmp`;
+  await writeFile(temporaryPath, `${JSON.stringify(value, null, 2)}\n`);
+  await rename(temporaryPath, filePath);
 }
 
 function parseArgs(rawArgs) {

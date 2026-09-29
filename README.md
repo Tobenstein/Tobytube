@@ -13,6 +13,8 @@ Copy the complete TobyTube application folder and the complete Media folder to t
 
 The migration setup creates a local Windows configuration without changing the shared defaults, backs up any previous local configuration, installs Windows FFmpeg/FFprobe components, verifies the JSON data, and optionally starts TobyTube. Stored media paths beneath the old Linux `/Media/` tree are automatically rebased onto the configured Movies, TV, and Wrestling folders.
 
+Normal TTCC launch also enables TTMV access on the trusted private LAN. TTCC opens locally at `http://127.0.0.1:8092/`; paired TTMV devices connect to the computer's private Ethernet/Wi-Fi address on port `8092`. TobyTube binds only to localhost and the selected private LAN adapter, not VPN or public adapters. Set `TOBYTUBE_LAN_HOST` if the automatic adapter choice needs overriding. The older `scripts/start-android-lan-beta.ps1` launcher remains available as a foreground diagnostic launcher, but is no longer required for ordinary TTMV use.
+
 ## Current Prototype
 
 Launch the app server:

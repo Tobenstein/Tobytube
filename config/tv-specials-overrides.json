@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "shows": {
+    "office-us": {
+      "seasonTitle": "Specials",
+      "episodes": [
+        { "episodeNumber": 1, "title": "Webisodes: The Accountants", "tmdbEpisodes": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] },
+        { "episodeNumber": 2, "title": "Webisodes: Kevin's Bank Loan", "tmdbEpisodes": [13, 14, 15, 16] },
+        { "episodeNumber": 3, "title": "Webisodes: The Outburst", "tmdbEpisodes": [18, 19, 20, 21] },
+        { "episodeNumber": 4, "title": "Webisodes: Blackmail", "tmdbEpisodes": [22, 23, 24, 25] },
+        { "episodeNumber": 5, "title": "Webisodes: Subtle Sexuality", "tmdbEpisodes": [27, 28, 29] },
+        { "episodeNumber": 6, "title": "Webisodes: The Mentor", "tmdbEpisodes": [30, 31, 32, 33] },
+        { "episodeNumber": 7, "title": "The Pod Caster", "airDate": "2010-09-07", "tmdbEpisodes": [] },
+        { "episodeNumber": 8, "title": "Recap Special", "tmdbEpisodes": [35] },
+        { "episodeNumber": 9, "title": "Threat Level Midnight: The Movie", "tmdbEpisodes": [42] },
+        { "episodeNumber": 10, "title": "Webisodes: The 3rd Floor", "tmdbEpisodes": [36, 37, 38] },
+        { "episodeNumber": 12, "title": "Webisodes: The Podcast", "tmdbEpisodes": [39, 40, 41] },
+        { "episodeNumber": 13, "title": "Webisodes: The Girl Next Door", "tmdbEpisodes": [43, 44] },
+        { "episodeNumber": 14, "title": "The Office Retrospective", "tmdbEpisodes": [47] }
+      ]
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "teams": [
+    {
+      "id": "team-brisco-brothers-jack-jerry",
+      "canonicalName": "The Brisco Brothers",
+      "activeEra": "1960s-1980s",
+      "members": [
+        { "id": "wrestler-jack-brisco", "name": "Jack Brisco" },
+        { "id": "wrestler-jerry-brisco", "name": "Jerry Brisco" }
+      ],
+      "aliases": ["Brisco Brothers", "The Briscos", "Briscos"],
+      "neverMergeWith": ["team-briscoe-brothers-jay-mark"]
+    },
+    {
+      "id": "team-briscoe-brothers-jay-mark",
+      "canonicalName": "The Briscoe Brothers",
+      "activeEra": "2000s-2020s",
+      "members": [
+        { "id": "wrestler-jay-briscoe", "name": "Jay Briscoe" },
+        { "id": "wrestler-mark-briscoe", "name": "Mark Briscoe" }
+      ],
+      "aliases": ["Briscoe Brothers", "The Briscoes", "Briscoes"],
+      "neverMergeWith": ["team-brisco-brothers-jack-jerry"]
+    }
+  ],
+  "resolutionRules": [
+    "Never resolve Brisco/Briscoe team identity by fuzzy spelling alone.",
+    "Use named members as authoritative evidence.",
+    "Use event date or era only as supporting evidence when members are omitted.",
+    "If neither members nor adequate date context exists, leave the team unresolved for manual review."
+  ]
+}

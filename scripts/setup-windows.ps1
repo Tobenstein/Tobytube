@@ -48,16 +48,19 @@ if (-not (Test-Path -LiteralPath $mediaRoot -PathType Container)) {
 }
 
 $categories = @("Movies", "TV", "Wrestling")
-$mediaRoots = @()
+$mediaSources = @()
 foreach ($category in $categories) {
   $candidate = Join-Path $mediaRoot $category
   if (Test-Path -LiteralPath $candidate -PathType Container) {
-    $mediaRoots += $candidate
+    $sourceType = switch ($category) { "Movies" { "movie" } "TV" { "tv" } "Wrestling" { "wrestling" } }
+    $mediaSources += [ordered]@{ id = $category.ToLowerInvariant(); type = $sourceType; path = $candidate }
   } else {
     Write-Host "Warning: $candidate was not found and will not be scanned." -ForegroundColor Yellow
   }
 }
-if ($mediaRoots.Count -eq 0) { $mediaRoots = @($mediaRoot) }
+if ($mediaSources.Count -eq 0) {
+  $mediaSources = @([ordered]@{ id = "temporary-media"; type = "mixed"; path = $mediaRoot })
+}
 
 $localConfigPath = Join-Path $root "config\tobytube.local.json"
 if (Test-Path -LiteralPath $localConfigPath) {
@@ -72,7 +75,7 @@ $localConfig = [ordered]@{
   refreshProviders = $false
   refreshNewProviders = $true
   providerBackfillLimit = 25
-  mediaRoots = $mediaRoots
+  mediaSources = $mediaSources
 }
 $localConfig | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $localConfigPath -Encoding UTF8
 
@@ -84,7 +87,7 @@ if ($LASTEXITCODE -ne 0) { throw "TobyTube's file check failed with exit code $L
 Write-Host ""
 Write-Host "Setup is complete." -ForegroundColor Green
 Write-Host "Media folders:" -ForegroundColor Green
-$mediaRoots | ForEach-Object { Write-Host "  $_" }
+$mediaSources | ForEach-Object { Write-Host "  $($_.type): $($_.path)" }
 Write-Host ""
 Write-Host "From now on, double-click Launch-Tobytube.cmd to start TobyTube." -ForegroundColor Cyan
 

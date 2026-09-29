@@ -1,0 +1,3984 @@
+{
+  "generatedAt": "2026-09-08T22:53:21.845Z",
+  "sourceRoot": "Z:\\Other\\Looney Tunes Golden Collection",
+  "destinationRoot": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection",
+  "expectedCartoons": 356,
+  "sourceVideos": 404,
+  "matchedCartoons": 356,
+  "extras": 48,
+  "unresolvedMainFiles": [
+    {
+      "path": "Z:\\Other\\Looney Tunes Golden Collection\\1932\\080632DVD I Love a Parade MM.avi",
+      "parsed": {
+        "title": "I Love a Parade",
+        "key": "i love a parade",
+        "series": "MM",
+        "date": "1932-08-06",
+        "year": 1932
+      }
+    },
+    {
+      "path": "Z:\\Other\\Looney Tunes Golden Collection\\1933\\061033DVD I Like Mountain Music MM.avi",
+      "parsed": {
+        "title": "I Like Mountain Music",
+        "key": "i like mountain music",
+        "series": "MM",
+        "date": "1933-06-10",
+        "year": 1933
+      }
+    },
+    {
+      "path": "Z:\\Other\\Looney Tunes Golden Collection\\1933\\121633DVD Sittin' on a Backyard Fence MM.avi",
+      "parsed": {
+        "title": "Sittin' on a Backyard Fence",
+        "key": "sittin on a backyard fence",
+        "series": "MM",
+        "date": "1933-12-16",
+        "year": 1933
+      }
+    },
+    {
+      "path": "Z:\\Other\\Looney Tunes Golden Collection\\1934\\060934DVD How Do I Know it's Sunday MM.avi",
+      "parsed": {
+        "title": "How Do I Know it's Sunday",
+        "key": "how do i know it s sunday",
+        "series": "MM",
+        "date": "1934-06-09",
+        "year": 1934
+      }
+    },
+    {
+      "path": "Z:\\Other\\Looney Tunes Golden Collection\\1940\\051140DVD Sniffles Takes a Trip MM.avi",
+      "parsed": {
+        "title": "Sniffles Takes a Trip",
+        "key": "sniffles takes a trip",
+        "series": "MM",
+        "date": "1940-05-11",
+        "year": 1940
+      }
+    },
+    {
+      "path": "Z:\\Other\\Looney Tunes Golden Collection\\1941\\011841DVD The Fighting 69 1 Halfth MM.avi",
+      "parsed": {
+        "title": "The Fighting 69 1 Halfth",
+        "key": "fighting 69 1 halfth",
+        "series": "MM",
+        "date": "1941-01-18",
+        "year": 1941
+      }
+    },
+    {
+      "path": "Z:\\Other\\Looney Tunes Golden Collection\\1943\\012343DVD Confusions of a Nutzy Spy LT.avi",
+      "parsed": {
+        "title": "Confusions of a Nutzy Spy",
+        "key": "confusions of a nutzy spy",
+        "series": "LT",
+        "date": "1943-01-23",
+        "year": 1943
+      }
+    },
+    {
+      "path": "Z:\\Other\\Looney Tunes Golden Collection\\1943\\032743DVD Hop and Go LT.avi",
+      "parsed": {
+        "title": "Hop and Go",
+        "key": "hop and go",
+        "series": "LT",
+        "date": "1943-03-27",
+        "year": 1943
+      }
+    },
+    {
+      "path": "Z:\\Other\\Looney Tunes Golden Collection\\1949\\111949DVD Hippety Hopper MM.avi",
+      "parsed": {
+        "title": "Hippety Hopper",
+        "key": "hippety hopper",
+        "series": "MM",
+        "date": "1949-11-19",
+        "year": 1949
+      }
+    },
+    {
+      "path": "Z:\\Other\\Looney Tunes Golden Collection\\1951\\110351DVD Sleepy Time Possum MM.avi",
+      "parsed": {
+        "title": "Sleepy Time Possum",
+        "key": "sleepy time possum",
+        "series": "MM",
+        "date": "1951-11-03",
+        "year": 1951
+      }
+    },
+    {
+      "path": "Z:\\Other\\Looney Tunes Golden Collection\\1953\\121953DVD Punch Trunk LT.avi",
+      "parsed": {
+        "title": "Punch Trunk",
+        "key": "punch trunk",
+        "series": "LT",
+        "date": "1953-12-19",
+        "year": 1953
+      }
+    },
+    {
+      "path": "Z:\\Other\\Looney Tunes Golden Collection\\1955\\061155DVD Rabbit Rampage LT.avi",
+      "parsed": {
+        "title": "Rabbit Rampage",
+        "key": "rabbit rampage",
+        "series": "LT",
+        "date": "1955-06-11",
+        "year": 1955
+      }
+    },
+    {
+      "path": "Z:\\Other\\Looney Tunes Golden Collection\\1957\\042057DVD Boyhood Daze MM.avi",
+      "parsed": {
+        "title": "Boyhood Daze",
+        "key": "boyhood daze",
+        "series": "MM",
+        "date": "1957-04-20",
+        "year": 1957
+      }
+    },
+    {
+      "path": "Z:\\Other\\Looney Tunes Golden Collection\\1960\\022760DVD Wild Wild World MM.avi",
+      "parsed": {
+        "title": "Wild Wild World",
+        "key": "wild wild world",
+        "series": "MM",
+        "date": "1960-02-27",
+        "year": 1960
+      }
+    },
+    {
+      "path": "Z:\\Other\\Looney Tunes Golden Collection\\1964\\022964DVD Bartholomew Versus the Wheel MM.avi",
+      "parsed": {
+        "title": "Bartholomew Versus the Wheel",
+        "key": "bartholomew versus wheel",
+        "series": "MM",
+        "date": "1964-02-29",
+        "year": 1964
+      }
+    },
+    {
+      "path": "Z:\\Other\\Looney Tunes Golden Collection\\Private Snafu\\060043 Coming Snafu.avi",
+      "parsed": {
+        "title": "Coming Snafu",
+        "key": "coming snafu",
+        "series": null,
+        "date": "1943-06-00",
+        "year": 1943
+      }
+    },
+    {
+      "path": "Z:\\Other\\Looney Tunes Golden Collection\\Private Snafu\\070043 Gripes.avi",
+      "parsed": {
+        "title": "Gripes",
+        "key": "gripes",
+        "series": null,
+        "date": "1943-07-00",
+        "year": 1943
+      }
+    }
+  ],
+  "missingDiscEntries": [],
+  "moves": [
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1930\\090030DVD Congo Jazz LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 3\\1930-09 - LT - Congo Jazz.avi",
+      "volume": 6,
+      "disc": 3,
+      "title": "Congo Jazz",
+      "series": "LT",
+      "date": "1930-09-00",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1930\\110030DVD The Booze Hangs High LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 3\\1930-11 - LT - The Booze Hangs High.avi",
+      "volume": 6,
+      "disc": 3,
+      "title": "The Booze Hangs High",
+      "series": "LT",
+      "date": "1930-11-00",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1931\\090531DVD Smile Darn Ya, Smile! MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 3\\1931-09-05 - MM - Smile, Darn Ya, Smile!.avi",
+      "volume": 6,
+      "disc": 3,
+      "title": "Smile, Darn Ya, Smile!",
+      "series": "MM",
+      "date": "1931-09-05",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1931\\100331DVD One More Time MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 3\\1931-10-03 - MM - One More Time.avi",
+      "volume": 6,
+      "disc": 3,
+      "title": "One More Time",
+      "series": "MM",
+      "date": "1931-10-03",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1931\\101731DVD Bosko the Doughboy LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 2\\1931-10-17 - LT - Bosko the Doughboy.avi",
+      "volume": 6,
+      "disc": 2,
+      "title": "Bosko the Doughboy",
+      "series": "LT",
+      "date": "1931-10-17",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1931\\103131DVD You Don't Know What You're Doin'! MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 3\\1931-10-31 - MM - You Don't Know What You're Doin'!.avi",
+      "volume": 6,
+      "disc": 3,
+      "title": "You Don't Know What You're Doin'!",
+      "series": "MM",
+      "date": "1931-10-31",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1932\\091732DVD Ride Him Bosko LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 3\\1932-09-17 - LT - Ride Him, Bosko!.avi",
+      "volume": 6,
+      "disc": 3,
+      "title": "Ride Him, Bosko!",
+      "series": "LT",
+      "date": "1932-09-17",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1933\\021133DVD Bosko in Person LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 3\\1933-02-11 - LT - Bosko in Person.avi",
+      "volume": 6,
+      "disc": 3,
+      "title": "Bosko in Person",
+      "series": "LT",
+      "date": "1933-02-11",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1933\\070833DVD Shuffle Off to Buffalo MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 3\\1933-07-08 - MM - Shuffle Off to Buffalo.avi",
+      "volume": 6,
+      "disc": 3,
+      "title": "Shuffle Off to Buffalo",
+      "series": "MM",
+      "date": "1933-07-08",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1933\\080533DVD The Dish Ran Away with the Spoon MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 3\\1933-08-05 - MM - The Dish Ran Away with the Spoon.avi",
+      "volume": 6,
+      "disc": 3,
+      "title": "The Dish Ran Away with the Spoon",
+      "series": "MM",
+      "date": "1933-08-05",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1933\\082633DVD Bosko's Picture Show LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 3\\1933-08-26 - LT - Bosko's Picture Show.avi",
+      "volume": 6,
+      "disc": 3,
+      "title": "Bosko's Picture Show",
+      "series": "LT",
+      "date": "1933-08-26",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1933\\082633DVD We're in the Money! MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 3\\1933-08-26 - MM - We're in the Money.avi",
+      "volume": 6,
+      "disc": 3,
+      "title": "We're in the Money",
+      "series": "MM",
+      "date": "1933-08-26",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1933\\090933DVD Buddy's Day Out LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 3\\1933-09-09 - LT - Buddy's Day Out.avi",
+      "volume": 6,
+      "disc": 3,
+      "title": "Buddy's Day Out",
+      "series": "LT",
+      "date": "1933-09-09",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1933\\093033DVD I've Got to Sing a Torch Song MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 4\\1933-09-30 - MM - I've Got to Sing a Torch Song.avi",
+      "volume": 5,
+      "disc": 4,
+      "title": "I've Got to Sing a Torch Song",
+      "series": "MM",
+      "date": "1933-09-30",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1933\\111833DVD Buddy's Beer Garden LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 3\\1933-11-18 - LT - Buddy's Beer Garden.avi",
+      "volume": 6,
+      "disc": 3,
+      "title": "Buddy's Beer Garden",
+      "series": "LT",
+      "date": "1933-11-18",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1934\\082534DVD Buddy's Circus LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 3\\1934-08-25 - LT - Buddy's Circus.avi",
+      "volume": 6,
+      "disc": 3,
+      "title": "Buddy's Circus",
+      "series": "LT",
+      "date": "1934-08-25",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1935\\030235DVD I Haven't Got a Hat MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 3\\1935-03-02 - MM - I Haven't Got a Hat.avi",
+      "volume": 3,
+      "disc": 3,
+      "title": "I Haven't Got a Hat",
+      "series": "MM",
+      "date": "1935-03-02",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1935\\091435DVD A Cartoonist's Nightmare LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 3\\1935-09-14 - LT - A Cartoonist's Nightmare.avi",
+      "volume": 6,
+      "disc": 3,
+      "title": "A Cartoonist's Nightmare",
+      "series": "LT",
+      "date": "1935-09-14",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1935\\101935DVD Hollywood Capers LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 2\\1935-10-19 - LT - Hollywood Capers.avi",
+      "volume": 3,
+      "disc": 2,
+      "title": "Hollywood Capers",
+      "series": "LT",
+      "date": "1935-10-19",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1935\\110235DVD Gold Diggers of '49 LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 4\\1935-11-02 - LT - Gold Diggers of '49.avi",
+      "volume": 5,
+      "disc": 4,
+      "title": "Gold Diggers of '49",
+      "series": "LT",
+      "date": "1935-11-02",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1936\\011836DVD Alpine Antics LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 4\\1936-01-18 - LT - Alpine Antics.avi",
+      "volume": 5,
+      "disc": 4,
+      "title": "Alpine Antics",
+      "series": "LT",
+      "date": "1936-01-18",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1936\\030736DVD Page Miss Glory MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 4\\1936-03-07 - MM - Miss Glory.avi",
+      "volume": 6,
+      "disc": 4,
+      "title": "Miss Glory",
+      "series": "MM",
+      "date": "1936-03-07",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1936\\071836DVD I Love to Singa MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 4\\1936-07-18 - MM - I Love to Singa.avi",
+      "volume": 2,
+      "disc": 4,
+      "title": "I Love to Singa",
+      "series": "MM",
+      "date": "1936-07-18",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1936\\082236DVD Porky's Poultry Plant LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 2\\1936-08-22 - LT - Porky's Poultry Plant.avi",
+      "volume": 4,
+      "disc": 2,
+      "title": "Porky's Poultry Plant",
+      "series": "LT",
+      "date": "1936-08-22",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1936\\100436DVD Milk and Money LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 4\\1936-10-04 - LT - Milk and Money.avi",
+      "volume": 5,
+      "disc": 4,
+      "title": "Milk and Money",
+      "series": "LT",
+      "date": "1936-10-04",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1936\\111436DVD Little Beau Porky LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 2\\1936-11-14 - LT - Little Beau Porky.avi",
+      "volume": 4,
+      "disc": 2,
+      "title": "Little Beau Porky",
+      "series": "LT",
+      "date": "1936-11-14",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1936\\112836DVD The CooCoo Nut Grove MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 2\\1936-11-28 - MM - The CooCoo Nut Grove.avi",
+      "volume": 3,
+      "disc": 2,
+      "title": "The CooCoo Nut Grove",
+      "series": "MM",
+      "date": "1936-11-28",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1936\\121936DVD Porky in the North Woods LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 2\\1936-12-19 - LT - Porky in the North Woods.avi",
+      "volume": 4,
+      "disc": 2,
+      "title": "Porky in the North Woods",
+      "series": "LT",
+      "date": "1936-12-19",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1937\\013037DVD Pigs is Pigs MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 3\\1937-01-30 - MM - Pigs Is Pigs.avi",
+      "volume": 3,
+      "disc": 3,
+      "title": "Pigs Is Pigs",
+      "series": "MM",
+      "date": "1937-01-30",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1937\\020637DVD Porky's Road Race LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 2\\1937-02-06 - LT - Porky's Road Race.avi",
+      "volume": 3,
+      "disc": 2,
+      "title": "Porky's Road Race",
+      "series": "LT",
+      "date": "1937-02-06",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1937\\040337DVD Porky's Romance LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 3\\1937-04-03 - LT - Porky's Romance.avi",
+      "volume": 3,
+      "disc": 3,
+      "title": "Porky's Romance",
+      "series": "LT",
+      "date": "1937-04-03",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1937\\041037DVD She was an Acrobat's Daughter MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 2\\1937-04-10 - MM - She Was an Acrobat's Daughter.avi",
+      "volume": 3,
+      "disc": 2,
+      "title": "She Was an Acrobat's Daughter",
+      "series": "MM",
+      "date": "1937-04-10",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1937\\080737DVD Porky's Railroad LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 2\\1937-08-07 - LT - Porky's Railroad.avi",
+      "volume": 4,
+      "disc": 2,
+      "title": "Porky's Railroad",
+      "series": "LT",
+      "date": "1937-08-07",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1937\\090437DVD Speaking of the Weather MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 2\\1937-09-04 - MM - Speaking of the Weather.avi",
+      "volume": 3,
+      "disc": 2,
+      "title": "Speaking of the Weather",
+      "series": "MM",
+      "date": "1937-09-04",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1937\\103037DVD The Case of the Stuttering Pig LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 2\\1937-10-30 - LT - The Case of the Stuttering Pig.avi",
+      "volume": 4,
+      "disc": 2,
+      "title": "The Case of the Stuttering Pig",
+      "series": "LT",
+      "date": "1937-10-30",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1937\\110637DVD Little Red Walking Hood MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 2\\1937-11-06 - MM - Little Red Walking Hood.avi",
+      "volume": 5,
+      "disc": 2,
+      "title": "Little Red Walking Hood",
+      "series": "MM",
+      "date": "1937-11-06",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1937\\111337DVD Porky's Double Trouble LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 4\\1937-11-13 - LT - Porky's Double Trouble.avi",
+      "volume": 5,
+      "disc": 4,
+      "title": "Porky's Double Trouble",
+      "series": "LT",
+      "date": "1937-11-13",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1937\\120437DVD The Woods are Full of Cuckoos MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 2\\1937-12-04 - MM - The Woods Are Full of Cuckoos.avi",
+      "volume": 3,
+      "disc": 2,
+      "title": "The Woods Are Full of Cuckoos",
+      "series": "MM",
+      "date": "1937-12-04",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1938\\010138DVD Daffy Duck and Egghead MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 4\\1938-01-01 - MM - Daffy Duck & Egghead.avi",
+      "volume": 3,
+      "disc": 4,
+      "title": "Daffy Duck & Egghead",
+      "series": "MM",
+      "date": "1938-01-01",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1938\\011538DVD Porky's Poppa LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 4\\1938-01-15 - LT - Porky's Poppa.avi",
+      "volume": 5,
+      "disc": 4,
+      "title": "Porky's Poppa",
+      "series": "LT",
+      "date": "1938-01-15",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1938\\020538DVD Porky at the Crocadero LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 4\\1938-02-05 - LT - Porky at the Crocadero.avi",
+      "volume": 5,
+      "disc": 4,
+      "title": "Porky at the Crocadero",
+      "series": "LT",
+      "date": "1938-02-05",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1938\\022638DVD What Price Porky LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 4\\1938-02-26 - LT - What Price Porky.avi",
+      "volume": 5,
+      "disc": 4,
+      "title": "What Price Porky",
+      "series": "LT",
+      "date": "1938-02-26",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1938\\051438DVD Now That Summer Is Gone MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 2\\1938-05-14 - MM - Now That Summer Is Gone.avi",
+      "volume": 4,
+      "disc": 2,
+      "title": "Now That Summer Is Gone",
+      "series": "MM",
+      "date": "1938-05-14",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1938\\060438DVD Porky the Fireman LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 2\\1938-06-04 - LT - Porky the Fireman.avi",
+      "volume": 4,
+      "disc": 2,
+      "title": "Porky the Fireman",
+      "series": "LT",
+      "date": "1938-06-04",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1938\\061138DVD Katnip Kollege MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 4\\1938-06-11 - MM - Katnip Kollege.avi",
+      "volume": 2,
+      "disc": 4,
+      "title": "Katnip Kollege",
+      "series": "MM",
+      "date": "1938-06-11",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1938\\062538DVD Have You Got Any Castles MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 4\\1938-06-25 - MM - Have You Got Any Castles.avi",
+      "volume": 2,
+      "disc": 4,
+      "title": "Have You Got Any Castles",
+      "series": "MM",
+      "date": "1938-06-25",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1938\\062538DVD Porky's Party LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 3\\1938-06-25 - LT - Porky's Party.avi",
+      "volume": 3,
+      "disc": 3,
+      "title": "Porky's Party",
+      "series": "LT",
+      "date": "1938-06-25",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1938\\082738DVD Wholly Smoke LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 4\\1938-08-27 - LT - Wholly Smoke.avi",
+      "volume": 5,
+      "disc": 4,
+      "title": "Wholly Smoke",
+      "series": "LT",
+      "date": "1938-08-27",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1938\\091038DVD Cracked Ice MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 2\\1938-09-10 - MM - Cracked Ice.avi",
+      "volume": 4,
+      "disc": 2,
+      "title": "Cracked Ice",
+      "series": "MM",
+      "date": "1938-09-10",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1938\\092438DVD Porky in Wackyland LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 3\\1938-09-24 - LT - Porky in Wackyland.avi",
+      "volume": 2,
+      "disc": 3,
+      "title": "Porky in Wackyland",
+      "series": "LT",
+      "date": "1938-09-24",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1938\\100838DVD Little Pancho Vanilla MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 2\\1938-10-08 - MM - Little Pancho Vanilla.avi",
+      "volume": 4,
+      "disc": 2,
+      "title": "Little Pancho Vanilla",
+      "series": "MM",
+      "date": "1938-10-08",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1938\\110538DVD Porky in Egypt LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 3\\1938-11-05 - LT - Porky in Egypt.avi",
+      "volume": 3,
+      "disc": 3,
+      "title": "Porky in Egypt",
+      "series": "LT",
+      "date": "1938-11-05",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1938\\110538DVD You're an Education MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 2\\1938-11-05 - MM - You're an Education.avi",
+      "volume": 4,
+      "disc": 2,
+      "title": "You're an Education",
+      "series": "MM",
+      "date": "1938-11-05",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1938\\111938DVD The Night Watchman MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 4\\1938-11-19 - MM - The Night Watchman.avi",
+      "volume": 4,
+      "disc": 4,
+      "title": "The Night Watchman",
+      "series": "MM",
+      "date": "1938-11-19",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1938\\112638DVD The Daffy Doc LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 3\\1938-11-26 - LT - The Daffy Doc.avi",
+      "volume": 5,
+      "disc": 3,
+      "title": "The Daffy Doc",
+      "series": "LT",
+      "date": "1938-11-26",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1938\\120338DVD Daffy Duck in Hollywood MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 2\\1938-12-03 - MM - Daffy Duck in Hollywood.avi",
+      "volume": 3,
+      "disc": 2,
+      "title": "Daffy Duck in Hollywood",
+      "series": "MM",
+      "date": "1938-12-03",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1939\\042239DVD Daffy Duck and the Dinosaur MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 4\\1939-04-22 - MM - Daffy Duck and the Dinosaur.avi",
+      "volume": 3,
+      "disc": 4,
+      "title": "Daffy Duck and the Dinosaur",
+      "series": "MM",
+      "date": "1939-04-22",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1939\\042239DVD Porky and Teabiscuit LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 3\\1939-04-22 - LT - Porky and Teabiscuit.avi",
+      "volume": 3,
+      "disc": 3,
+      "title": "Porky and Teabiscuit",
+      "series": "LT",
+      "date": "1939-04-22",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1939\\050639DVD Thugs with Dirty Mugs MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 2\\1939-05-06 - MM - Thugs with Dirty Mugs.avi",
+      "volume": 3,
+      "disc": 2,
+      "title": "Thugs with Dirty Mugs",
+      "series": "MM",
+      "date": "1939-05-06",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1939\\060339DVD Polar Pals LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 4\\1939-06-03 - LT - Polar Pals.avi",
+      "volume": 5,
+      "disc": 4,
+      "title": "Polar Pals",
+      "series": "LT",
+      "date": "1939-06-03",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1939\\070139DVD Old Glory MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 3\\1939-07-01 - MM - Old Glory.avi",
+      "volume": 2,
+      "disc": 3,
+      "title": "Old Glory",
+      "series": "MM",
+      "date": "1939-07-01",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1939\\080539DVD Wise Quacks LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 4\\1939-08-05 - LT - Wise Quacks.avi",
+      "volume": 5,
+      "disc": 4,
+      "title": "Wise Quacks",
+      "series": "LT",
+      "date": "1939-08-05",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1939\\121639DVD The Film Fan LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 2\\1939-12-16 - LT - The Film Fan.avi",
+      "volume": 3,
+      "disc": 2,
+      "title": "The Film Fan",
+      "series": "LT",
+      "date": "1939-12-16",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1940\\030240DVD Elmer's Candid Camera MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 3\\1940-03-02 - MM - Elmer's Candid Camera.avi",
+      "volume": 1,
+      "disc": 3,
+      "title": "Elmer's Candid Camera",
+      "series": "MM",
+      "date": "1940-03-02",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1940\\031640DVD Pilgrim Porky LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 4\\1940-03-16 - LT - Pilgrim Porky.avi",
+      "volume": 5,
+      "disc": 4,
+      "title": "Pilgrim Porky",
+      "series": "LT",
+      "date": "1940-03-16",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1940\\042740DVD Porky's Poor Fish LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 4\\1940-04-27 - LT - Porky's Poor Fish.avi",
+      "volume": 4,
+      "disc": 4,
+      "title": "Porky's Poor Fish",
+      "series": "LT",
+      "date": "1940-04-27",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1940\\051840DVD You Ought to be in Pictures LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 4\\1940-05-18 - LT - You Ought to Be in Pictures.avi",
+      "volume": 2,
+      "disc": 4,
+      "title": "You Ought to Be in Pictures",
+      "series": "LT",
+      "date": "1940-05-18",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1940\\052540DVD A Gander at Mother Goose MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 2\\1940-05-25 - MM - A Gander at Mother Goose.avi",
+      "volume": 5,
+      "disc": 2,
+      "title": "A Gander at Mother Goose",
+      "series": "MM",
+      "date": "1940-05-25",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1940\\060840DVD Tom Thumb in Trouble MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 2\\1940-06-08 - MM - Tom Thumb in Trouble.avi",
+      "volume": 5,
+      "disc": 2,
+      "title": "Tom Thumb in Trouble",
+      "series": "MM",
+      "date": "1940-06-08",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1940\\082440DVD Patient Porky LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 3\\1940-08-24 - LT - Patient Porky.avi",
+      "volume": 5,
+      "disc": 3,
+      "title": "Patient Porky",
+      "series": "LT",
+      "date": "1940-08-24",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1940\\101240DVD Prehistoric Porky LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 3\\1940-10-12 - LT - Prehistoric Porky.avi",
+      "volume": 5,
+      "disc": 3,
+      "title": "Prehistoric Porky",
+      "series": "LT",
+      "date": "1940-10-12",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1940\\110240DVD The Sour Puss LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 4\\1940-11-02 - LT - The Sour Puss.avi",
+      "volume": 4,
+      "disc": 4,
+      "title": "The Sour Puss",
+      "series": "LT",
+      "date": "1940-11-02",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1941\\031541DVD Tortoise Beats Hare MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 1\\1941-03-15 - MM - Tortoise Beats Hare.avi",
+      "volume": 2,
+      "disc": 1,
+      "title": "Tortoise Beats Hare",
+      "series": "MM",
+      "date": "1941-03-15",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1941\\032941DVD Goofy Groceries MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 2\\1941-03-29 - MM - Goofy Groceries.avi",
+      "volume": 3,
+      "disc": 2,
+      "title": "Goofy Groceries",
+      "series": "MM",
+      "date": "1941-03-29",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1941\\041941DVD Porky's Preview LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 4\\1941-04-19 - LT - Porky's Preview.avi",
+      "volume": 5,
+      "disc": 4,
+      "title": "Porky's Preview",
+      "series": "LT",
+      "date": "1941-04-19",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1941\\042641DVD The Trial of Mr. Wolf MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 2\\1941-04-26 - MM - The Trial of Mr. Wolf.avi",
+      "volume": 5,
+      "disc": 2,
+      "title": "The Trial of Mr. Wolf",
+      "series": "MM",
+      "date": "1941-04-26",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1941\\051041DVD Farm Frolics MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 3\\1941-05-10 - MM - Farm Frolics.avi",
+      "volume": 5,
+      "disc": 3,
+      "title": "Farm Frolics",
+      "series": "MM",
+      "date": "1941-05-10",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1941\\052441DVD Hollywood Steps Out MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 4\\1941-05-24 - MM - Hollywood Steps Out.avi",
+      "volume": 2,
+      "disc": 4,
+      "title": "Hollywood Steps Out",
+      "series": "MM",
+      "date": "1941-05-24",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1941\\070541DVD Meet John Doughboy LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 2\\1941-07-05 - LT - Meet John Doughboy.avi",
+      "volume": 6,
+      "disc": 2,
+      "title": "Meet John Doughboy",
+      "series": "LT",
+      "date": "1941-07-05",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1941\\070541DVD The Heckling Hare MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 1\\1941-07-05 - MM - The Heckling Hare.avi",
+      "volume": 2,
+      "disc": 1,
+      "title": "The Heckling Hare",
+      "series": "MM",
+      "date": "1941-07-05",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1941\\102541DVD Rookie Revue MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 2\\1941-10-25 - MM - Rookie Revue.avi",
+      "volume": 6,
+      "disc": 2,
+      "title": "Rookie Revue",
+      "series": "MM",
+      "date": "1941-10-25",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1941\\122041DVD Wabbit Twouble MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 1\\1941-12-20 - MM - Wabbit Twouble.avi",
+      "volume": 1,
+      "disc": 1,
+      "title": "Wabbit Twouble",
+      "series": "MM",
+      "date": "1941-12-20",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1941\\122741DVD Porky's Pooch LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 3\\1941-12-27 - LT - Porky's Pooch.avi",
+      "volume": 5,
+      "disc": 3,
+      "title": "Porky's Pooch",
+      "series": "LT",
+      "date": "1941-12-27",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1942\\022842DVD Conrad the Sailor MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 4\\1942-02-28 - MM - Conrad the Sailor.avi",
+      "volume": 4,
+      "disc": 4,
+      "title": "Conrad the Sailor",
+      "series": "MM",
+      "date": "1942-02-28",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1942\\031442DVD Crazy Cruise MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 3\\1942-03-14 - MM - Crazy Cruise.avi",
+      "volume": 5,
+      "disc": 3,
+      "title": "Crazy Cruise",
+      "series": "MM",
+      "date": "1942-03-14",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1942\\032842DVD The Wabbit Who Came to Supper MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 1\\1942-03-28 - MM - The Wabbit Who Came to Supper.avi",
+      "volume": 3,
+      "disc": 1,
+      "title": "The Wabbit Who Came to Supper",
+      "series": "MM",
+      "date": "1942-03-28",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1942\\041142DVD Horton Hatches the Egg MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 4\\1942-04-11 - MM - Horton Hatches the Egg.avi",
+      "volume": 6,
+      "disc": 4,
+      "title": "Horton Hatches the Egg",
+      "series": "MM",
+      "date": "1942-04-11",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1942\\050242DVD The Wacky Wabbit MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 3\\1942-05-02 - MM - The Wacky Wabbit.avi",
+      "volume": 5,
+      "disc": 3,
+      "title": "The Wacky Wabbit",
+      "series": "MM",
+      "date": "1942-05-02",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1942\\050942DVD The Draft Horse MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 2\\1942-05-09 - MM - The Draft Horse.avi",
+      "volume": 6,
+      "disc": 2,
+      "title": "The Draft Horse",
+      "series": "MM",
+      "date": "1942-05-09",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1942\\052342DVD Lights Fantastic MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 4\\1942-05-23 - MM - Lights Fantastic.avi",
+      "volume": 6,
+      "disc": 4,
+      "title": "Lights Fantastic",
+      "series": "MM",
+      "date": "1942-05-23",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1942\\071142DVD Bugs Bunny Gets the Boid MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 3\\1942-07-11 - MM - Bugs Bunny Gets the Boid.avi",
+      "volume": 1,
+      "disc": 3,
+      "title": "Bugs Bunny Gets the Boid",
+      "series": "MM",
+      "date": "1942-07-11",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1942\\071142DVD Wacky Blackout LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 2\\1942-07-11 - LT - Wacky Blackout.avi",
+      "volume": 6,
+      "disc": 2,
+      "title": "Wacky Blackout",
+      "series": "LT",
+      "date": "1942-07-11",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1942\\080142DVD Foney Fables MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 2\\1942-08-01 - MM - Foney Fables.avi",
+      "volume": 5,
+      "disc": 2,
+      "title": "Foney Fables",
+      "series": "MM",
+      "date": "1942-08-01",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1942\\080142DVD The Ducktators LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 2\\1942-08-01 - LT - The Ducktators.avi",
+      "volume": 6,
+      "disc": 2,
+      "title": "The Ducktators",
+      "series": "LT",
+      "date": "1942-08-01",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1942\\082242DVD Eatin' on the Cuff LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 4\\1942-08-22 - LT - Eatin' On The Cuff or The Moth Who Came to Dinner.avi",
+      "volume": 5,
+      "disc": 4,
+      "title": "Eatin' On The Cuff or The Moth Who Came to Dinner",
+      "series": "LT",
+      "date": "1942-08-22",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1942\\091942DVD The Dover Boys MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 2\\1942-09-19 - MM - The Dover Boys at Pimento University.avi",
+      "volume": 2,
+      "disc": 2,
+      "title": "The Dover Boys at Pimento University",
+      "series": "MM",
+      "date": "1942-09-19",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1942\\100342DVD The Hep Cat LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 4\\1942-10-03 - LT - The Hep Cat.avi",
+      "volume": 2,
+      "disc": 4,
+      "title": "The Hep Cat",
+      "series": "LT",
+      "date": "1942-10-03",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1942\\103142DVD The Hare-Brained Hypnotist MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 1\\1942-10-31 - MM - The Hare-Brained Hypnotist.avi",
+      "volume": 2,
+      "disc": 1,
+      "title": "The Hare-Brained Hypnotist",
+      "series": "MM",
+      "date": "1942-10-31",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1942\\112142DVD A Tale of Two Kitties MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 3\\1942-11-21 - MM - A Tale of Two Kitties.avi",
+      "volume": 5,
+      "disc": 3,
+      "title": "A Tale of Two Kitties",
+      "series": "MM",
+      "date": "1942-11-21",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1942\\120542DVD My Favorite Duck LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 1\\1942-12-05 - LT - My Favorite Duck.avi",
+      "volume": 6,
+      "disc": 1,
+      "title": "My Favorite Duck",
+      "series": "LT",
+      "date": "1942-12-05",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1942\\121242DVD Case of the Missing Hare MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 1\\1942-12-12 - MM - Case of the Missing Hare.avi",
+      "volume": 3,
+      "disc": 1,
+      "title": "Case of the Missing Hare",
+      "series": "MM",
+      "date": "1942-12-12",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1943\\020243DVD Pigs in a Polka MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 3\\1943-02-02 - MM - Pigs in a Polka.avi",
+      "volume": 3,
+      "disc": 3,
+      "title": "Pigs in a Polka",
+      "series": "MM",
+      "date": "1943-02-02",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1943\\022043DVD Tortoise Wins by a Hare MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 3\\1943-02-20 - MM - Tortoise Wins by a Hare.avi",
+      "volume": 1,
+      "disc": 3,
+      "title": "Tortoise Wins by a Hare",
+      "series": "MM",
+      "date": "1943-02-20",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1943\\030643DVD Fifth Column Mouse MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 2\\1943-03-06 - MM - Fifth-Column Mouse.avi",
+      "volume": 6,
+      "disc": 2,
+      "title": "Fifth-Column Mouse",
+      "series": "MM",
+      "date": "1943-03-06",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1943\\030643DVD To Duck or Not to Duck LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 1\\1943-03-06 - LT - To Duck or Not to Duck.avi",
+      "volume": 6,
+      "disc": 1,
+      "title": "To Duck or Not to Duck",
+      "series": "LT",
+      "date": "1943-03-06",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1943\\040343DVD Super Rabbit MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 4\\1943-04-03 - MM - Super-Rabbit.avi",
+      "volume": 3,
+      "disc": 4,
+      "title": "Super-Rabbit",
+      "series": "MM",
+      "date": "1943-04-03",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1943\\050143DVD The Wise Quacking Duck LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 3\\1943-05-01 - LT - The Wise Quacking Duck.avi",
+      "volume": 5,
+      "disc": 3,
+      "title": "The Wise Quacking Duck",
+      "series": "LT",
+      "date": "1943-05-01",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1943\\061943DVD The Aristo-Cat MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 4\\1943-06-19 - MM - The Aristo-Cat.avi",
+      "volume": 4,
+      "disc": 4,
+      "title": "The Aristo-Cat",
+      "series": "MM",
+      "date": "1943-06-19",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1943\\070343DVD Wackiki Wabbit MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 1\\1943-07-03 - MM - Wackiki Wabbit.avi",
+      "volume": 3,
+      "disc": 1,
+      "title": "Wackiki Wabbit",
+      "series": "MM",
+      "date": "1943-07-03",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1943\\070343DVD Yankee Doodle Daffy LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 2\\1943-07-03 - LT - Yankee Doodle Daffy.avi",
+      "volume": 1,
+      "disc": 2,
+      "title": "Yankee Doodle Daffy",
+      "series": "LT",
+      "date": "1943-07-03",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1943\\071743DVD Porky Pig's Feat LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 3\\1943-07-17 - LT - Porky Pig's Feat.avi",
+      "volume": 3,
+      "disc": 3,
+      "title": "Porky Pig's Feat",
+      "series": "LT",
+      "date": "1943-07-17",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1943\\082143DVD Scrap Happy Daffy LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 4\\1943-08-21 - LT - Scrap Happy Daffy.avi",
+      "volume": 5,
+      "disc": 4,
+      "title": "Scrap Happy Daffy",
+      "series": "LT",
+      "date": "1943-08-21",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1943\\092543DVD A Corny Concerto MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 4\\1943-09-25 - MM - A Corny Concerto.avi",
+      "volume": 2,
+      "disc": 4,
+      "title": "A Corny Concerto",
+      "series": "MM",
+      "date": "1943-09-25",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1943\\103043DVD Falling Hare MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 4\\1943-10-30 - MM - Falling Hare.avi",
+      "volume": 3,
+      "disc": 4,
+      "title": "Falling Hare",
+      "series": "MM",
+      "date": "1943-10-30",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1943\\112043DVD Daffy the Commando LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 2\\1943-11-20 - LT - Daffy – The Commando.avi",
+      "volume": 6,
+      "disc": 2,
+      "title": "Daffy – The Commando",
+      "series": "LT",
+      "date": "1943-11-20",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1943\\120443DVD An Itch In Time MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 4\\1943-12-04 - MM - An Itch in Time.avi",
+      "volume": 3,
+      "disc": 4,
+      "title": "An Itch in Time",
+      "series": "MM",
+      "date": "1943-12-04",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1943\\121143DVD Puss N' Booty LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 2\\1943-12-11 - LT - Puss n' Booty.avi",
+      "volume": 4,
+      "disc": 2,
+      "title": "Puss n' Booty",
+      "series": "LT",
+      "date": "1943-12-11",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1944\\010144DVD Little Red Riding Rabbit MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 1\\1944-01-01 - MM - Little Red Riding Rabbit.avi",
+      "volume": 2,
+      "disc": 1,
+      "title": "Little Red Riding Rabbit",
+      "series": "MM",
+      "date": "1944-01-01",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1944\\022644DVD Bugs Bunny and the Three Bears MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 3\\1944-02-26 - MM - Bugs Bunny and the Three Bears.avi",
+      "volume": 1,
+      "disc": 3,
+      "title": "Bugs Bunny and the Three Bears",
+      "series": "MM",
+      "date": "1944-02-26",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1944\\031144DVD I Got Plenty of Mutton LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 2\\1944-03-11 - LT - I Got Plenty of Mutton.avi",
+      "volume": 4,
+      "disc": 2,
+      "title": "I Got Plenty of Mutton",
+      "series": "LT",
+      "date": "1944-03-11",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1944\\032544DVD The Weakly Reporter MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 2\\1944-03-25 - MM - The Weakly Reporter.avi",
+      "volume": 6,
+      "disc": 2,
+      "title": "The Weakly Reporter",
+      "series": "MM",
+      "date": "1944-03-25",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1944\\050644DVD Swooner Crooner MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 2\\1944-05-06 - MM - Swooner Crooner.avi",
+      "volume": 3,
+      "disc": 2,
+      "title": "Swooner Crooner",
+      "series": "MM",
+      "date": "1944-05-06",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1944\\052044DVD Russian Rhapsody MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 2\\1944-05-20 - MM - Russian Rhapsody.avi",
+      "volume": 6,
+      "disc": 2,
+      "title": "Russian Rhapsody",
+      "series": "MM",
+      "date": "1944-05-20",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1944\\052744DVD Duck Soup to Nuts LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 3\\1944-05-27 - LT - Duck Soup to Nuts.avi",
+      "volume": 2,
+      "disc": 3,
+      "title": "Duck Soup to Nuts",
+      "series": "LT",
+      "date": "1944-05-27",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1944\\062444DVD Hare Ribbin' MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 3\\1944-06-24 - MM - Hare Ribbin'.avi",
+      "volume": 5,
+      "disc": 3,
+      "title": "Hare Ribbin'",
+      "series": "MM",
+      "date": "1944-06-24",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1944\\072244DVD Hare Force MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 1\\1944-07-22 - MM - Hare Force.avi",
+      "volume": 3,
+      "disc": 1,
+      "title": "Hare Force",
+      "series": "MM",
+      "date": "1944-07-22",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1944\\082644DVD Buckaroo Bugs LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 3\\1944-08-26 - LT - Buckaroo Bugs.avi",
+      "volume": 5,
+      "disc": 3,
+      "title": "Buckaroo Bugs",
+      "series": "LT",
+      "date": "1944-08-26",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1944\\091644DVD Plane Daffy LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 2\\1944-09-16 - LT - Plane Daffy.avi",
+      "volume": 4,
+      "disc": 2,
+      "title": "Plane Daffy",
+      "series": "LT",
+      "date": "1944-09-16",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1944\\101444DVD Booby Hatched LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 2\\1944-10-14 - LT - Booby Hatched.avi",
+      "volume": 4,
+      "disc": 2,
+      "title": "Booby Hatched",
+      "series": "LT",
+      "date": "1944-10-14",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1944\\102844DVD The Old Grey Hare MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 3\\1944-10-28 - MM - The Old Grey Hare.avi",
+      "volume": 5,
+      "disc": 3,
+      "title": "The Old Grey Hare",
+      "series": "MM",
+      "date": "1944-10-28",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1944\\112544DVD The Stupid Cupid LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 2\\1944-11-25 - LT - The Stupid Cupid.avi",
+      "volume": 4,
+      "disc": 2,
+      "title": "The Stupid Cupid",
+      "series": "LT",
+      "date": "1944-11-25",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1944\\123044DVD Stage Door Cartoon MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 4\\1944-12-30 - MM - Stage Door Cartoon.avi",
+      "volume": 2,
+      "disc": 4,
+      "title": "Stage Door Cartoon",
+      "series": "MM",
+      "date": "1944-12-30",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1945\\010645DVD Odor-Able Kitty LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 4\\1945-01-06 - LT - Odor-able Kitty.avi",
+      "volume": 3,
+      "disc": 4,
+      "title": "Odor-able Kitty",
+      "series": "LT",
+      "date": "1945-01-06",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1945\\011345DVD Herr Meets Hare MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 2\\1945-01-13 - MM - Herr Meets Hare.avi",
+      "volume": 6,
+      "disc": 2,
+      "title": "Herr Meets Hare",
+      "series": "MM",
+      "date": "1945-01-13",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1945\\012745DVD Draftee Daffy LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 4\\1945-01-27 - LT - Draftee Daffy.avi",
+      "volume": 3,
+      "disc": 4,
+      "title": "Draftee Daffy",
+      "series": "LT",
+      "date": "1945-01-27",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1945\\050545DVD Hare Trigger MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 1\\1945-05-05 - MM - Hare Trigger.avi",
+      "volume": 6,
+      "disc": 1,
+      "title": "Hare Trigger",
+      "series": "MM",
+      "date": "1945-05-05",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1945\\060945DVD A Gruesome Twosome MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 4\\1945-06-09 - MM - A Gruesome Twosome.avi",
+      "volume": 3,
+      "disc": 4,
+      "title": "A Gruesome Twosome",
+      "series": "MM",
+      "date": "1945-06-09",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1945\\072845DVD Wagon Heels MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 3\\1945-07-28 - MM - Wagon Heels.avi",
+      "volume": 5,
+      "disc": 3,
+      "title": "Wagon Heels",
+      "series": "MM",
+      "date": "1945-07-28",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1945\\081145DVD Hare Conditioned LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 1\\1945-08-11 - LT - Hare Conditioned.avi",
+      "volume": 2,
+      "disc": 1,
+      "title": "Hare Conditioned",
+      "series": "LT",
+      "date": "1945-08-11",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1945\\082545DVD Fresh Airedale MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 4\\1945-08-25 - MM - Fresh Airedale.avi",
+      "volume": 6,
+      "disc": 4,
+      "title": "Fresh Airedale",
+      "series": "MM",
+      "date": "1945-08-25",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1945\\090545DVD The Bashful Buzzard LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 3\\1945-09-05 - LT - The Bashful Buzzard.avi",
+      "volume": 5,
+      "disc": 3,
+      "title": "The Bashful Buzzard",
+      "series": "LT",
+      "date": "1945-09-05",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1945\\111045DVD Hare Tonic LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 1\\1945-11-10 - LT - Hare Tonic.avi",
+      "volume": 3,
+      "disc": 1,
+      "title": "Hare Tonic",
+      "series": "LT",
+      "date": "1945-11-10",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1946\\010546DVD Book Revue LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 4\\1946-01-05 - LT - Book Revue.avi",
+      "volume": 2,
+      "disc": 4,
+      "title": "Book Revue",
+      "series": "LT",
+      "date": "1946-01-05",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1946\\020246DVD Baseball Bugs LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 1\\1946-02-02 - LT - Baseball Bugs.avi",
+      "volume": 1,
+      "disc": 1,
+      "title": "Baseball Bugs",
+      "series": "LT",
+      "date": "1946-02-02",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1946\\022346DVD Holiday for Shoestrings MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 2\\1946-02-23 - MM - Holiday for Shoestrings.avi",
+      "volume": 5,
+      "disc": 2,
+      "title": "Holiday for Shoestrings",
+      "series": "MM",
+      "date": "1946-02-23",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1946\\031646DVD Baby Bottleneck LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 3\\1946-03-16 - LT - Baby Bottleneck.avi",
+      "volume": 2,
+      "disc": 3,
+      "title": "Baby Bottleneck",
+      "series": "LT",
+      "date": "1946-03-16",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1946\\032346DVD Hare Remover MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 1\\1946-03-23 - MM - Hare Remover.avi",
+      "volume": 3,
+      "disc": 1,
+      "title": "Hare Remover",
+      "series": "MM",
+      "date": "1946-03-23",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1946\\042046DVD Hollywood Canine Canteen MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 2\\1946-04-20 - MM - Hollywood Canine Canteen.avi",
+      "volume": 6,
+      "disc": 2,
+      "title": "Hollywood Canine Canteen",
+      "series": "MM",
+      "date": "1946-04-20",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1946\\052546DVD Hair-Raising Hare MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 3\\1946-05-25 - MM - Hair-Raising Hare.avi",
+      "volume": 1,
+      "disc": 3,
+      "title": "Hair-Raising Hare",
+      "series": "MM",
+      "date": "1946-05-25",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1946\\060846DVD Kitty Kornered LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 3\\1946-06-08 - LT - Kitty Kornered.avi",
+      "volume": 2,
+      "disc": 3,
+      "title": "Kitty Kornered",
+      "series": "LT",
+      "date": "1946-06-08",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1946\\062246DVD Hollywood Daffy MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 1\\1946-06-22 - MM - Hollywood Daffy.avi",
+      "volume": 5,
+      "disc": 1,
+      "title": "Hollywood Daffy",
+      "series": "MM",
+      "date": "1946-06-22",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1946\\062946DVD Acrobatty Bunny LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 1\\1946-06-29 - LT - Acrobatty Bunny.avi",
+      "volume": 3,
+      "disc": 1,
+      "title": "Acrobatty Bunny",
+      "series": "LT",
+      "date": "1946-06-29",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1946\\072046DVD The Great Piggy Bank Robbery LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 3\\1946-07-20 - LT - The Great Piggy Bank Robbery.avi",
+      "volume": 2,
+      "disc": 3,
+      "title": "The Great Piggy Bank Robbery",
+      "series": "LT",
+      "date": "1946-07-20",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1946\\080346DVD Bacall to Arms MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 3\\1946-08-03 - MM - Bacall to Arms.avi",
+      "volume": 5,
+      "disc": 3,
+      "title": "Bacall to Arms",
+      "series": "MM",
+      "date": "1946-08-03",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1946\\083146DVD Walky Talky Hawky MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 4\\1946-08-31 - MM - Walky Talky Hawky.avi",
+      "volume": 3,
+      "disc": 4,
+      "title": "Walky Talky Hawky",
+      "series": "MM",
+      "date": "1946-08-31",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1946\\100546DVD The Big Snooze LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 1\\1946-10-05 - LT - The Big Snooze.avi",
+      "volume": 2,
+      "disc": 1,
+      "title": "The Big Snooze",
+      "series": "LT",
+      "date": "1946-10-05",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1946\\110946DVD Rhapsody Rabbit MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 4\\1946-11-09 - MM - Rhapsody Rabbit.avi",
+      "volume": 2,
+      "disc": 4,
+      "title": "Rhapsody Rabbit",
+      "series": "MM",
+      "date": "1946-11-09",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1947\\032247DVD A Hare Grows in Manhatten MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 1\\1947-03-22 - MM - A Hare Grows in Manhattan.avi",
+      "volume": 3,
+      "disc": 1,
+      "title": "A Hare Grows in Manhattan",
+      "series": "MM",
+      "date": "1947-03-22",
+      "fuzzyDistance": 0.04
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1947\\041247DVD Birth of a Notion LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 1\\1947-04-12 - LT - Birth of a Notion.avi",
+      "volume": 6,
+      "disc": 1,
+      "title": "Birth of a Notion",
+      "series": "LT",
+      "date": "1947-04-12",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1947\\050347DVD Tweetie Pie MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 3\\1947-05-03 - MM - Tweetie Pie.avi",
+      "volume": 2,
+      "disc": 3,
+      "title": "Tweetie Pie",
+      "series": "MM",
+      "date": "1947-05-03",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1947\\051047DVD Rabbit Transit LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 1\\1947-05-10 - LT - Rabbit Transit.avi",
+      "volume": 2,
+      "disc": 1,
+      "title": "Rabbit Transit",
+      "series": "LT",
+      "date": "1947-05-10",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1947\\062847DVD Easter Yeggs LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 1\\1947-06-28 - LT - Easter Yeggs.avi",
+      "volume": 3,
+      "disc": 1,
+      "title": "Easter Yeggs",
+      "series": "LT",
+      "date": "1947-06-28",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1947\\071247DVD Crowing Pains LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 1\\1947-07-12 - LT - Crowing Pains.avi",
+      "volume": 6,
+      "disc": 1,
+      "title": "Crowing Pains",
+      "series": "LT",
+      "date": "1947-07-12",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1947\\080247DVD A Pest in the House MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 1\\1947-08-02 - MM - A Pest in the House.avi",
+      "volume": 5,
+      "disc": 1,
+      "title": "A Pest in the House",
+      "series": "MM",
+      "date": "1947-08-02",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1947\\110147DVD Slick Hare MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 1\\1947-11-01 - MM - Slick Hare.avi",
+      "volume": 2,
+      "disc": 1,
+      "title": "Slick Hare",
+      "series": "MM",
+      "date": "1947-11-01",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1948\\010348DVD Gorilla My Dreams LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 1\\1948-01-03 - LT - Gorilla My Dreams.avi",
+      "volume": 2,
+      "disc": 1,
+      "title": "Gorilla My Dreams",
+      "series": "LT",
+      "date": "1948-01-03",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1948\\030648DVD Daffy Duck Slept Here MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 3\\1948-03-06 - MM - Daffy Duck Slept Here.avi",
+      "volume": 3,
+      "disc": 3,
+      "title": "Daffy Duck Slept Here",
+      "series": "MM",
+      "date": "1948-03-06",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1948\\032748DVD Back Alley Oproar MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 4\\1948-03-27 - MM - Back Alley Oproar.avi",
+      "volume": 2,
+      "disc": 4,
+      "title": "Back Alley Oproar",
+      "series": "MM",
+      "date": "1948-03-27",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1948\\041048DVD Rabbit Punch MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 4\\1948-04-10 - MM - Rabbit Punch.avi",
+      "volume": 3,
+      "disc": 4,
+      "title": "Rabbit Punch",
+      "series": "MM",
+      "date": "1948-04-10",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1948\\041348DVD The Bear's Tale MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 2\\1948-04-13 - MM - The Bear's Tale.avi",
+      "volume": 5,
+      "disc": 2,
+      "title": "The Bear's Tale",
+      "series": "MM",
+      "date": "1948-04-13",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1948\\050848DVD Buccaneer Bunny LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 1\\1948-05-08 - LT - Buccaneer Bunny.avi",
+      "volume": 5,
+      "disc": 1,
+      "title": "Buccaneer Bunny",
+      "series": "LT",
+      "date": "1948-05-08",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1948\\061248DVD Bugs Bunny Rides Again MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 1\\1948-06-12 - MM - Bugs Bunny Rides Again.avi",
+      "volume": 2,
+      "disc": 1,
+      "title": "Bugs Bunny Rides Again",
+      "series": "MM",
+      "date": "1948-06-12",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1948\\070348DVD The Upstanding Sitter LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 1\\1948-07-03 - LT - The Up-Standing Sitter.avi",
+      "volume": 5,
+      "disc": 1,
+      "title": "The Up-Standing Sitter",
+      "series": "LT",
+      "date": "1948-07-03",
+      "fuzzyDistance": 0.056
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1948\\072448DVD Haredevil Hare LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 3\\1948-07-24 - LT - Haredevil Hare.avi",
+      "volume": 1,
+      "disc": 3,
+      "title": "Haredevil Hare",
+      "series": "LT",
+      "date": "1948-07-24",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1948\\080748DVD You Were Never Duckier MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 1\\1948-08-07 - MM - You Were Never Duckier.avi",
+      "volume": 5,
+      "disc": 1,
+      "title": "You Were Never Duckier",
+      "series": "MM",
+      "date": "1948-08-07",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1948\\081448DVD Dough Ray Me-ow MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 4\\1948-08-14 - MM - Dough Ray Me-ow.avi",
+      "volume": 4,
+      "disc": 4,
+      "title": "Dough Ray Me-ow",
+      "series": "MM",
+      "date": "1948-08-14",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1948\\100948DVD The Foghorn Leghorn MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 4\\1948-10-09 - MM - The Foghorn Leghorn.avi",
+      "volume": 1,
+      "disc": 4,
+      "title": "The Foghorn Leghorn",
+      "series": "MM",
+      "date": "1948-10-09",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1948\\110648DVD Kit for Cat LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 4\\1948-11-06 - LT - Kit for Cat.avi",
+      "volume": 1,
+      "disc": 4,
+      "title": "Kit for Cat",
+      "series": "LT",
+      "date": "1948-11-06",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1948\\112048DVD The Stupor Salesman LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 1\\1948-11-20 - LT - The Stupor Salesman.avi",
+      "volume": 5,
+      "disc": 1,
+      "title": "The Stupor Salesman",
+      "series": "LT",
+      "date": "1948-11-20",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1948\\120448DVD My Bunny Lies over the Sea MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 1\\1948-12-04 - MM - My Bunny Lies over the Sea.avi",
+      "volume": 1,
+      "disc": 1,
+      "title": "My Bunny Lies over the Sea",
+      "series": "MM",
+      "date": "1948-12-04",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1948\\121848DVD Scaredy Cat MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 2\\1948-12-18 - MM - Scaredy Cat.avi",
+      "volume": 1,
+      "disc": 2,
+      "title": "Scaredy Cat",
+      "series": "MM",
+      "date": "1948-12-18",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1949\\011549DVD Hare Do MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 1\\1949-01-15 - MM - Hare Do.avi",
+      "volume": 3,
+      "disc": 1,
+      "title": "Hare Do",
+      "series": "MM",
+      "date": "1949-01-15",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1949\\012949DVD The Awful Orphan MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 3\\1949-01-29 - MM - Awful Orphan.avi",
+      "volume": 1,
+      "disc": 3,
+      "title": "Awful Orphan",
+      "series": "MM",
+      "date": "1949-01-29",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1949\\021249DVD Porky Chops LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 2\\1949-02-12 - LT - Porky Chops.avi",
+      "volume": 1,
+      "disc": 2,
+      "title": "Porky Chops",
+      "series": "LT",
+      "date": "1949-02-12",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1949\\022649DVD Mississippi Hare LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 1\\1949-02-26 - LT - Mississippi Hare.avi",
+      "volume": 4,
+      "disc": 1,
+      "title": "Mississippi Hare",
+      "series": "LT",
+      "date": "1949-02-26",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1949\\031249DVD Paying the Piper LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 2\\1949-03-12 - LT - Paying the Piper.avi",
+      "volume": 5,
+      "disc": 2,
+      "title": "Paying the Piper",
+      "series": "LT",
+      "date": "1949-03-12",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1949\\032649DVD Daffy Duck Hunt LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 4\\1949-03-26 - LT - Daffy Duck Hunt.avi",
+      "volume": 1,
+      "disc": 4,
+      "title": "Daffy Duck Hunt",
+      "series": "LT",
+      "date": "1949-03-26",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1949\\040949DVD Rebel Rabbit MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 1\\1949-04-09 - MM - Rebel Rabbit.avi",
+      "volume": 3,
+      "disc": 1,
+      "title": "Rebel Rabbit",
+      "series": "MM",
+      "date": "1949-04-09",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1949\\042349DVD Mouse Wreckers LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 2\\1949-04-23 - LT - Mouse Wreckers.avi",
+      "volume": 2,
+      "disc": 2,
+      "title": "Mouse Wreckers",
+      "series": "LT",
+      "date": "1949-04-23",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1949\\043049DVD High Diving Hare LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 1\\1949-04-30 - LT - High Diving Hare.avi",
+      "volume": 1,
+      "disc": 1,
+      "title": "High Diving Hare",
+      "series": "LT",
+      "date": "1949-04-30",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1949\\060449DVD Bowery Bugs MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 1\\1949-06-04 - MM - Bowery Bugs.avi",
+      "volume": 3,
+      "disc": 1,
+      "title": "Bowery Bugs",
+      "series": "MM",
+      "date": "1949-06-04",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1949\\062549DVD Long Haired Hare LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 1\\1949-06-25 - LT - Long-Haired Hare.avi",
+      "volume": 1,
+      "disc": 1,
+      "title": "Long-Haired Hare",
+      "series": "LT",
+      "date": "1949-06-25",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1949\\072349DVD Bad Ol' Putty Tat MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 3\\1949-07-23 - MM - Bad Ol' Putty Tat.avi",
+      "volume": 2,
+      "disc": 3,
+      "title": "Bad Ol' Putty Tat",
+      "series": "MM",
+      "date": "1949-07-23",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1949\\080649DVD The Gret Hounded Hare LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 1\\1949-08-06 - LT - The Grey Hounded Hare.avi",
+      "volume": 4,
+      "disc": 1,
+      "title": "The Grey Hounded Hare",
+      "series": "LT",
+      "date": "1949-08-06",
+      "fuzzyDistance": 0.059
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1949\\081349DVD Often an Orphan LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 1\\1949-08-13 - LT - Often an Orphan.avi",
+      "volume": 6,
+      "disc": 1,
+      "title": "Often an Orphan",
+      "series": "LT",
+      "date": "1949-08-13",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1949\\082749DVD The Windblown Hare LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 3\\1949-08-27 - LT - The Windblown Hare.avi",
+      "volume": 3,
+      "disc": 3,
+      "title": "The Windblown Hare",
+      "series": "LT",
+      "date": "1949-08-27",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1949\\090349DVD Dough for the Do-Do MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 2\\1949-09-03 - MM - Dough for the Do-Do.avi",
+      "volume": 1,
+      "disc": 2,
+      "title": "Dough for the Do-Do",
+      "series": "MM",
+      "date": "1949-09-03",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1949\\091749DVD Fast and Furry-ous LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 3\\1949-09-17 - LT - Fast and Furry-ous.avi",
+      "volume": 1,
+      "disc": 3,
+      "title": "Fast and Furry-ous",
+      "series": "LT",
+      "date": "1949-09-17",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1949\\100849DVD Frigid Hare MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 3\\1949-10-08 - MM - Frigid Hare.avi",
+      "volume": 1,
+      "disc": 3,
+      "title": "Frigid Hare",
+      "series": "MM",
+      "date": "1949-10-08",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1949\\101549DVD Swallow the Leader LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 4\\1949-10-15 - LT - Swallow the Leader.avi",
+      "volume": 4,
+      "disc": 4,
+      "title": "Swallow the Leader",
+      "series": "LT",
+      "date": "1949-10-15",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1949\\102249DVD Bye Bye Bluebeard MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 3\\1949-10-22 - MM - Bye, Bye Bluebeard.avi",
+      "volume": 3,
+      "disc": 3,
+      "title": "Bye, Bye Bluebeard",
+      "series": "MM",
+      "date": "1949-10-22",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1949\\111249DVD For Scent-imental Reasons LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 3\\1949-11-12 - LT - For Scent-imental Reasons.avi",
+      "volume": 1,
+      "disc": 3,
+      "title": "For Scent-imental Reasons",
+      "series": "LT",
+      "date": "1949-11-12",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1949\\121049DVD Bear Feat LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 1\\1949-12-10 - LT - Bear Feat.avi",
+      "volume": 6,
+      "disc": 1,
+      "title": "Bear Feat",
+      "series": "LT",
+      "date": "1949-12-10",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1949\\122449DVD Rabbit Hood MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 1\\1949-12-24 - MM - Rabbit Hood.avi",
+      "volume": 4,
+      "disc": 1,
+      "title": "Rabbit Hood",
+      "series": "MM",
+      "date": "1949-12-24",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1949\\123149DVD A Ham in a Role LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 1\\1949-12-31 - LT - A Ham in a Role.avi",
+      "volume": 6,
+      "disc": 1,
+      "title": "A Ham in a Role",
+      "series": "LT",
+      "date": "1949-12-31",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1950\\012150DVD Nurdy-Gurdy Hare MM BR.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 1\\1950-01-21 - MM - Hurdy-Gurdy Hare.avi",
+      "volume": 4,
+      "disc": 1,
+      "title": "Hurdy-Gurdy Hare",
+      "series": "MM",
+      "date": "1950-01-21",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1950\\012850DVD Boobs in the Woods LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 2\\1950-01-28 - LT - Boobs in the Woods.avi",
+      "volume": 1,
+      "disc": 2,
+      "title": "Boobs in the Woods",
+      "series": "LT",
+      "date": "1950-01-28",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1950\\030450DVD The Scarlet Pumpernickel LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 2\\1950-03-04 - LT - The Scarlet Pumpernickel.avi",
+      "volume": 1,
+      "disc": 2,
+      "title": "The Scarlet Pumpernickel",
+      "series": "LT",
+      "date": "1950-03-04",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1950\\031150DVD Homeless Hare MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 1\\1950-03-11 - MM - Homeless Hare.avi",
+      "volume": 3,
+      "disc": 1,
+      "title": "Homeless Hare",
+      "series": "MM",
+      "date": "1950-03-11",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1950\\041550DVD The Hypo-Chondri-Cat MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 3\\1950-04-15 - MM - The Hypo-Chondri-Cat.avi",
+      "volume": 1,
+      "disc": 3,
+      "title": "The Hypo-Chondri-Cat",
+      "series": "MM",
+      "date": "1950-04-15",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1950\\042250DVD Big House Bunny LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 1\\1950-04-22 - LT - Big House Bunny.avi",
+      "volume": 1,
+      "disc": 1,
+      "title": "Big House Bunny",
+      "series": "LT",
+      "date": "1950-04-22",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1950\\052750DVD An Egg Scramble MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 3\\1950-05-27 - MM - An Egg Scramble.avi",
+      "volume": 3,
+      "disc": 3,
+      "title": "An Egg Scramble",
+      "series": "MM",
+      "date": "1950-05-27",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1950\\061750DVD What's Up Doc LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 1\\1950-06-17 - LT - What's Up Doc-.avi",
+      "volume": 1,
+      "disc": 1,
+      "title": "What's Up Doc?",
+      "series": "LT",
+      "date": "1950-06-17",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1950\\062450DVD All Abir-r-r-d LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 3\\1950-06-24 - LT - All a Bir-r-r-d.avi",
+      "volume": 2,
+      "disc": 3,
+      "title": "All a Bir-r-r-d",
+      "series": "LT",
+      "date": "1950-06-24",
+      "fuzzyDistance": 0.067
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1950\\070850DVD 8 Ball Bunny MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 1\\1950-07-08 - MM - 8 Ball Bunny.avi",
+      "volume": 4,
+      "disc": 1,
+      "title": "8 Ball Bunny",
+      "series": "MM",
+      "date": "1950-07-08",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1950\\072250DVD It's Hummer Time LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 4\\1950-07-22 - LT - It's Hummer Time.avi",
+      "volume": 6,
+      "disc": 4,
+      "title": "It's Hummer Time",
+      "series": "LT",
+      "date": "1950-07-22",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1950\\080550DVD Golden Yeggs MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 2\\1950-08-05 - MM - Golden Yeggs.avi",
+      "volume": 1,
+      "disc": 2,
+      "title": "Golden Yeggs",
+      "series": "MM",
+      "date": "1950-08-05",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1950\\081250DVD Hillbilly Hare MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 1\\1950-08-12 - MM - Hillbilly Hare.avi",
+      "volume": 3,
+      "disc": 1,
+      "title": "Hillbilly Hare",
+      "series": "MM",
+      "date": "1950-08-12",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1950\\082650DVD Dog Gone South MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 1\\1950-08-26 - MM - Dog Gone South.avi",
+      "volume": 6,
+      "disc": 1,
+      "title": "Dog Gone South",
+      "series": "MM",
+      "date": "1950-08-26",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1950\\090250DVD The Ducksters LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 2\\1950-09-02 - LT - The Ducksters.avi",
+      "volume": 1,
+      "disc": 2,
+      "title": "The Ducksters",
+      "series": "LT",
+      "date": "1950-09-02",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1950\\092350DVD Bunker Hill Bunny MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 4\\1950-09-23 - MM - Bunker Hill Bunny.avi",
+      "volume": 1,
+      "disc": 4,
+      "title": "Bunker Hill Bunny",
+      "series": "MM",
+      "date": "1950-09-23",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1950\\100750DVD Canary Row MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 4\\1950-10-07 - MM - Canary Row.avi",
+      "volume": 1,
+      "disc": 4,
+      "title": "Canary Row",
+      "series": "MM",
+      "date": "1950-10-07",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1950\\121650DVD Rabbit of Seville LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 1\\1950-12-16 - LT - Rabbit of Seville.avi",
+      "volume": 1,
+      "disc": 1,
+      "title": "Rabbit of Seville",
+      "series": "LT",
+      "date": "1950-12-16",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1951\\020351DVD Canned Feud LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 4\\1951-02-03 - LT - Canned Feud.avi",
+      "volume": 1,
+      "disc": 4,
+      "title": "Canned Feud",
+      "series": "LT",
+      "date": "1951-02-03",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1951\\022451DVD Putty Tat Trouble LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 4\\1951-02-24 - LT - Putty Tat Trouble.avi",
+      "volume": 1,
+      "disc": 4,
+      "title": "Putty Tat Trouble",
+      "series": "LT",
+      "date": "1951-02-24",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1951\\031051DVD Bunny Hugged MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 1\\1951-03-10 - MM - Bunny Hugged.avi",
+      "volume": 2,
+      "disc": 1,
+      "title": "Bunny Hugged",
+      "series": "MM",
+      "date": "1951-03-10",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1951\\051251DVD Early to Bet MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 4\\1951-05-12 - MM - Early to Bet.avi",
+      "volume": 1,
+      "disc": 4,
+      "title": "Early to Bet",
+      "series": "MM",
+      "date": "1951-05-12",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1951\\051951DVD Rabbit Fire LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 2\\1951-05-19 - LT - Rabbit Fire.avi",
+      "volume": 1,
+      "disc": 2,
+      "title": "Rabbit Fire",
+      "series": "LT",
+      "date": "1951-05-19",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1951\\060251DVD Room and Bird MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 3\\1951-06-02 - MM - Room and Bird.avi",
+      "volume": 2,
+      "disc": 3,
+      "title": "Room and Bird",
+      "series": "MM",
+      "date": "1951-06-02",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1951\\061651DVD Chow Hound LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 4\\1951-06-16 - LT - Chow Hound.avi",
+      "volume": 6,
+      "disc": 4,
+      "title": "Chow Hound",
+      "series": "LT",
+      "date": "1951-06-16",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1951\\063051DVD French Rarebit MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 1\\1951-06-30 - MM - French Rarebit.avi",
+      "volume": 2,
+      "disc": 1,
+      "title": "French Rarebit",
+      "series": "MM",
+      "date": "1951-06-30",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1951\\071451DVD Wearing of the Grin LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 2\\1951-07-14 - LT - The Wearing of the Grin.avi",
+      "volume": 1,
+      "disc": 2,
+      "title": "The Wearing of the Grin",
+      "series": "LT",
+      "date": "1951-07-14",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1951\\082551DVD Cheese Chasers MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 2\\1951-08-25 - MM - Cheese Chasers.avi",
+      "volume": 2,
+      "disc": 2,
+      "title": "Cheese Chasers",
+      "series": "MM",
+      "date": "1951-08-25",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1951\\092251DVD Tweety's S.O.S. MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 4\\1951-09-22 - MM - Tweety's S.O.S..avi",
+      "volume": 1,
+      "disc": 4,
+      "title": "Tweety's S.O.S.",
+      "series": "MM",
+      "date": "1951-09-22",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1951\\100651DVD Ballot Box Bunny MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 1\\1951-10-06 - MM - Ballot Box Bunny.avi",
+      "volume": 1,
+      "disc": 1,
+      "title": "Ballot Box Bunny",
+      "series": "MM",
+      "date": "1951-10-06",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1951\\102051DVD A Bear for Punishment MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 2\\1951-10-20 - MM - A Bear for Punishment.avi",
+      "volume": 2,
+      "disc": 2,
+      "title": "A Bear for Punishment",
+      "series": "MM",
+      "date": "1951-10-20",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1951\\111751DVD Drip-Along Daffy MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 2\\1951-11-17 - MM - Drip-Along Daffy.avi",
+      "volume": 1,
+      "disc": 2,
+      "title": "Drip-Along Daffy",
+      "series": "MM",
+      "date": "1951-11-17",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1951\\120151DVD Big Top Bunny MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 1\\1951-12-01 - MM - Big Top Bunny.avi",
+      "volume": 1,
+      "disc": 1,
+      "title": "Big Top Bunny",
+      "series": "MM",
+      "date": "1951-12-01",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1951\\121551DVD Tweet Tweet Tweety LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 3\\1951-12-15 - LT - Tweet Tweet Tweety.avi",
+      "volume": 2,
+      "disc": 3,
+      "title": "Tweet Tweet Tweety",
+      "series": "LT",
+      "date": "1951-12-15",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1952\\011952DVD Operation Rabbit LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 1\\1952-01-19 - LT - Operation- Rabbit.avi",
+      "volume": 4,
+      "disc": 1,
+      "title": "Operation: Rabbit",
+      "series": "LT",
+      "date": "1952-01-19",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1952\\020252DVD Feed the Kitty MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 3\\1952-02-02 - MM - Feed the Kitty.avi",
+      "volume": 1,
+      "disc": 3,
+      "title": "Feed the Kitty",
+      "series": "MM",
+      "date": "1952-02-02",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1952\\021652DVD Gift Wrapped LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 3\\1952-02-16 - LT - Gift Wrapped.avi",
+      "volume": 2,
+      "disc": 3,
+      "title": "Gift Wrapped",
+      "series": "LT",
+      "date": "1952-02-16",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1952\\031552DVD 14-Carrot Rabbit LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 1\\1952-03-15 - LT - 14 Carrot Rabbit.avi",
+      "volume": 5,
+      "disc": 1,
+      "title": "14 Carrot Rabbit",
+      "series": "LT",
+      "date": "1952-03-15",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1952\\040552DVD Kiddin' the Kitten MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 4\\1952-04-05 - MM - Kiddin' the Kitten.avi",
+      "volume": 4,
+      "disc": 4,
+      "title": "Kiddin' the Kitten",
+      "series": "MM",
+      "date": "1952-04-05",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1952\\041952DVD Water, Water Every Hare LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 1\\1952-04-19 - LT - Water, Water Every Hare.avi",
+      "volume": 1,
+      "disc": 1,
+      "title": "Water, Water Every Hare",
+      "series": "LT",
+      "date": "1952-04-19",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1952\\050352DVD Little Red Rodent Hood MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 2\\1952-05-03 - MM - Little Red Rodent Hood.avi",
+      "volume": 5,
+      "disc": 2,
+      "title": "Little Red Rodent Hood",
+      "series": "MM",
+      "date": "1952-05-03",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1952\\052452DVD Beep Beep MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 2\\1952-05-24 - MM - Beep, Beep.avi",
+      "volume": 2,
+      "disc": 2,
+      "title": "Beep, Beep",
+      "series": "MM",
+      "date": "1952-05-24",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1952\\062152DVD Ain't She Tweet LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 3\\1952-06-21 - LT - Ain't She Tweet.avi",
+      "volume": 2,
+      "disc": 3,
+      "title": "Ain't She Tweet",
+      "series": "LT",
+      "date": "1952-06-21",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1952\\062852DVD The Turn-Tale Wolf MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 2\\1952-06-28 - MM - The Turn-Tale Wolf.avi",
+      "volume": 5,
+      "disc": 2,
+      "title": "The Turn-Tale Wolf",
+      "series": "MM",
+      "date": "1952-06-28",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1952\\072652DVD Oily Hare MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 1\\1952-07-26 - MM - Oily Hare.avi",
+      "volume": 5,
+      "disc": 1,
+      "title": "Oily Hare",
+      "series": "MM",
+      "date": "1952-07-26",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1952\\082352DVD Going! Going! Gosh! MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 2\\1952-08-23 - MM - Going! Going! Gosh!.avi",
+      "volume": 2,
+      "disc": 2,
+      "title": "Going! Going! Gosh!",
+      "series": "MM",
+      "date": "1952-08-23",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1952\\083052DVD Bird in a Guilty Cage LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 3\\1952-08-30 - LT - A Bird in a Guilty Cage.avi",
+      "volume": 2,
+      "disc": 3,
+      "title": "A Bird in a Guilty Cage",
+      "series": "LT",
+      "date": "1952-08-30",
+      "fuzzyDistance": 0.087
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1952\\092052DVD Rabbit Seasoning MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 1\\1952-09-20 - MM - Rabbit Seasoning.avi",
+      "volume": 1,
+      "disc": 1,
+      "title": "Rabbit Seasoning",
+      "series": "MM",
+      "date": "1952-09-20",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1952\\110152DVD The Super Snooper LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 1\\1952-11-01 - LT - The Super Snooper.avi",
+      "volume": 5,
+      "disc": 1,
+      "title": "The Super Snooper",
+      "series": "LT",
+      "date": "1952-11-01",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1952\\111552DVD Rabbit's Kin MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 1\\1952-11-15 - MM - Rabbit's Kin.avi",
+      "volume": 1,
+      "disc": 1,
+      "title": "Rabbit's Kin",
+      "series": "MM",
+      "date": "1952-11-15",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1953\\010353DVD Don't Give Up the Sheep LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 3\\1953-01-03 - LT - Don't Give Up the Sheep.avi",
+      "volume": 1,
+      "disc": 3,
+      "title": "Don't Give Up the Sheep",
+      "series": "LT",
+      "date": "1953-01-03",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1953\\011753DVD Snow Business LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 3\\1953-01-17 - LT - Snow Business.avi",
+      "volume": 2,
+      "disc": 3,
+      "title": "Snow Business",
+      "series": "LT",
+      "date": "1953-01-17",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1953\\020453DVD Forward March Hare LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 1\\1953-02-04 - LT - Forward March Hare.avi",
+      "volume": 4,
+      "disc": 1,
+      "title": "Forward March Hare",
+      "series": "LT",
+      "date": "1953-02-04",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1953\\022153DVD Kiss Me Cat LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 4\\1953-02-21 - LT - Kiss Me Cat.avi",
+      "volume": 4,
+      "disc": 4,
+      "title": "Kiss Me Cat",
+      "series": "LT",
+      "date": "1953-02-21",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1953\\022753DVD The Wild Chase MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 3\\1953-02-27 - MM - The Wild Chase.avi",
+      "volume": 4,
+      "disc": 3,
+      "title": "The Wild Chase",
+      "series": "MM",
+      "date": "1953-02-27",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1953\\022853DVD Duck Amuck MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 2\\1953-02-28 - MM - Duck Amuck.avi",
+      "volume": 1,
+      "disc": 2,
+      "title": "Duck Amuck",
+      "series": "MM",
+      "date": "1953-02-28",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1953\\032853DVD A Peck O' Trouble LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 4\\1953-03-28 - LT - A Peck o' Trouble.avi",
+      "volume": 4,
+      "disc": 4,
+      "title": "A Peck o' Trouble",
+      "series": "LT",
+      "date": "1953-03-28",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1953\\050253DVD Southern Fried Rabbit LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 1\\1953-05-02 - LT - Southern Fried Rabbit.avi",
+      "volume": 4,
+      "disc": 1,
+      "title": "Southern Fried Rabbit",
+      "series": "LT",
+      "date": "1953-05-02",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1953\\052353DVD Much Ado About Nutting MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 4\\1953-05-23 - MM - Much Ado About Nutting.avi",
+      "volume": 6,
+      "disc": 4,
+      "title": "Much Ado About Nutting",
+      "series": "MM",
+      "date": "1953-05-23",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1953\\072553DVD Duck Dodgers in the 24.5 Century MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 2\\1953-07-25 - MM - Duck Dodgers in the 24½th Century.avi",
+      "volume": 1,
+      "disc": 2,
+      "title": "Duck Dodgers in the 24½th Century",
+      "series": "MM",
+      "date": "1953-07-25",
+      "fuzzyDistance": 0.069
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1953\\080853DVD Bully for Bugs LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 1\\1953-08-08 - LT - Bully for Bugs.avi",
+      "volume": 1,
+      "disc": 1,
+      "title": "Bully for Bugs",
+      "series": "LT",
+      "date": "1953-08-08",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1953\\082953DVD Cat-Tales for Two MM BR.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 3\\1953-08-29 - MM - Cat-Tails for Two.avi",
+      "volume": 4,
+      "disc": 3,
+      "title": "Cat-Tails for Two",
+      "series": "MM",
+      "date": "1953-08-29",
+      "fuzzyDistance": 0.118
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1953\\091953DVD Zipping Along MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 2\\1953-09-19 - MM - Zipping Along.avi",
+      "volume": 2,
+      "disc": 2,
+      "title": "Zipping Along",
+      "series": "MM",
+      "date": "1953-09-19",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1953\\100353DVD Duck! Rabbit! Duck! MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 1\\1953-10-03 - MM - Duck! Rabbit, Duck!.avi",
+      "volume": 3,
+      "disc": 1,
+      "title": "Duck! Rabbit, Duck!",
+      "series": "MM",
+      "date": "1953-10-03",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1954\\022054DVD Wild Wife MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 4\\1954-02-20 - MM - Wild Wife.avi",
+      "volume": 6,
+      "disc": 4,
+      "title": "Wild Wife",
+      "series": "MM",
+      "date": "1954-02-20",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1954\\022754DVD No Barking MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 4\\1954-02-27 - MM - No Barking.avi",
+      "volume": 3,
+      "disc": 4,
+      "title": "No Barking",
+      "series": "MM",
+      "date": "1954-02-27",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1954\\031354DVD Bugs and Thugs LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 4\\1954-03-13 - LT - Bugs and Thugs.avi",
+      "volume": 1,
+      "disc": 4,
+      "title": "Bugs and Thugs",
+      "series": "LT",
+      "date": "1954-03-13",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1954\\052254DVD Claws for Alarm MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 3\\1954-05-22 - MM - Claws for Alarm.avi",
+      "volume": 3,
+      "disc": 3,
+      "title": "Claws for Alarm",
+      "series": "MM",
+      "date": "1954-05-22",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1954\\061954DVD Devil May Hare LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 4\\1954-06-19 - LT - Devil May Hare.avi",
+      "volume": 1,
+      "disc": 4,
+      "title": "Devil May Hare",
+      "series": "LT",
+      "date": "1954-06-19",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1954\\071054DVD The Oily American MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 4\\1954-07-10 - MM - The Oily American.avi",
+      "volume": 6,
+      "disc": 4,
+      "title": "The Oily American",
+      "series": "MM",
+      "date": "1954-07-10",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1954\\072454DVD Bewitched Bunny LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 2\\1954-07-24 - LT - Bewitched Bunny.avi",
+      "volume": 5,
+      "disc": 2,
+      "title": "Bewitched Bunny",
+      "series": "LT",
+      "date": "1954-07-24",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1954\\080754DVD Satan's Waitin' LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 1\\1954-08-07 - LT - Satan's Waitin'.avi",
+      "volume": 6,
+      "disc": 1,
+      "title": "Satan's Waitin'",
+      "series": "LT",
+      "date": "1954-08-07",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1954\\081454DVD Stop! Look! and Hasten! MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 2\\1954-08-14 - MM - Stop! Look! And Hasten!.avi",
+      "volume": 2,
+      "disc": 2,
+      "title": "Stop! Look! And Hasten!",
+      "series": "MM",
+      "date": "1954-08-14",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1954\\091854DVD Goo Goo Goliath MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 4\\1954-09-18 - MM - Goo Goo Goliath.avi",
+      "volume": 6,
+      "disc": 4,
+      "title": "Goo Goo Goliath",
+      "series": "MM",
+      "date": "1954-09-18",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1954\\100254DVD By Word of Mouse LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 2\\1954-10-02 - LT - By Word of Mouse.avi",
+      "volume": 6,
+      "disc": 2,
+      "title": "By Word of Mouse",
+      "series": "LT",
+      "date": "1954-10-02",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1954\\112754DVD My Little Duckaroo MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 1\\1954-11-27 - MM - My Little Duckaroo.avi",
+      "volume": 6,
+      "disc": 1,
+      "title": "My Little Duckaroo",
+      "series": "MM",
+      "date": "1954-11-27",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1954\\121854DVD Baby Buggy Bunny MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 1\\1954-12-18 - MM - Baby Buggy Bunny.avi",
+      "volume": 2,
+      "disc": 1,
+      "title": "Baby Buggy Bunny",
+      "series": "MM",
+      "date": "1954-12-18",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1955\\010155DVD Pizzicato Pussy Cat MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 4\\1955-01-01 - MM - Pizzicato Pussycat.avi",
+      "volume": 4,
+      "disc": 4,
+      "title": "Pizzicato Pussycat",
+      "series": "MM",
+      "date": "1955-01-01",
+      "fuzzyDistance": 0.053
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1955\\032655DVD Sahara Hare LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 1\\1955-03-26 - LT - Sahara Hare.avi",
+      "volume": 4,
+      "disc": 1,
+      "title": "Sahara Hare",
+      "series": "LT",
+      "date": "1955-03-26",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1955\\041655DVD The Hole Idea LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 4\\1955-04-16 - LT - The Hole Idea.avi",
+      "volume": 6,
+      "disc": 4,
+      "title": "The Hole Idea",
+      "series": "LT",
+      "date": "1955-04-16",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1955\\043055DVD Ready, Set, Zoom LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 2\\1955-04-30 - LT - Ready, Set, Zoom!.avi",
+      "volume": 2,
+      "disc": 2,
+      "title": "Ready, Set, Zoom!",
+      "series": "LT",
+      "date": "1955-04-30",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1955\\062555DVD Lumber Jerks LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 4\\1955-06-25 - LT - Lumber Jerks.avi",
+      "volume": 1,
+      "disc": 4,
+      "title": "Lumber Jerks",
+      "series": "LT",
+      "date": "1955-06-25",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1955\\080655DVD Jumpin' Jupiter MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 1\\1955-08-06 - MM - Jumpin' Jupiter.avi",
+      "volume": 6,
+      "disc": 1,
+      "title": "Jumpin' Jupiter",
+      "series": "MM",
+      "date": "1955-08-06",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1955\\082755DVD Hyde and Hare LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 1\\1955-08-27 - LT - Hyde and Hare.avi",
+      "volume": 2,
+      "disc": 1,
+      "title": "Hyde and Hare",
+      "series": "LT",
+      "date": "1955-08-27",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1955\\091755DVD Speedy Gonzales MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 4\\1955-09-17 - MM - Speedy Gonzales.avi",
+      "volume": 1,
+      "disc": 4,
+      "title": "Speedy Gonzales",
+      "series": "MM",
+      "date": "1955-09-17",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1955\\100155DVD Knight-mare Hare MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 1\\1955-10-01 - MM - Knight-mare Hare.avi",
+      "volume": 4,
+      "disc": 1,
+      "title": "Knight-mare Hare",
+      "series": "MM",
+      "date": "1955-10-01",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1955\\102955DVD Red Riding Hoodwinked LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 2\\1955-10-29 - LT - Red Riding Hoodwinked.avi",
+      "volume": 5,
+      "disc": 2,
+      "title": "Red Riding Hoodwinked",
+      "series": "LT",
+      "date": "1955-10-29",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1955\\111255DVD Roman Legion-Hare LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 1\\1955-11-12 - LT - Roman Legion-Hare.avi",
+      "volume": 4,
+      "disc": 1,
+      "title": "Roman Legion-Hare",
+      "series": "LT",
+      "date": "1955-11-12",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1955\\112655DVD Heir Conditioned LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 2\\1955-11-26 - LT - Heir-Conditioned.avi",
+      "volume": 6,
+      "disc": 2,
+      "title": "Heir-Conditioned",
+      "series": "LT",
+      "date": "1955-11-26",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1955\\121055DVD Guided Muscle LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 2\\1955-12-10 - LT - Guided Muscle.avi",
+      "volume": 2,
+      "disc": 2,
+      "title": "Guided Muscle",
+      "series": "LT",
+      "date": "1955-12-10",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1955\\123155DVD One Froggy Evening MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 4\\1955-12-31 - MM - One Froggy Evening.avi",
+      "volume": 2,
+      "disc": 4,
+      "title": "One Froggy Evening",
+      "series": "MM",
+      "date": "1955-12-31",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1956\\011456DVD Bugs' Bonnets MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 1\\1956-01-14 - MM - Bugs' Bonnets.avi",
+      "volume": 5,
+      "disc": 1,
+      "title": "Bugs' Bonnets",
+      "series": "MM",
+      "date": "1956-01-14",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1956\\022556DVD Broomstick Bunny LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 1\\1956-02-25 - LT - Broom-Stick Bunny.avi",
+      "volume": 2,
+      "disc": 1,
+      "title": "Broom-Stick Bunny",
+      "series": "LT",
+      "date": "1956-02-25",
+      "fuzzyDistance": 0.059
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1956\\031056DVD Rocket Squad MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 3\\1956-03-10 - MM - Rocket Squad.avi",
+      "volume": 3,
+      "disc": 3,
+      "title": "Rocket Squad",
+      "series": "MM",
+      "date": "1956-03-10",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1956\\033156DVD Heaven Scent MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 1\\1956-03-31 - MM - Heaven Scent.avi",
+      "volume": 6,
+      "disc": 1,
+      "title": "Heaven Scent",
+      "series": "MM",
+      "date": "1956-03-31",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1956\\050556DVD Gee Whiz-z-z LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 2\\1956-05-05 - LT - Gee Whiz-z-z-z-z-z-z.avi",
+      "volume": 2,
+      "disc": 2,
+      "title": "Gee Whiz-z-z-z-z-z-z",
+      "series": "LT",
+      "date": "1956-05-05",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1956\\060256DVD The Unexpected Pest MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 4\\1956-06-02 - MM - The Unexpected Pest.avi",
+      "volume": 4,
+      "disc": 4,
+      "title": "The Unexpected Pest",
+      "series": "MM",
+      "date": "1956-06-02",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1956\\070756DVD Stupor Duck LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 1\\1956-07-07 - LT - Stupor Duck.avi",
+      "volume": 5,
+      "disc": 1,
+      "title": "Stupor Duck",
+      "series": "LT",
+      "date": "1956-07-07",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1956\\072156DVD Barbary Coast Bunny LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 1\\1956-07-21 - LT - Barbary Coast Bunny.avi",
+      "volume": 4,
+      "disc": 1,
+      "title": "Barbary Coast Bunny",
+      "series": "LT",
+      "date": "1956-07-21",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1956\\080456DVD Rocket Bye Baby MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 4\\1956-08-04 - MM - Rocket-Bye Baby.avi",
+      "volume": 6,
+      "disc": 4,
+      "title": "Rocket-Bye Baby",
+      "series": "MM",
+      "date": "1956-08-04",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1956\\082556DVD Raw! Raw! Rooster! LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 1\\1956-08-25 - LT - Raw! Raw! Rooster!.avi",
+      "volume": 6,
+      "disc": 1,
+      "title": "Raw! Raw! Rooster!",
+      "series": "LT",
+      "date": "1956-08-25",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1956\\091556DVD A Star is Bored LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 1\\1956-09-15 - LT - A Star Is Bored.avi",
+      "volume": 5,
+      "disc": 1,
+      "title": "A Star Is Bored",
+      "series": "LT",
+      "date": "1956-09-15",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1956\\092956DVD Deduce, You Say LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 2\\1956-09-29 - LT - Deduce, You Say!.avi",
+      "volume": 1,
+      "disc": 2,
+      "title": "Deduce, You Say!",
+      "series": "LT",
+      "date": "1956-09-29",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1956\\101356DVD Yankee Dood it MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 2\\1956-10-13 - MM - Yankee Dood It.avi",
+      "volume": 6,
+      "disc": 2,
+      "title": "Yankee Dood It",
+      "series": "MM",
+      "date": "1956-10-13",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1956\\102756DVD Wideo Wabbit MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 2\\1956-10-27 - MM - Wideo Wabbit.avi",
+      "volume": 3,
+      "disc": 2,
+      "title": "Wideo Wabbit",
+      "series": "MM",
+      "date": "1956-10-27",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1956\\111056DVD There They Go-Go-Go LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 2\\1956-11-10 - LT - There They Go-Go-Go!.avi",
+      "volume": 2,
+      "disc": 2,
+      "title": "There They Go-Go-Go!",
+      "series": "LT",
+      "date": "1956-11-10",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1956\\120856DVD The Honey-Mousers LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 2\\1956-12-08 - LT - The Honey-Mousers.avi",
+      "volume": 3,
+      "disc": 2,
+      "title": "The Honey-Mousers",
+      "series": "LT",
+      "date": "1956-12-08",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1956\\121556DVD To Hare is Human MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 1\\1956-12-15 - MM - To Hare Is Human.avi",
+      "volume": 4,
+      "disc": 1,
+      "title": "To Hare Is Human",
+      "series": "MM",
+      "date": "1956-12-15",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1957\\010557DVD The Three Little Bops LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 4\\1957-01-05 - LT - Three Little Bops.avi",
+      "volume": 2,
+      "disc": 4,
+      "title": "Three Little Bops",
+      "series": "LT",
+      "date": "1957-01-05",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1957\\012657DVD Scrambled Arches LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 2\\1957-01-26 - LT - Scrambled Aches.avi",
+      "volume": 2,
+      "disc": 2,
+      "title": "Scrambled Aches",
+      "series": "LT",
+      "date": "1957-01-26",
+      "fuzzyDistance": 0.063
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1957\\020957DVD Ali Baba Bunny MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 1\\1957-02-09 - MM - Ali Baba Bunny.avi",
+      "volume": 5,
+      "disc": 1,
+      "title": "Ali Baba Bunny",
+      "series": "MM",
+      "date": "1957-02-09",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1957\\022357DVD Go Fly a Kit LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 4\\1957-02-23 - LT - Go Fly a Kit.avi",
+      "volume": 4,
+      "disc": 4,
+      "title": "Go Fly a Kit",
+      "series": "LT",
+      "date": "1957-02-23",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1957\\031657DVD Tweety and the Beanstalk MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 2\\1957-03-16 - MM - Tweety and the Beanstalk.avi",
+      "volume": 5,
+      "disc": 2,
+      "title": "Tweety and the Beanstalk",
+      "series": "MM",
+      "date": "1957-03-16",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1957\\060857DVD Steal Wool LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 4\\1957-06-08 - LT - Steal Wool.avi",
+      "volume": 3,
+      "disc": 4,
+      "title": "Steal Wool",
+      "series": "LT",
+      "date": "1957-06-08",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1957\\070657DVD What's Opera, Doc MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 4\\1957-07-06 - MM - What's Opera, Doc-.avi",
+      "volume": 2,
+      "disc": 4,
+      "title": "What's Opera, Doc?",
+      "series": "MM",
+      "date": "1957-07-06",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1957\\072057DVD Tabasco Road MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 3\\1957-07-20 - MM - Tabasco Road.avi",
+      "volume": 4,
+      "disc": 3,
+      "title": "Tabasco Road",
+      "series": "MM",
+      "date": "1957-07-20",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1957\\081057DVD Birds Anonymous MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 4\\1957-08-10 - MM - Birds Anonymous.avi",
+      "volume": 3,
+      "disc": 4,
+      "title": "Birds Anonymous",
+      "series": "MM",
+      "date": "1957-08-10",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1957\\091457DVD Zoom and Bored MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 2\\1957-09-14 - MM - Zoom and Bored.avi",
+      "volume": 2,
+      "disc": 2,
+      "title": "Zoom and Bored",
+      "series": "MM",
+      "date": "1957-09-14",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1957\\110257DVD Show Biz Bugs LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 4\\1957-11-02 - LT - Show Biz Bugs.avi",
+      "volume": 2,
+      "disc": 4,
+      "title": "Show Biz Bugs",
+      "series": "LT",
+      "date": "1957-11-02",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1957\\113057DVD Gonzales' Tomales LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 4\\1957-11-30 - LT - Gonzales' Tamales.avi",
+      "volume": 3,
+      "disc": 4,
+      "title": "Gonzales' Tamales",
+      "series": "LT",
+      "date": "1957-11-30",
+      "fuzzyDistance": 0.063
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1957\\121457DVD Rabbit Romeo MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 1\\1957-12-14 - MM - Rabbit Romeo.avi",
+      "volume": 4,
+      "disc": 1,
+      "title": "Rabbit Romeo",
+      "series": "MM",
+      "date": "1957-12-14",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1958\\011858DVD Tortilla Flaps LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 3\\1958-01-18 - LT - Tortilla Flaps.avi",
+      "volume": 4,
+      "disc": 3,
+      "title": "Tortilla Flaps",
+      "series": "LT",
+      "date": "1958-01-18",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1958\\030858DVD Robin Hood Daffy MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 3\\1958-03-08 - MM - Robin Hood Daffy.avi",
+      "volume": 3,
+      "disc": 3,
+      "title": "Robin Hood Daffy",
+      "series": "MM",
+      "date": "1958-03-08",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1958\\041258DVD Whoa, Be Gone! MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 2\\Disc 2\\1958-04-12 - MM - Whoa, Be-Gone!.avi",
+      "volume": 2,
+      "disc": 2,
+      "title": "Whoa, Be-Gone!",
+      "series": "MM",
+      "date": "1958-04-12",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1958\\082358DVD Knighty Knight Bugs LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 1\\1958-08-23 - LT - Knighty Knight Bugs.avi",
+      "volume": 4,
+      "disc": 1,
+      "title": "Knighty Knight Bugs",
+      "series": "LT",
+      "date": "1958-08-23",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1958\\101158DVD Hook Line and Stinker LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 1\\1958-10-11 - LT - Hook, Line and Stinker.avi",
+      "volume": 6,
+      "disc": 1,
+      "title": "Hook, Line and Stinker",
+      "series": "LT",
+      "date": "1958-10-11",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1958\\122058DVD Cat Feud MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 4\\1958-12-20 - MM - Cat Feud.avi",
+      "volume": 4,
+      "disc": 4,
+      "title": "Cat Feud",
+      "series": "MM",
+      "date": "1958-12-20",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1959\\011059DVD Baton Bunny LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 3\\1959-01-10 - LT - Baton Bunny.avi",
+      "volume": 1,
+      "disc": 3,
+      "title": "Baton Bunny",
+      "series": "LT",
+      "date": "1959-01-10",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1959\\040459DVD The Mouse that Jack Built MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 2\\1959-04-04 - MM - The Mouse That Jack Built.avi",
+      "volume": 3,
+      "disc": 2,
+      "title": "The Mouse That Jack Built",
+      "series": "MM",
+      "date": "1959-04-04",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1959\\070459DVD Mexicali Shmoes LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 3\\1959-07-04 - LT - Mexicali Shmoes.avi",
+      "volume": 4,
+      "disc": 3,
+      "title": "Mexicali Shmoes",
+      "series": "LT",
+      "date": "1959-07-04",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1959\\082959DVD Here Today, Gone Tamle LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 3\\1959-08-29 - LT - Here Today, Gone Tamale.avi",
+      "volume": 4,
+      "disc": 3,
+      "title": "Here Today, Gone Tamale",
+      "series": "LT",
+      "date": "1959-08-29",
+      "fuzzyDistance": 0.045
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1959\\092659DVD Broken Leghorn LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 1\\Disc 4\\1959-09-26 - LT - A Broken Leghorn.avi",
+      "volume": 1,
+      "disc": 4,
+      "title": "A Broken Leghorn",
+      "series": "LT",
+      "date": "1959-09-26",
+      "fuzzyDistance": 0.125
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1960\\012360DVD West of the Pesos MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 3\\1960-01-23 - MM - West of the Pesos.avi",
+      "volume": 4,
+      "disc": 3,
+      "title": "West of the Pesos",
+      "series": "MM",
+      "date": "1960-01-23",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1960\\031960DVD Goldimouse and the Three Cats LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 2\\1960-03-19 - LT - Goldimouse and the Three Cats.avi",
+      "volume": 5,
+      "disc": 2,
+      "title": "Goldimouse and the Three Cats",
+      "series": "LT",
+      "date": "1960-03-19",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1960\\071660DVD Mouse and Garden LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 4\\1960-07-16 - LT - Mouse and Garden.avi",
+      "volume": 4,
+      "disc": 4,
+      "title": "Mouse and Garden",
+      "series": "LT",
+      "date": "1960-07-16",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1961\\010761DVD Cannery Woe LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 3\\1961-01-07 - LT - Cannery Woe.avi",
+      "volume": 4,
+      "disc": 3,
+      "title": "Cannery Woe",
+      "series": "LT",
+      "date": "1961-01-07",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1961\\052061DVD The Abominable Snow Rabbit LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 1\\1961-05-20 - LT - The Abominable Snow Rabbit.avi",
+      "volume": 5,
+      "disc": 1,
+      "title": "The Abominable Snow Rabbit",
+      "series": "LT",
+      "date": "1961-05-20",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1961\\081961DVD The Pied Piper of Guadalupe LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 3\\1961-08-19 - LT - The Pied Piper of Guadalupe.avi",
+      "volume": 4,
+      "disc": 3,
+      "title": "The Pied Piper of Guadalupe",
+      "series": "LT",
+      "date": "1961-08-19",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1961\\120261DVD The Last Hungry Cat MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 2\\1961-12-02 - MM - The Last Hungry Cat.avi",
+      "volume": 3,
+      "disc": 2,
+      "title": "The Last Hungry Cat",
+      "series": "MM",
+      "date": "1961-12-02",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1962\\051262DVD Mexican Boarders LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 3\\1962-05-12 - LT - Mexican Boarders.avi",
+      "volume": 4,
+      "disc": 3,
+      "title": "Mexican Boarders",
+      "series": "LT",
+      "date": "1962-05-12",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1963\\042763DVD Now Hear This LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 4\\1963-04-27 - LT - Now Hear This.avi",
+      "volume": 6,
+      "disc": 4,
+      "title": "Now Hear This",
+      "series": "LT",
+      "date": "1963-04-27",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1963\\081763DVD Chili Weather MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 3\\1963-08-17 - MM - Chili Weather.avi",
+      "volume": 4,
+      "disc": 3,
+      "title": "Chili Weather",
+      "series": "MM",
+      "date": "1963-08-17",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1963\\113063DVD Transylvania 6-5000 MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 1\\1963-11-30 - MM - Transylvania 6-5000.avi",
+      "volume": 5,
+      "disc": 1,
+      "title": "Transylvania 6-5000",
+      "series": "MM",
+      "date": "1963-11-30",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1963\\122863DVD To Beep or Not To Beep MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 3\\Disc 4\\1963-12-28 - MM - To Beep or Not to Beep.avi",
+      "volume": 3,
+      "disc": 4,
+      "title": "To Beep or Not to Beep",
+      "series": "MM",
+      "date": "1963-12-28",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1964\\020864DVD A Message to Gracias LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 3\\1964-02-08 - LT - A Message to Gracias.avi",
+      "volume": 4,
+      "disc": 3,
+      "title": "A Message to Gracias",
+      "series": "LT",
+      "date": "1964-02-08",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1964\\042564DVD Nuts and Volts LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 3\\1964-04-25 - LT - Nuts and Volts.avi",
+      "volume": 4,
+      "disc": 3,
+      "title": "Nuts and Volts",
+      "series": "LT",
+      "date": "1964-04-25",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1964\\080164DVD Senorella and the Glass Huarache LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 5\\Disc 2\\1964-08-01 - LT - Señorella and the Glass Huarache.avi",
+      "volume": 5,
+      "disc": 2,
+      "title": "Señorella and the Glass Huarache",
+      "series": "LT",
+      "date": "1964-08-01",
+      "fuzzyDistance": 0.036
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1964\\102464DVD Pancho's Hideaway LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 3\\1964-10-24 - LT - Pancho's Hideaway.avi",
+      "volume": 4,
+      "disc": 3,
+      "title": "Pancho's Hideaway",
+      "series": "LT",
+      "date": "1964-10-24",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1964\\122964DVD Martian Through Georgia LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 4\\1964-12-29 - LT - Martian Through Georgia.avi",
+      "volume": 6,
+      "disc": 4,
+      "title": "Martian Through Georgia",
+      "series": "LT",
+      "date": "1964-12-29",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1966\\041666DVD A-Haunting We Will Go LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 4\\Disc 3\\1966-04-16 - LT - A-Haunting We Will Go.avi",
+      "volume": 4,
+      "disc": 3,
+      "title": "A-Haunting We Will Go",
+      "series": "LT",
+      "date": "1966-04-16",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1968\\020368DVD Norman Normal.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\Volume 6\\Disc 4\\1968-02-03 - Unclassified - Norman Normal.avi",
+      "volume": 6,
+      "disc": 4,
+      "title": "Norman Normal",
+      "series": "Unclassified",
+      "date": "1968-02-03",
+      "fuzzyDistance": 0
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\Extras\\Volume 5\\Disc 1\\Bad Time Story.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\Volume 5\\Disc 1\\Bad Time Story.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\Extras\\Volume 5\\Disc 1\\Commercials.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\Volume 5\\Disc 1\\Commercials.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\Extras\\Volume 5\\Disc 1\\Extremes and In-Betweens Part 1.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\Volume 5\\Disc 1\\Extremes and In-Betweens Part 1.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\Extras\\Volume 5\\Disc 1\\What's up Dog.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\Volume 5\\Disc 1\\What's up Dog.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\Extras\\Volume 5\\Disc 2\\Drawn to Life.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\Volume 5\\Disc 2\\Drawn to Life.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\Extras\\Volume 5\\Disc 2\\Extremes and In-Betweens Part 2.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\Volume 5\\Disc 2\\Extremes and In-Betweens Part 2.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\Extras\\Volume 5\\Disc 2\\Once Upon a Looney Tune.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\Volume 5\\Disc 2\\Once Upon a Looney Tune.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\Extras\\Volume 5\\Disc 2\\Tricks of the Cartoon.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\Volume 5\\Disc 2\\Tricks of the Cartoon.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\Extras\\Volume 5\\Disc 3\\Bonus Cartoons\\The Good Egg.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\Volume 5\\Disc 3\\Bonus Cartoons\\The Good Egg.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\Extras\\Volume 5\\Disc 3\\Bonus Cartoons\\The Return of Mr. Hook.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\Volume 5\\Disc 3\\Bonus Cartoons\\The Return of Mr. Hook.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\Extras\\Volume 5\\Disc 3\\Bonus Cartoons\\Tokyo Woes.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\Volume 5\\Disc 3\\Bonus Cartoons\\Tokyo Woes.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\Extras\\Volume 5\\Disc 3\\Special Features\\Hare Ribbin' Director's Cut.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\Volume 5\\Disc 3\\Special Features\\Hare Ribbin' Director's Cut.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\Extras\\Volume 5\\Disc 3\\Special Features\\Real American Zero.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\Volume 5\\Disc 3\\Special Features\\Real American Zero.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\Extras\\Volume 5\\Disc 3\\Special Features\\The Bashful Buzzard Storyboard Reel.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\Volume 5\\Disc 3\\Special Features\\The Bashful Buzzard Storyboard Reel.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\Extras\\Volume 5\\Disc 3\\Special Features\\Wacky Warner One-Shots.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\Volume 5\\Disc 3\\Special Features\\Wacky Warner One-Shots.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\Extras\\Volume 5\\Disc 4\\Bustin' Out All Over.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\Volume 5\\Disc 4\\Bustin' Out All Over.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\Extras\\Volume 5\\Disc 4\\Carnival of the Animals.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\Volume 5\\Disc 4\\Carnival of the Animals.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\Extras\\Volume 5\\Disc 4\\Looney Christmas Tales.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\Volume 5\\Disc 4\\Looney Christmas Tales.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\Extras\\Volume 5\\Disc 4\\Unsung Maestros.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\Volume 5\\Disc 4\\Unsung Maestros.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\Extras\\Volume 6\\Disc 1\\Bugs Bunny in King Arthurs Court.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\Volume 6\\Disc 1\\Bugs Bunny in King Arthurs Court.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\Extras\\Volume 6\\Disc 1\\Daffy Ducks Easter Egg-Citement.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\Volume 6\\Disc 1\\Daffy Ducks Easter Egg-Citement.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\Extras\\Volume 6\\Disc 2\\Friz Freling at MGM\\A Day at the Beach.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\Volume 6\\Disc 2\\Friz Freling at MGM\\A Day at the Beach.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\Extras\\Volume 6\\Disc 2\\Friz Freling at MGM\\Mamas New Hat.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\Volume 6\\Disc 2\\Friz Freling at MGM\\Mamas New Hat.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\Extras\\Volume 6\\Disc 2\\Friz Freling at MGM\\Poultry Pirates.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\Volume 6\\Disc 2\\Friz Freling at MGM\\Poultry Pirates.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\Extras\\Volume 6\\Disc 2\\Friz Freling at MGM\\Seal Skinners.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\Volume 6\\Disc 2\\Friz Freling at MGM\\Seal Skinners.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\Extras\\Volume 6\\Disc 2\\Friz Freling at MGM\\The Captains Christmas.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\Volume 6\\Disc 2\\Friz Freling at MGM\\The Captains Christmas.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\Extras\\Volume 6\\Disc 3\\The World of Leon Schlesinger\\Crying for the Carolines.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\Volume 6\\Disc 3\\The World of Leon Schlesinger\\Crying for the Carolines.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\Extras\\Volume 6\\Disc 3\\The World of Leon Schlesinger\\Haunted Gold Title Sequence.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\Volume 6\\Disc 3\\The World of Leon Schlesinger\\Haunted Gold Title Sequence.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\Extras\\Volume 6\\Disc 3\\The World of Leon Schlesinger\\Introduction.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\Volume 6\\Disc 3\\The World of Leon Schlesinger\\Introduction.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\Extras\\Volume 6\\Disc 3\\The World of Leon Schlesinger\\Schlesinger Productions Christmas Party.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\Volume 6\\Disc 3\\The World of Leon Schlesinger\\Schlesinger Productions Christmas Party.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\Extras\\Volume 6\\Disc 4\\Mel Blanc - The Man of a Thousand Voices.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\Volume 6\\Disc 4\\Mel Blanc - The Man of a Thousand Voices.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1932\\080632DVD I Love a Parade MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\1932\\080632DVD I Love a Parade MM.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1933\\061033DVD I Like Mountain Music MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\1933\\061033DVD I Like Mountain Music MM.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1933\\121633DVD Sittin' on a Backyard Fence MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\1933\\121633DVD Sittin' on a Backyard Fence MM.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1934\\060934DVD How Do I Know it's Sunday MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\1934\\060934DVD How Do I Know it's Sunday MM.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1940\\051140DVD Sniffles Takes a Trip MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\1940\\051140DVD Sniffles Takes a Trip MM.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1941\\011841DVD The Fighting 69 1 Halfth MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\1941\\011841DVD The Fighting 69 1 Halfth MM.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1943\\012343DVD Confusions of a Nutzy Spy LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\1943\\012343DVD Confusions of a Nutzy Spy LT.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1943\\032743DVD Hop and Go LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\1943\\032743DVD Hop and Go LT.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1949\\111949DVD Hippety Hopper MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\1949\\111949DVD Hippety Hopper MM.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1951\\110351DVD Sleepy Time Possum MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\1951\\110351DVD Sleepy Time Possum MM.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1953\\121953DVD Punch Trunk LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\1953\\121953DVD Punch Trunk LT.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1955\\061155DVD Rabbit Rampage LT.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\1955\\061155DVD Rabbit Rampage LT.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1957\\042057DVD Boyhood Daze MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\1957\\042057DVD Boyhood Daze MM.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1960\\022760DVD Wild Wild World MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\1960\\022760DVD Wild Wild World MM.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\1964\\022964DVD Bartholomew Versus the Wheel MM.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\1964\\022964DVD Bartholomew Versus the Wheel MM.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\Private Snafu\\060043 Coming Snafu.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\Private Snafu\\060043 Coming Snafu.avi",
+      "extra": true
+    },
+    {
+      "source": "Z:\\Other\\Looney Tunes Golden Collection\\Private Snafu\\070043 Gripes.avi",
+      "destination": "M:\\Collections\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\extras\\Private Snafu\\070043 Gripes.avi",
+      "extra": true
+    }
+  ]
+}

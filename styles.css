@@ -66,16 +66,22 @@
   margin-right: 0.25rem;
 }
 
-.toby-tv-brand i {
+.toby-tv-brand-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 0.12rem;
+}
+
+.toby-tv-brand-bars i {
   display: block;
   width: clamp(1.2rem, 3vw, 2.4rem);
   height: 0.22rem;
 }
 
-.toby-tv-brand i:nth-child(2) { background: #e63b2e; }
-.toby-tv-brand i:nth-child(3) { background: #f5b51b; }
-.toby-tv-brand i:nth-child(4) { background: #2aa85b; }
-.toby-tv-brand i:nth-child(5) { background: #2c91df; }
+.toby-tv-brand-bars i:nth-child(1) { background: #e63b2e; }
+.toby-tv-brand-bars i:nth-child(2) { background: #f5b51b; }
+.toby-tv-brand-bars i:nth-child(3) { background: #2aa85b; }
+.toby-tv-brand-bars i:nth-child(4) { background: #2c91df; }
 
 .toby-tv-detail-icons {
   display: flex;
@@ -184,6 +190,40 @@
   color: var(--muted);
   font-size: clamp(0.72rem, 0.9vw, 0.92rem);
   line-height: 1.34;
+}
+
+.toby-tv-hierarchy {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.28rem;
+}
+
+.toby-tv-hierarchy-link {
+  border: 0;
+  border-bottom: 1px solid transparent;
+  padding: 0;
+  background: transparent;
+  color: var(--toby-tv-gold);
+  font: inherit;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+}
+
+.toby-tv-hierarchy-link:hover,
+.toby-tv-hierarchy-link:focus-visible {
+  border-bottom-color: currentColor;
+  color: var(--toby-tv-cream);
+  outline: none;
+}
+
+.toby-tv-hierarchy-link.heading {
+  color: inherit;
+  font: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  text-transform: inherit;
 }
 
 .toby-tv-season-side > .toby-tv-meta {
@@ -820,8 +860,20 @@ button {
 }
 
 .app-shell:has(.sidebar:hover),
-.app-shell:has(.sidebar:focus-within) {
+.app-shell:has(.sidebar:focus-within),
+.app-shell.search-active,
+.global-search-active .app-shell {
   grid-template-columns: 14.75rem minmax(0, 1fr);
+}
+
+.global-search-active .app-shell,
+.global-search-active .sidebar,
+.global-search-active .brand-text,
+.global-search-active .nav-label,
+.global-search-active .nav-count,
+.global-search-active .nav-divider,
+.global-search-active .nav-search .search {
+  transition: none !important;
 }
 
 .app-shell.tv-guide-theater-mode {
@@ -893,7 +945,9 @@ button {
 }
 
 .sidebar:hover .brand-text,
-.sidebar:focus-within .brand-text {
+.sidebar:focus-within .brand-text,
+.search-active .sidebar .brand-text,
+.global-search-active .sidebar .brand-text {
   opacity: 1;
   transform: translateX(0);
 }
@@ -969,7 +1023,11 @@ button {
 .sidebar:hover .nav-label,
 .sidebar:hover .nav-count,
 .sidebar:focus-within .nav-label,
-.sidebar:focus-within .nav-count {
+.sidebar:focus-within .nav-count,
+.search-active .sidebar .nav-label,
+.search-active .sidebar .nav-count,
+.global-search-active .sidebar .nav-label,
+.global-search-active .sidebar .nav-count {
   opacity: 1;
 }
 
@@ -991,7 +1049,9 @@ button {
 }
 
 .sidebar:hover .nav-divider,
-.sidebar:focus-within .nav-divider {
+.sidebar:focus-within .nav-divider,
+.search-active .sidebar .nav-divider,
+.global-search-active .sidebar .nav-divider {
   width: 100%;
 }
 
@@ -1019,7 +1079,9 @@ button {
 }
 
 .sidebar:hover .nav-search .search,
-.sidebar:focus-within .nav-search .search {
+.sidebar:focus-within .nav-search .search,
+.search-active .sidebar .nav-search .search,
+.global-search-active .sidebar .nav-search .search {
   opacity: 1;
   pointer-events: auto;
 }
@@ -1960,6 +2022,226 @@ h2 {
   color: var(--accent);
   font-size: 0.72rem;
   text-transform: uppercase;
+}
+
+.person-filmography-page {
+  --person-accent: var(--toby-blue, #6faeff);
+  --person-gold: #d8b35d;
+  gap: clamp(1.2rem, 2.5vw, 2rem);
+  padding-bottom: 3rem;
+}
+
+.person-filmography-hero {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: clamp(7.5rem, 10vw, 10rem) minmax(0, 1fr);
+  gap: clamp(1.2rem, 3vw, 2.5rem);
+  align-items: start;
+  overflow: hidden;
+  padding: clamp(1rem, 2.5vw, 2rem);
+  border: 1px solid rgba(111, 174, 255, 0.3);
+  border-radius: var(--radius);
+  background:
+    radial-gradient(circle at 8% 22%, rgba(111, 174, 255, 0.18), transparent 19rem),
+    linear-gradient(125deg, rgba(216, 179, 93, 0.1), var(--panel) 42%, rgba(122, 76, 255, 0.08));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
+}
+
+.person-filmography-hero::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: auto -6rem -9rem auto;
+  width: 24rem;
+  aspect-ratio: 1;
+  border: 1px solid rgba(216, 179, 93, 0.12);
+  border-radius: 50%;
+  box-shadow: 0 0 0 2.5rem rgba(111, 174, 255, 0.025), 0 0 0 5rem rgba(216, 179, 93, 0.018);
+}
+
+.person-filmography-portrait {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  border: 1px solid rgba(216, 179, 93, 0.72);
+  border-radius: calc(var(--radius) - 2px);
+  background: linear-gradient(145deg, rgba(111, 174, 255, 0.18), #0b0d13);
+  color: var(--person-gold);
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-weight: 900;
+  box-shadow: 0 0.8rem 1.8rem rgba(0, 0, 0, 0.42), 0 0 0 0.25rem rgba(0, 0, 0, 0.28);
+}
+
+.person-filmography-portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.person-filmography-copy {
+  display: grid;
+  align-content: start;
+  gap: 0.85rem;
+  min-width: 0;
+}
+
+.person-kicker {
+  color: var(--person-gold);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.person-filmography-copy h1 {
+  max-width: 18ch;
+  margin: 0;
+  color: var(--text);
+  font-size: clamp(2.15rem, 5.3vw, 5rem);
+  line-height: 0.92;
+  letter-spacing: -0.045em;
+  text-wrap: balance;
+}
+
+.person-biography {
+  max-width: 80ch;
+  margin: 0;
+  color: color-mix(in srgb, var(--text) 82%, var(--muted));
+  font-size: clamp(0.92rem, 1.2vw, 1.05rem);
+  line-height: 1.62;
+}
+
+.person-fact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+  gap: 0.55rem;
+  margin-top: 0.2rem;
+}
+
+.person-fact-grid > div {
+  display: grid;
+  align-content: start;
+  gap: 0.18rem;
+  min-height: 3.8rem;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--line-soft);
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.24);
+}
+
+.person-fact-grid span {
+  color: var(--muted);
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.person-fact-grid strong {
+  color: var(--text);
+  font-size: 0.88rem;
+  line-height: 1.25;
+}
+
+.person-available,
+.person-credits {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.person-available > h2,
+.person-credits h2 {
+  margin: 0;
+}
+
+.person-credit-table-wrap {
+  border-color: rgba(111, 174, 255, 0.28);
+  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.16);
+}
+
+.person-credit-table {
+  min-width: 68rem;
+}
+
+.person-credit-table tbody tr:nth-child(even) {
+  background: rgba(111, 174, 255, 0.035);
+}
+
+.person-credit-table tbody tr:hover {
+  background: linear-gradient(90deg, rgba(111, 174, 255, 0.1), rgba(216, 179, 93, 0.055));
+}
+
+.person-credit-table th:nth-last-child(-n + 2),
+.person-credit-table td:nth-last-child(-n + 2) {
+  text-align: center;
+}
+
+.person-credit-title {
+  color: var(--text);
+  font-weight: 800;
+}
+
+.credit-status {
+  display: inline-flex;
+  justify-content: center;
+  min-width: 4.8rem;
+  padding: 0.22rem 0.5rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  color: var(--dim);
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.credit-status.yes {
+  border-color: rgba(201, 255, 99, 0.35);
+  background: rgba(201, 255, 99, 0.08);
+  color: var(--toby-lime, #c9ff63);
+}
+
+.credit-status.watched {
+  border-color: rgba(111, 174, 255, 0.4);
+  background: rgba(111, 174, 255, 0.1);
+  color: var(--person-accent);
+}
+
+.credit-library-link {
+  cursor: pointer;
+  font: inherit;
+  transition: border-color 140ms ease, background 140ms ease, box-shadow 140ms ease, transform 140ms ease;
+}
+
+.credit-library-link:hover,
+.credit-library-link:focus-visible {
+  border-color: var(--toby-lime, #c9ff63);
+  background: rgba(201, 255, 99, 0.15);
+  box-shadow: 0 0 0.8rem rgba(201, 255, 99, 0.14);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 720px) {
+  .person-filmography-hero {
+    grid-template-columns: clamp(6.5rem, 25vw, 8rem) minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  .person-filmography-copy h1 {
+    font-size: clamp(1.75rem, 8vw, 3rem);
+  }
+
+  .person-biography,
+  .person-fact-grid {
+    grid-column: 1 / -1;
+  }
+
+  .person-fact-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 .championship-history-controls {
@@ -5306,16 +5588,20 @@ h2 {
 }
 
 .toby-movie-store-card {
-  border: 1px solid rgba(111, 174, 255, 0.28);
+  border: 1px solid var(--rental-line, rgba(111, 174, 255, 0.28));
   border-radius: 6px;
-  background: rgba(6, 5, 3, 0.72);
+  background:
+    radial-gradient(circle at 12% 0%, color-mix(in srgb, var(--rental-accent, #6faeff) 13%, transparent), transparent 48%),
+    linear-gradient(132deg, var(--rental-bg-a, #10141c) 0%, var(--rental-bg-a, #10141c) 52%, var(--rental-bg-b, #10141c) 100%);
+  color: var(--rental-text, var(--toby-tv-cream));
   padding: 0.85rem 1rem;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035), 0 0.65rem 1.4rem rgba(0, 0, 0, 0.16);
 }
 
 .toby-movie-store-card h2,
 .toby-movie-store-card p {
   margin: 0;
-  color: var(--toby-tv-gold);
+  color: var(--rental-accent, var(--toby-tv-gold));
   font-family: var(--font-display);
   text-transform: uppercase;
 }
@@ -5339,20 +5625,41 @@ h2 {
   display: grid;
   grid-template-columns: 6.4rem minmax(0, 1fr);
   gap: 0.6rem;
-  border-top: 1px solid rgba(111, 174, 255, 0.2);
+  border-top: 1px solid var(--rental-line, rgba(111, 174, 255, 0.2));
   padding: 0.38rem 0;
 }
 
 .toby-movie-store-card dt,
 .toby-movie-store-card dd {
   margin: 0;
-  color: var(--toby-tv-cream);
+  color: var(--rental-text, var(--toby-tv-cream));
   font-family: var(--font-display);
 }
 
 .toby-movie-store-card dt {
-  color: var(--toby-tv-gold);
+  color: var(--rental-accent, var(--toby-tv-gold));
   text-transform: uppercase;
+}
+
+.toby-movie-store-card .toby-store-person-link {
+  border-color: color-mix(in srgb, var(--rental-accent, var(--toby-tv-gold)) 54%, transparent);
+  background: color-mix(in srgb, var(--rental-text, white) 14%, transparent);
+  color: var(--rental-text, var(--toby-tv-cream));
+}
+
+.toby-tv-rental-card {
+  width: 100%;
+  align-self: start;
+}
+
+.toby-tv-rental-card dd {
+  min-width: 0;
+}
+
+.toby-tv-rental-card .toby-store-collection-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
 }
 
 .toby-movie-found-list {
@@ -5379,6 +5686,21 @@ h2 {
   grid-template-columns: repeat(auto-fill, minmax(7.5rem, 10rem));
   justify-content: start;
   gap: clamp(0.65rem, 1.25vw, 1rem);
+}
+
+.recommendation-card {
+  display: grid;
+  align-content: start;
+  gap: 0.45rem;
+  min-width: 0;
+}
+
+.recommendation-reason {
+  display: block;
+  max-width: 12rem;
+  color: var(--text-muted, #9eb7cf);
+  font-size: 0.72rem;
+  line-height: 1.25;
 }
 
 .toby-movie-cast-card {
@@ -6234,6 +6556,30 @@ h2 {
   text-transform: uppercase;
 }
 
+.toby-player-popover-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-height: 1.8rem;
+}
+
+.toby-player-popover .toby-player-popover-close {
+  flex: 0 0 1.8rem;
+  display: grid;
+  place-items: center;
+  width: 1.8rem;
+  height: 1.8rem;
+  padding: 0;
+  border-color: rgba(134, 255, 116, 0.5);
+  border-radius: 50%;
+  font-family: Arial, sans-serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+}
+
 .toby-player-popover button {
   border: 1px solid rgba(134, 255, 116, 0.24);
   background: rgba(134, 255, 116, 0.06);
@@ -6266,6 +6612,19 @@ h2 {
 .toby-player-popover button.is-selected .player-selection-mark {
   border-color: currentColor;
   box-shadow: 0 0 0.45rem rgba(134, 255, 116, 0.55);
+}
+
+.toby-player-popover button.is-selected {
+  border-color: #86ff74;
+  background: rgba(134, 255, 116, 0.2);
+  box-shadow: inset 0 0 0 1px rgba(134, 255, 116, 0.35), 0 0 0.65rem rgba(134, 255, 116, 0.22);
+  color: #efffec;
+}
+
+.toby-player-popover button.is-pending {
+  border-color: #f5b51b;
+  background: rgba(245, 181, 27, 0.18);
+  color: #ffe7a3;
 }
 
 @keyframes tobyCrtFade {
@@ -6739,6 +7098,21 @@ h2 {
   margin-inline: clamp(1rem, 4vw, 2rem);
 }
 
+.criterion-director-filmography {
+  display: grid;
+  gap: 2rem;
+  padding-block: 1.5rem 2.5rem;
+}
+
+.criterion-poster-wall-section .lane-head {
+  margin-inline: clamp(1rem, 4vw, 2rem);
+  margin-bottom: 0.8rem;
+}
+
+.criterion-poster-wall-section .criterion-wall {
+  margin-block: 0;
+}
+
 .criterion-tabs {
   position: sticky;
   top: 0;
@@ -6854,8 +7228,19 @@ h2 {
 
 .criterion-collection-lane .collection-shelf-card {
   aspect-ratio: 1;
-  flex-basis: clamp(9rem, 15vw, 12rem);
+  flex-basis: clamp(10.8rem, 18vw, 14.4rem);
   overflow: hidden;
+}
+
+.criterion-collection-lane {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 18rem;
+}
+
+.curated-page-wes-anderson .curated-hero,
+.curated-page-david-cronenberg .curated-hero {
+  min-height: clamp(24rem, 50vw, 40rem);
+  height: auto;
 }
 
 .criterion-subcollection-image {
@@ -6867,15 +7252,36 @@ h2 {
 
 .criterion-subcollection-page .criterion-hero-title {
   left: clamp(1.2rem, 3.5vw, 3.6rem);
-  bottom: clamp(1.3rem, 3vw, 2.7rem);
+  bottom: clamp(1.15rem, 2.4vw, 2.15rem);
 }
 
 .criterion-subcollection-page .criterion-hero-title h1 {
-  font-size: clamp(2.05rem, 4.8vw, 4.9rem);
+  max-width: min(42rem, 72vw);
+  font-size: clamp(1.85rem, 3.5vw, 3.65rem);
+  line-height: 0.94;
 }
 
-.criterion-subcollection-page .criterion-hero-title p {
-  max-width: 38rem;
+.criterion-subcollection-page .criterion-hero {
+  min-height: 48svh;
+  height: 48svh;
+  background: #000;
+}
+
+.criterion-subcollection-page .criterion-hero img {
+  object-fit: contain;
+  object-position: center;
+  background: #000;
+}
+
+.criterion-subcollection-page .criterion-hero::after {
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.05), transparent 58%, rgba(3, 3, 4, 0.9)),
+    linear-gradient(90deg, rgba(3, 3, 4, 0.35), transparent 42%);
+}
+
+.criterion-subcollection-page .criterion-wall {
+  grid-template-columns: repeat(auto-fill, minmax(min(11.5rem, 42vw), 1fr));
+  gap: clamp(0.8rem, 1.15vw, 1.1rem);
 }
 
 .criterion-eclipse-set-page .criterion-hero-title {
@@ -6975,10 +7381,109 @@ h2 {
 .curated-page-romance-compact { --aisle-rgb: 255, 83, 135; --aisle-panel: 84, 15, 40; }
 .curated-page-sci-fi-compact { --aisle-rgb: 81, 238, 137; --aisle-panel: 8, 70, 40; }
 .curated-page-animation-compact { --aisle-rgb: 224, 64, 67; --aisle-panel: 68, 13, 25; }
+
+.animation-randomizer-control {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.28rem;
+  width: clamp(13rem, 17vw, 15.5rem);
+  min-height: 3.55rem;
+  margin: 0.75rem 0 0 1.5rem;
+  padding: 0.32rem;
+  border: 0.12rem solid #030303;
+  border-radius: 0.58rem;
+  background: linear-gradient(180deg, #1a1714, #080807);
+  box-shadow: inset 0 0.12rem rgba(255, 255, 255, 0.07), 0 0.22rem 0 #020202;
+}
+
+.animation-randomizer-start,
+.animation-randomizer-movies {
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  min-height: 2.7rem;
+  border: 0.12rem solid #030303;
+  border-radius: 0.36rem;
+  background: linear-gradient(180deg, #24211d, #0d0c0b);
+  color: #d8d3c8;
+  box-shadow: inset 0 0.12rem 0 rgba(255, 255, 255, 0.08), 0 0.16rem 0 #020202;
+  cursor: pointer;
+}
+
+.animation-randomizer-start-label {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.animation-randomizer-start:hover,
+.animation-randomizer-start:focus-visible,
+.animation-randomizer-movies:hover,
+.animation-randomizer-movies:focus-within {
+  outline: 0;
+  color: #82ff5f;
+  text-shadow: 0 0 0.6rem rgba(130, 255, 95, 0.7);
+}
+
+.animation-randomizer-movies {
+  position: relative;
+  grid-template-columns: auto auto;
+  gap: 0.42rem;
+  align-content: center;
+  padding: 0.35rem 0.5rem;
+}
+
+.animation-randomizer-movies input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.animation-randomizer-switch {
+  width: 2.7rem;
+  height: 1.18rem;
+  border: 1px solid #030303;
+  border-radius: 999px;
+  background: #080807;
+  box-shadow: inset 0 0 0.45rem rgba(0, 0, 0, 0.9);
+}
+
+.animation-randomizer-switch::after {
+  content: "";
+  display: block;
+  width: 0.84rem;
+  height: 0.84rem;
+  margin: 0.1rem;
+  border-radius: 50%;
+  background: #8c6870;
+  transition: transform 140ms ease, background 140ms ease;
+}
+
+.animation-randomizer-movies input:checked + .animation-randomizer-switch::after {
+  transform: translateX(1.48rem);
+  background: #82ff5f;
+}
+
+.animation-randomizer-movies b {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+@media (max-width: 720px) {
+  .animation-randomizer-control {
+    width: min(15.5rem, calc(100% - 1.5rem));
+    margin-left: 0.75rem;
+  }
+}
 .curated-page-cult-films-compact { --aisle-rgb: 235, 64, 31; --aisle-panel: 78, 21, 8; }
 .curated-page-exploitation-compact { --aisle-rgb: 246, 181, 22; --aisle-panel: 77, 42, 5; }
 .curated-page-dc-animation-compact { --aisle-rgb: 224, 176, 65; --aisle-panel: 43, 35, 18; }
 .curated-page-arrowverse-compact { --aisle-rgb: 73, 160, 91; --aisle-panel: 12, 50, 29; }
+.curated-page-universal-monsters-compact { --aisle-rgb: 196, 139, 59; --aisle-panel: 55, 34, 15; }
+.curated-page-star-trek-compact { --aisle-rgb: 111, 174, 255; --aisle-panel: 17, 38, 69; }
+.curated-page-star-wars-compact { --aisle-rgb: 245, 188, 76; --aisle-panel: 68, 42, 12; }
 
 .curated-page-aisle-compact .curated-hero {
   min-height: 48svh;
@@ -6992,16 +7497,6 @@ h2 {
   background: #000;
 }
 
-.curated-page-fantasy-compact .curated-hero img {
-  inset: 0 auto auto 50%;
-  width: auto;
-  max-width: none;
-  height: 100%;
-  object-fit: fill;
-  object-position: center;
-  transform: translateX(-50%);
-}
-
 .curated-page-aisle-compact .curated-hero::after {
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.08), transparent 60%, rgba(5, 5, 6, 0.92));
 }
@@ -7010,6 +7505,11 @@ h2 {
   position: relative;
   z-index: 4;
   height: 0;
+}
+
+.curated-page-aisle-compact .curated-lane {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 30rem;
 }
 
 .curated-page-aisle-compact .curated-jump-shell > .carousel-edge-control {
@@ -7425,6 +7925,105 @@ h2 {
   object-position: center top;
 }
 
+.curated-page-holiday-chaos {
+  min-height: 100svh;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(115, 16, 111, 0.22), transparent 34rem),
+    linear-gradient(180deg, #100612, #050307 42rem);
+}
+
+.curated-page-holiday-chaos .holiday-chaos-hero {
+  min-height: 24rem;
+  height: min(40vw, 60svh);
+  max-height: 43rem;
+  background: #080411;
+}
+
+.curated-page-holiday-chaos .holiday-chaos-hero img {
+  object-fit: cover;
+  object-position: 50% 52%;
+}
+
+.curated-page-holiday-chaos .holiday-chaos-hero::after {
+  background:
+    linear-gradient(180deg, rgba(2, 2, 10, 0.04), transparent 68%, rgba(15, 2, 16, 0.72)),
+    linear-gradient(90deg, rgba(8, 3, 13, 0.22), transparent 20%, transparent 82%, rgba(8, 3, 13, 0.2));
+}
+
+.holiday-chaos-nav {
+  position: relative;
+  z-index: 4;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.55rem, 1.2vw, 1rem);
+  width: min(62rem, calc(100% - var(--page-pad) * 2));
+  margin: clamp(-1.35rem, -2vw, -0.7rem) auto 0;
+  padding: clamp(0.55rem, 0.9vw, 0.8rem);
+  border: 1px solid rgba(236, 194, 91, 0.42);
+  border-radius: 0.85rem;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 28%),
+    linear-gradient(145deg, rgba(91, 10, 91, 0.96), rgba(29, 4, 35, 0.98));
+  box-shadow:
+    inset 0 0 1.4rem rgba(255, 79, 181, 0.12),
+    0 0.7rem 2rem rgba(0, 0, 0, 0.52);
+}
+
+.holiday-chaos-nav button {
+  min-height: clamp(2.7rem, 4vw, 3.7rem);
+  border: 1px solid rgba(239, 198, 91, 0.42);
+  border-radius: 0.58rem;
+  background: linear-gradient(145deg, rgba(79, 7, 78, 0.82), rgba(24, 5, 29, 0.94));
+  color: #f7df9c;
+  font-family: var(--font-display);
+  font-size: clamp(0.78rem, 1.15vw, 1.08rem);
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  text-shadow: 0 0.12rem 0.45rem rgba(0, 0, 0, 0.9);
+  cursor: pointer;
+  transition: transform 150ms ease, border-color 150ms ease, background 150ms ease, box-shadow 150ms ease;
+}
+
+.holiday-chaos-nav button:hover,
+.holiday-chaos-nav button:focus-visible,
+.holiday-chaos-nav button.active {
+  transform: translateY(-1px);
+  border-color: #f2c95f;
+  background:
+    linear-gradient(180deg, rgba(255, 231, 155, 0.14), transparent 44%),
+    linear-gradient(145deg, rgba(122, 13, 111, 0.96), rgba(48, 6, 52, 0.98));
+  box-shadow: inset 0 0 1rem rgba(255, 206, 103, 0.1), 0 0 0.8rem rgba(229, 171, 64, 0.25);
+}
+
+.holiday-chaos-shelves {
+  padding-top: clamp(1.25rem, 2.6vw, 2.5rem);
+}
+
+.holiday-chaos-empty {
+  margin: clamp(1rem, 2vw, 2rem) var(--page-pad) 3rem;
+  border-color: rgba(232, 190, 87, 0.26);
+  color: rgba(248, 229, 184, 0.68);
+}
+
+@media (max-width: 760px) {
+  .curated-page-holiday-chaos .holiday-chaos-hero {
+    min-height: 18rem;
+    height: 54vw;
+  }
+
+  .holiday-chaos-nav {
+    width: calc(100% - 1rem);
+    gap: 0.35rem;
+    padding: 0.4rem;
+  }
+
+  .holiday-chaos-nav button {
+    min-height: 2.6rem;
+    font-size: clamp(0.62rem, 2.6vw, 0.8rem);
+    letter-spacing: 0.045em;
+  }
+}
+
 .curated-hero::after {
   content: "";
   position: absolute;
@@ -7578,6 +8177,16 @@ h2 {
   object-position: center center;
 }
 
+/* The landing artwork contains the five navigation panels. Keep its native
+   proportions so the interactive layer can share the artwork's coordinates. */
+@media (min-width: 761px) {
+  .cinema-india-landing {
+    min-height: 0;
+    height: auto;
+    aspect-ratio: 1672 / 941;
+  }
+}
+
 .cinema-india-main-nav,
 .cinema-india-language-nav {
   position: absolute;
@@ -7591,14 +8200,55 @@ h2 {
 }
 
 .cinema-india-main-nav {
+  left: 8.9%;
+  bottom: 7.3%;
   grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1.2%;
+  width: 80.7%;
+  transform: none;
+}
+
+/* The India panoramas are authored at 3:1. Lock the page frame to the source
+   artwork so the room and its semantic hotspots share one coordinate system. */
+.curated-page-cinema-of-india-languages .curated-hero {
+  position: relative;
+  display: block;
+  min-height: 0;
+  height: auto;
+  aspect-ratio: 3 / 1;
+  overflow: hidden;
+  isolation: isolate;
+  background: #020100;
+}
+
+.curated-page-cinema-of-india-languages .curated-hero::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: -1rem;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.38), transparent 18%, transparent 82%, rgba(0, 0, 0, 0.38)),
+    url("./assets/collections/cinema-of-india/languages-hero-compact.webp") center / cover no-repeat;
+  filter: blur(10px);
+  opacity: 0.42;
+  transform: scale(1.035);
+}
+
+.curated-page-cinema-of-india-languages .curated-hero > img {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  object-position: center;
 }
 
 .cinema-india-language-nav {
-  bottom: 3.35%;
+  bottom: 6.1%;
   grid-template-columns: repeat(10, minmax(0, 1fr));
-  gap: clamp(0.3rem, 0.75vw, 0.8rem);
-  width: min(101rem, 96.8vw);
+  gap: 0.6%;
+  width: 97%;
 }
 
 .cinema-india-main-nav button,
@@ -7619,8 +8269,13 @@ h2 {
     transform 160ms ease;
 }
 
+.cinema-india-main-nav button {
+  aspect-ratio: 1.29 / 1;
+}
+
 .cinema-india-language-nav button {
-  aspect-ratio: 1 / 1.26;
+  aspect-ratio: 2.05 / 1;
+  background: transparent;
 }
 
 .cinema-india-language-nav button span,
@@ -7633,22 +8288,63 @@ h2 {
 .cinema-india-language-nav button:hover,
 .cinema-india-language-nav button:focus-visible {
   border-color: rgba(255, 219, 132, 0.82);
-  background: rgba(255, 196, 89, 0.08);
+  background-color: rgba(255, 196, 89, 0.08);
   box-shadow:
     inset 0 0 1.2rem rgba(255, 214, 134, 0.28),
     0 0 1.1rem rgba(255, 168, 70, 0.34),
     0 0 2rem rgba(255, 116, 70, 0.18);
   outline: none;
-  transform: translateY(-2px);
+}
+
+/* Individual language pages reuse one lightweight panoramic room. The title is
+   live text inside the blank marquee, while twelve controls sit over the two
+   rows of illustrated plaques. */
+.curated-page-cinema-of-india-language .cinema-india-language-template {
+  position: relative;
+  display: block;
+  min-height: 0;
+  height: auto;
+  aspect-ratio: 3 / 1;
+  overflow: hidden;
+  isolation: isolate;
+  background: #020100;
+}
+
+.curated-page-cinema-of-india-language .cinema-india-language-template::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: -1rem;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.38), transparent 18%, transparent 82%, rgba(0, 0, 0, 0.38)),
+    url("./assets/collections/cinema-of-india/language-page-template-v3.webp") center / cover no-repeat;
+  filter: blur(10px);
+  opacity: 0.42;
+  transform: scale(1.035);
+}
+
+.cinema-india-language-art {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+}
+
+.curated-page-cinema-of-india-language .cinema-india-language-art > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
 }
 
 .cinema-india-language-title {
   position: absolute;
   z-index: 4;
-  left: 42.1%;
-  top: 38.3%;
-  width: 29.8%;
-  transform: translateX(-50%);
+  left: 50%;
+  top: 34.1%;
+  width: 44%;
+  transform: translate(-50%, -50%);
   color: #35200c;
   font-family: var(--font-display);
   text-align: center;
@@ -7659,15 +8355,15 @@ h2 {
 
 .cinema-india-language-title span {
   display: block;
-  font-size: clamp(1.25rem, 4.2vw, 4.6rem);
-  line-height: 0.95;
+  font-size: clamp(1rem, 2.2vw, 4.2rem);
+  line-height: 0.9;
   letter-spacing: 0.06em;
 }
 
 .cinema-india-language-title small {
   display: block;
-  margin-top: 0.15rem;
-  font-size: clamp(0.82rem, 1.6vw, 1.55rem);
+  margin-top: 0.08rem;
+  font-size: clamp(0.68rem, 1vw, 1.8rem);
   letter-spacing: 0.04em;
 }
 
@@ -7703,7 +8399,547 @@ h2 {
     0 0 1.1rem rgba(255, 168, 70, 0.32);
 }
 
+.curated-page-cinema-of-india-language .curated-jump-bar {
+  inset: 68.5% 0 auto;
+  width: 100%;
+  height: 21%;
+  display: block;
+  padding: 0;
+  transform: none;
+  pointer-events: none;
+}
+
+.curated-page-cinema-of-india-language .curated-jump-row {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 49.5%;
+}
+
+.curated-page-cinema-of-india-language .curated-jump-row:nth-child(2) {
+  top: 51.5%;
+}
+
+.curated-page-cinema-of-india-language .curated-jump-row button:nth-child(1) { left: 2.1%; width: 14.75%; }
+.curated-page-cinema-of-india-language .curated-jump-row button:nth-child(2) { left: 17.55%; width: 15.15%; }
+.curated-page-cinema-of-india-language .curated-jump-row button:nth-child(3) { left: 33.38%; width: 15.43%; }
+.curated-page-cinema-of-india-language .curated-jump-row button:nth-child(4) { left: 49.54%; width: 15.43%; }
+.curated-page-cinema-of-india-language .curated-jump-row button:nth-child(5) { left: 65.70%; width: 15.98%; }
+.curated-page-cinema-of-india-language .curated-jump-row button:nth-child(6) { left: 82.46%; width: 15.38%; }
+}
+
+.curated-page-cinema-of-india-language .curated-jump-bar button,
+.curated-page-cinema-of-india-language .curated-jump-bar button:hover,
+.curated-page-cinema-of-india-language .curated-jump-bar button:focus-visible {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  height: 100%;
+  max-width: none;
+  min-height: 0;
+  aspect-ratio: auto;
+  padding: 0;
+  color: transparent;
+  background: transparent;
+  pointer-events: auto;
+}
+
+/* Cultural Legacy uses the same compact, fully contained room standard. The
+   semantic controls remain live over the illustrated plaque strip. */
+.curated-page-cinema-of-india-cultural-legacy .curated-hero {
+  position: relative;
+  display: block;
+  min-height: 0;
+  height: auto;
+  aspect-ratio: 3 / 1;
+  overflow: hidden;
+  isolation: isolate;
+  background: #020702;
+}
+
+.curated-page-cinema-of-india-cultural-legacy .curated-hero::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: -1rem;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.38), transparent 18%, transparent 82%, rgba(0, 0, 0, 0.38)),
+    url("./assets/collections/cinema-of-india/cultural-legacy-hero-v2.webp") center / cover no-repeat;
+  filter: blur(10px);
+  opacity: 0.42;
+  transform: scale(1.035);
+}
+
+.curated-page-cinema-of-india-cultural-legacy .curated-hero::after {
+  opacity: 0;
+}
+
+.curated-page-cinema-of-india-cultural-legacy .curated-hero > img {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  object-position: center;
+}
+
+.curated-page-cinema-of-india-cultural-legacy .curated-jump-bar {
+  bottom: 5.9%;
+  width: 92.5%;
+  padding: 0;
+}
+
+.curated-page-cinema-of-india-cultural-legacy .curated-jump-row {
+  display: grid;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  gap: 0.55%;
+  width: 100%;
+}
+
+.curated-page-cinema-of-india-cultural-legacy .curated-jump-bar button,
+.curated-page-cinema-of-india-cultural-legacy .curated-jump-bar button:hover,
+.curated-page-cinema-of-india-cultural-legacy .curated-jump-bar button:focus-visible {
+  width: 100%;
+  max-width: none;
+  min-height: 0;
+  aspect-ratio: 1.54 / 1;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  color: transparent;
+  background: transparent;
+}
+
+.curated-page-cinema-of-india-cultural-legacy .curated-jump-bar button:hover,
+.curated-page-cinema-of-india-cultural-legacy .curated-jump-bar button:focus-visible {
+  border-color: rgba(242, 194, 99, 0.82);
+  background: rgba(189, 134, 43, 0.09);
+  box-shadow:
+    inset 0 0 1rem rgba(247, 208, 126, 0.22),
+    0 0 1rem rgba(193, 145, 55, 0.3);
+  outline: none;
+}
+
+/* Gateway Collections keeps its nine illustrated plaques in one compact,
+   fully interactive row over the approved panorama. */
+.curated-page-cinema-of-india-gateway .curated-hero {
+  position: relative;
+  display: block;
+  min-height: 0;
+  height: auto;
+  aspect-ratio: 3 / 1;
+  overflow: hidden;
+  isolation: isolate;
+  background: #020711;
+}
+
+.curated-page-cinema-of-india-gateway .curated-hero::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: -1rem;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.38), transparent 18%, transparent 82%, rgba(0, 0, 0, 0.38)),
+    url("./assets/collections/cinema-of-india/gateway-hero-v2.webp") center / cover no-repeat;
+  filter: blur(10px);
+  opacity: 0.42;
+  transform: scale(1.035);
+}
+
+.curated-page-cinema-of-india-gateway .curated-hero::after {
+  opacity: 0;
+}
+
+.curated-page-cinema-of-india-gateway .curated-hero > img {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  object-position: center;
+}
+
+.curated-page-cinema-of-india-gateway .curated-jump-bar {
+  bottom: 5.3%;
+  width: 97.7%;
+  padding: 0;
+}
+
+.curated-page-cinema-of-india-gateway .curated-jump-row {
+  display: grid;
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+  gap: 0.45%;
+  width: 100%;
+}
+
+.curated-page-cinema-of-india-gateway .curated-jump-bar button,
+.curated-page-cinema-of-india-gateway .curated-jump-bar button:hover,
+.curated-page-cinema-of-india-gateway .curated-jump-bar button:focus-visible {
+  width: 100%;
+  max-width: none;
+  min-height: 0;
+  aspect-ratio: 1.7 / 1;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  color: transparent;
+  background: transparent;
+}
+
+.curated-page-cinema-of-india-gateway .curated-jump-bar button:hover,
+.curated-page-cinema-of-india-gateway .curated-jump-bar button:focus-visible {
+  border-color: rgba(172, 218, 244, 0.82);
+  background: rgba(90, 164, 210, 0.09);
+  box-shadow:
+    inset 0 0 1rem rgba(190, 226, 247, 0.2),
+    0 0 1rem rgba(75, 154, 204, 0.32);
+  outline: none;
+}
+
+/* Genres uses the same source-locked panoramic geometry as Box Office Smash,
+   with twelve illustrated plaques arranged as two rows of six. */
+.curated-page-cinema-of-india-genres .curated-hero {
+  position: relative;
+  display: block;
+  min-height: 0;
+  height: auto;
+  aspect-ratio: 3 / 1;
+  overflow: hidden;
+  isolation: isolate;
+  background: #061426;
+}
+
+.curated-page-cinema-of-india-genres .curated-hero::after {
+  opacity: 0;
+}
+
+.curated-page-cinema-of-india-genres .curated-hero > img {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+}
+
+.curated-page-cinema-of-india-genres .curated-jump-bar {
+  bottom: 5.2%;
+  gap: clamp(0.22rem, 0.55vw, 0.6rem);
+  width: 97%;
+  padding: 0;
+}
+
+.curated-page-cinema-of-india-genres .curated-jump-row {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.55%;
+  width: 100%;
+}
+
+.curated-page-cinema-of-india-genres .curated-jump-bar button,
+.curated-page-cinema-of-india-genres .curated-jump-bar button:hover,
+.curated-page-cinema-of-india-genres .curated-jump-bar button:focus-visible {
+  width: 100%;
+  max-width: none;
+  min-height: 0;
+  aspect-ratio: 3.18 / 1;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  color: transparent;
+  background: transparent;
+}
+
+.curated-page-cinema-of-india-genres .curated-jump-bar button:hover,
+.curated-page-cinema-of-india-genres .curated-jump-bar button:focus-visible {
+  border-color: rgba(173, 216, 250, 0.88);
+  background: rgba(86, 157, 216, 0.1);
+  box-shadow:
+    inset 0 0 1rem rgba(185, 224, 255, 0.2),
+    0 0 1rem rgba(76, 158, 220, 0.34);
+  outline: none;
+}
+
+/* Box Office Smash deliberately uses the full page width. Its twelve record
+   plaques remain semantic controls over the two illustrated rows. */
+.curated-page-cinema-of-india-box-office-smash .curated-hero {
+  position: relative;
+  display: block;
+  min-height: 0;
+  height: auto;
+  aspect-ratio: 3 / 1;
+  overflow: hidden;
+  isolation: isolate;
+  background: #06140f;
+}
+
+.curated-page-cinema-of-india-box-office-smash .curated-hero::after {
+  opacity: 0;
+}
+
+.curated-page-cinema-of-india-box-office-smash .curated-hero > img {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+}
+
+.curated-page-cinema-of-india-box-office-smash .curated-jump-bar {
+  bottom: 4.7%;
+  gap: clamp(0.22rem, 0.47vw, 0.55rem);
+  width: 98.2%;
+  padding: 0;
+}
+
+.curated-page-cinema-of-india-box-office-smash .curated-jump-row {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.48%;
+  width: 100%;
+}
+
+.curated-page-cinema-of-india-box-office-smash .curated-jump-bar button,
+.curated-page-cinema-of-india-box-office-smash .curated-jump-bar button:hover,
+.curated-page-cinema-of-india-box-office-smash .curated-jump-bar button:focus-visible {
+  width: 100%;
+  max-width: none;
+  min-height: 0;
+  aspect-ratio: 3.55 / 1;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  color: transparent;
+  background: transparent;
+}
+
+.curated-page-cinema-of-india-box-office-smash .curated-jump-bar button:hover,
+.curated-page-cinema-of-india-box-office-smash .curated-jump-bar button:focus-visible {
+  border-color: rgba(239, 181, 82, 0.88);
+  background: rgba(206, 139, 35, 0.1);
+  box-shadow:
+    inset 0 0 1rem rgba(248, 198, 104, 0.2),
+    0 0 1rem rgba(210, 139, 40, 0.34);
+  outline: none;
+}
+
 @media (max-width: 760px) {
+  .curated-page-cinema-of-india-languages .curated-hero {
+    display: block;
+    height: auto;
+    min-height: 0;
+  }
+
+  .curated-page-cinema-of-india-languages .curated-hero > img {
+    position: relative;
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .curated-page-cinema-of-india-language .cinema-india-language-template {
+    display: block;
+    height: auto;
+    min-height: 0;
+  }
+
+  .curated-page-cinema-of-india-language .cinema-india-language-art {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    aspect-ratio: 3 / 1;
+  }
+
+  .curated-page-cinema-of-india-language .curated-jump-bar {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    width: auto;
+    height: auto;
+    margin: 0.8rem var(--page-pad) 1rem;
+    transform: none;
+    pointer-events: auto;
+  }
+
+  .curated-page-cinema-of-india-language .curated-jump-row {
+    position: relative;
+    inset: auto;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.55rem;
+    height: auto;
+  }
+
+  .curated-page-cinema-of-india-language .curated-jump-row:nth-child(2) {
+    top: auto;
+  }
+
+  .curated-page-cinema-of-india-language .curated-jump-bar button,
+  .curated-page-cinema-of-india-language .curated-jump-bar button:hover,
+  .curated-page-cinema-of-india-language .curated-jump-bar button:focus-visible {
+    min-height: 4.2rem;
+    position: relative;
+    left: auto;
+    top: auto;
+    width: 100%;
+    height: auto;
+    aspect-ratio: auto;
+    border-color: rgba(255, 219, 132, 0.36);
+    background: rgba(9, 8, 7, 0.78);
+    color: #f4e4bd;
+  }
+
+  .curated-page-cinema-of-india-cultural-legacy .curated-hero {
+    display: block;
+    height: auto;
+    min-height: 0;
+  }
+
+  .curated-page-cinema-of-india-cultural-legacy .curated-hero > img {
+    position: relative;
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .curated-page-cinema-of-india-cultural-legacy .curated-jump-bar {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    width: auto;
+    margin: 0.8rem var(--page-pad) 1rem;
+    transform: none;
+  }
+
+  .curated-page-cinema-of-india-cultural-legacy .curated-jump-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.55rem;
+  }
+
+  .curated-page-cinema-of-india-cultural-legacy .curated-jump-bar button,
+  .curated-page-cinema-of-india-cultural-legacy .curated-jump-bar button:hover,
+  .curated-page-cinema-of-india-cultural-legacy .curated-jump-bar button:focus-visible {
+    min-height: 4.2rem;
+    aspect-ratio: auto;
+    border-color: rgba(242, 194, 99, 0.36);
+    background: rgba(6, 15, 7, 0.82);
+    color: #f4e4bd;
+  }
+
+  .curated-page-cinema-of-india-gateway .curated-hero {
+    display: block;
+    height: auto;
+    min-height: 0;
+  }
+
+  .curated-page-cinema-of-india-gateway .curated-hero > img {
+    position: relative;
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .curated-page-cinema-of-india-gateway .curated-jump-bar {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    width: auto;
+    margin: 0.8rem var(--page-pad) 1rem;
+    transform: none;
+  }
+
+  .curated-page-cinema-of-india-gateway .curated-jump-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.55rem;
+  }
+
+  .curated-page-cinema-of-india-gateway .curated-jump-bar button,
+  .curated-page-cinema-of-india-gateway .curated-jump-bar button:hover,
+  .curated-page-cinema-of-india-gateway .curated-jump-bar button:focus-visible {
+    min-height: 4.2rem;
+    aspect-ratio: auto;
+    border-color: rgba(172, 218, 244, 0.36);
+    background: rgba(3, 10, 18, 0.84);
+    color: #e8f5ff;
+  }
+
+  .curated-page-cinema-of-india-genres .curated-hero {
+    height: auto;
+    aspect-ratio: auto;
+  }
+
+  .curated-page-cinema-of-india-genres .curated-hero > img {
+    position: relative;
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .curated-page-cinema-of-india-genres .curated-jump-bar {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    width: auto;
+    margin: 0.8rem var(--page-pad) 1rem;
+    transform: none;
+  }
+
+  .curated-page-cinema-of-india-genres .curated-jump-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.55rem;
+  }
+
+  .curated-page-cinema-of-india-genres .curated-jump-bar button,
+  .curated-page-cinema-of-india-genres .curated-jump-bar button:hover,
+  .curated-page-cinema-of-india-genres .curated-jump-bar button:focus-visible {
+    min-height: 4.2rem;
+    aspect-ratio: auto;
+    border-color: rgba(173, 216, 250, 0.36);
+    background: rgba(3, 11, 24, 0.84);
+    color: #e8f5ff;
+  }
+
+  .curated-page-cinema-of-india-box-office-smash .curated-hero {
+    height: auto;
+    aspect-ratio: auto;
+  }
+
+  .curated-page-cinema-of-india-box-office-smash .curated-hero > img {
+    position: relative;
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+  }
+
+  .curated-page-cinema-of-india-box-office-smash .curated-jump-bar {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    width: auto;
+    margin: 0.8rem var(--page-pad) 1rem;
+    transform: none;
+  }
+
+  .curated-page-cinema-of-india-box-office-smash .curated-jump-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.55rem;
+  }
+
+  .curated-page-cinema-of-india-box-office-smash .curated-jump-bar button,
+  .curated-page-cinema-of-india-box-office-smash .curated-jump-bar button:hover,
+  .curated-page-cinema-of-india-box-office-smash .curated-jump-bar button:focus-visible {
+    min-height: 4.2rem;
+    aspect-ratio: auto;
+    border-color: rgba(239, 181, 82, 0.38);
+    background: rgba(10, 26, 19, 0.86);
+    color: #f6dcaa;
+  }
+
   .cinema-india-main-nav,
   .cinema-india-language-nav {
     position: relative;
@@ -7734,8 +8970,26 @@ h2 {
 
   .cinema-india-language-title {
     left: 50%;
-    top: 37%;
-    width: 58%;
+    top: 34.1%;
+    width: 44%;
+  }
+
+  .cinema-india-language-title span {
+    font-size: clamp(0.8rem, 2.8vw, 1.35rem);
+  }
+
+  .cinema-india-language-title small {
+    font-size: clamp(0.6rem, 1.5vw, 0.8rem);
+  }
+}
+
+@media (max-width: 520px) {
+  .curated-page-cinema-of-india-language .cinema-india-language-title small {
+    display: none;
+  }
+
+  .curated-page-cinema-of-india-language .cinema-india-language-title span {
+    font-size: clamp(0.72rem, 3.6vw, 1rem);
   }
 }
 
@@ -8593,6 +9847,11 @@ h2 {
   background: rgba(255, 211, 84, 0.15);
   color: #ffd354;
   outline: none;
+}
+
+.metadata-context-menu button[data-command="fix-match"] {
+  color: var(--overlay-green, #d7ff2f);
+  font-weight: 900;
 }
 .metadata-overlay-close {
   float: right;
@@ -9608,4 +10867,684 @@ body.metadata-overlay-open {
 
 @media (max-width: 850px) {
   .merge-as-options { grid-template-columns: 1fr; }
+}
+.disney-shorts-program-page,
+.disney-short-detail-page {
+  padding-bottom: 3rem;
+}
+
+.disney-shorts-program-layout {
+  align-items: start;
+}
+
+.disney-shorts-wall-section,
+.disney-short-release-row {
+  margin: 1.25rem 0 0;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(116, 168, 255, 0.24);
+}
+
+.disney-shorts-wall {
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.looney-sort-actions {
+  margin-top: 1rem;
+}
+
+.looney-sort-control {
+  display: inline-flex;
+  align-items: center;
+  gap: .65rem;
+  color: #ffd25a;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.looney-sort-control select {
+  min-width: 13rem;
+  padding: .65rem 2.25rem .65rem .8rem;
+  border: 1px solid #7d5b18;
+  border-radius: .45rem;
+  background: #16100a;
+  color: #fff4cf;
+  font: inherit;
+}
+
+.disney-short-card .poster {
+  aspect-ratio: 2 / 3;
+}
+
+.disney-short-release-card.current {
+  border-color: #c8ff32;
+  box-shadow: 0 0 0 1px #c8ff32;
+}
+
+.disney-short-release-row {
+  position: relative;
+}
+
+.disney-short-release-card {
+  flex-basis: clamp(8.5rem, 11vw, 10.5rem);
+}
+
+.disney-short-release-card .criterion-film-poster {
+  aspect-ratio: 2 / 3;
+  height: auto;
+  padding: 0;
+}
+
+.disney-short-release-card .episode-card-copy {
+  padding: 0.55rem;
+}
+
+.disney-short-release-card .episode-card-copy .card-title {
+  font-size: 0.78rem;
+  line-height: 1.18;
+}
+
+.disney-next-short {
+  margin-top: 0.65rem;
+}
+
+.short-collection-switcher { margin-top: 0.8rem; }
+.short-collection-carousel { padding-bottom: 0.25rem; }
+.short-collection-card,
+.short-pool-randomizer { flex-basis: clamp(6.4rem, 9vw, 8.4rem); }
+.short-collection-card .poster { width: 100%; min-height: 0; aspect-ratio: 2 / 3; }
+.short-collection-card strong,
+.short-pool-randomizer strong { font-size: 0.72rem; line-height: 1.15; }
+.short-collection-card > span,
+.short-pool-randomizer small { color: var(--toby-tv-blue); font-size: 0.62rem; }
+.short-pool-randomizer {
+  align-content: center;
+  min-height: 10rem;
+  border-color: rgba(205, 255, 45, 0.62);
+  background: radial-gradient(circle at 50% 32%, rgba(205, 255, 45, 0.18), transparent 40%), #080611;
+  color: #efffc0;
+  text-align: center;
+}
+.short-pool-randomizer > span { color: var(--acid); font-size: 2.3rem; }
+.disney-short-wall-meta { display: grid; justify-items: end; gap: 0.35rem; }
+.looney-sort-control { justify-content: flex-end; }
+
+.disney-next-short-art {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.disney-next-short-art .poster {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  aspect-ratio: auto;
+}
+
+.disney-next-short-art .poster img {
+  object-fit: cover;
+}
+
+.disney-short-movie-layout .toby-movie-poster-frame {
+  max-width: 19rem;
+}
+
+/* Keep the startup ident legible without letting its large source artwork
+   dominate the loading screen. The 686px cap is half the source width. */
+.catalog-loading-logo {
+  width: min(686px, 50vw);
+  height: auto;
+}
++
+/* Wrestling directory and AEW browser */
+.wrestling-landing {
+  width: 100%;
+}
+
+.wrestling-landing-banner {
+  position: relative;
+  aspect-ratio: 1920 / 540;
+  min-height: 18rem;
+  overflow: hidden;
+  border: 1px solid rgba(216, 179, 93, 0.42);
+  background:
+    radial-gradient(circle at 50% 32%, rgba(216, 179, 93, 0.2), transparent 26%),
+    linear-gradient(90deg, rgba(2, 4, 12, 0.96), rgba(18, 12, 22, 0.72) 50%, rgba(2, 4, 12, 0.96)),
+    repeating-linear-gradient(125deg, transparent 0 5rem, rgba(255,255,255,0.025) 5rem 5.1rem),
+    #070713;
+  box-shadow: inset 0 0 5rem rgba(0, 0, 0, 0.85);
+}
+
+.wrestling-landing-copy {
+  position: absolute;
+  inset: 0 0 4.6rem;
+  display: grid;
+  place-content: center;
+  text-align: center;
+}
+
+.wrestling-landing-copy span {
+  color: #d8b35d;
+  font-size: clamp(0.65rem, 0.9vw, 0.95rem);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.wrestling-landing-copy h1 {
+  margin: 0.2rem 0 0;
+  color: #f2f5ff;
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 7.5vw, 8rem);
+  letter-spacing: 0.06em;
+  line-height: 0.9;
+  text-transform: uppercase;
+  text-shadow: 0 0 2rem rgba(91, 197, 255, 0.24);
+}
+
+.wrestling-landing-nav {
+  position: absolute;
+  inset: auto 0 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  min-height: 4.6rem;
+  border-top: 1px solid rgba(216, 179, 93, 0.42);
+  background: rgba(2, 4, 12, 0.9);
+}
+
+.wrestling-landing-nav button {
+  border: 0;
+  border-right: 1px solid rgba(216, 179, 93, 0.35);
+  background: transparent;
+  color: #f4ddb0;
+  font-family: var(--font-display);
+  font-size: clamp(0.72rem, 1.15vw, 1.05rem);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.wrestling-landing-nav button:last-child { border-right: 0; }
+.wrestling-landing-nav button:hover,
+.wrestling-landing-nav button:focus-visible {
+  color: #fff;
+  background: linear-gradient(180deg, rgba(216,179,93,0.04), rgba(216,179,93,0.2));
+}
+
+.wrestling-landing-nav button.active {
+  color: #fff;
+  background: linear-gradient(180deg, rgba(216,179,93,0.1), rgba(216,179,93,0.28));
+  box-shadow: inset 0 -3px #d8b35d;
+}
+
+.wrestling-directory-controls {
+  display: flex;
+  justify-content: flex-end;
+  margin: 0.8rem 0;
+}
+
+.wrestling-directory-heading > div {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.wrestling-directory .promotion-group {
+  margin-bottom: 2rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid rgba(216, 179, 93, 0.28);
+}
+
+.wrestling-directory .promotion-group > h3 {
+  color: #d8b35d;
+  font-family: var(--font-display);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.wrestling-directory-major .promotion-grid {
+  grid-template-columns: repeat(auto-fill, minmax(10.5rem, 1fr));
+  gap: 1rem;
+}
+
+.aew-show-browser,
+.aew-event-browser {
+  margin-top: 1.25rem;
+}
+
+.aew-promotion-columns {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+.wrestling-show-selector {
+  align-items: stretch;
+  gap: 0.9rem;
+}
+
+.wrestling-show-card {
+  flex: 0 0 clamp(11rem, 15vw, 15rem);
+  display: grid;
+  grid-template-rows: 1fr auto;
+  gap: 0.32rem;
+  overflow: hidden;
+  padding: 0 0 0.7rem;
+  border: 1px solid #31506a;
+  border-radius: 0.45rem;
+  background: #06101f;
+  color: #edf5ff;
+  text-align: left;
+}
+
+.wrestling-show-card.active {
+  border-color: #d8b35d;
+  box-shadow: 0 0 0 1px #d8b35d, 0 0 1.2rem rgba(216,179,93,0.22);
+}
+
+.wrestling-show-card .poster {
+  width: 100%;
+  min-height: 0;
+  aspect-ratio: 2 / 3;
+  border: 0;
+  border-radius: 0;
+}
+
+.wrestling-show-card .poster img { object-fit: cover; }
+.wrestling-show-card > small {
+  padding: 0.22rem 0.72rem 0;
+  color: #79cfff;
+  text-align: center;
+}
+
+.wrestling-show-dropdown {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid rgba(216,179,93,0.34);
+  border-radius: 0.5rem;
+  background: rgba(5, 10, 22, 0.82);
+}
+
+.wrestling-show-dropdown .vertical-event-carousel,
+.aew-show-browser .vertical-event-carousel,
+.aew-event-browser .vertical-event-carousel {
+  --event-row-height: 9.2rem;
+}
+
+.event-row-copy {
+  min-width: 0;
+  align-self: center;
+}
+
+.event-row:has(.event-row-copy) {
+  grid-template-columns: 3.2rem minmax(0, 1fr);
+}
+
+.event-row-kicker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.25rem;
+  color: #79cfff;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.event-main {
+  display: grid;
+  gap: 0.12rem;
+  margin-top: 0.42rem;
+  font-size: 0.72rem;
+  line-height: 1.25;
+}
+
+.event-main strong {
+  color: #d8b35d;
+  font-size: 0.62rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.event-main span {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+@media (max-width: 760px) {
+  .wrestling-landing-banner { min-height: 15rem; }
+  .wrestling-landing-nav { grid-template-columns: 1fr; }
+  .wrestling-landing-copy { bottom: 8.7rem; }
+  .wrestling-landing-nav button { min-height: 2.9rem; border-right: 0; border-bottom: 1px solid rgba(216,179,93,0.24); }
+  .aew-promotion-columns { grid-template-columns: 1fr; }
+}
+
+.controls-settings { max-width: 760px; margin: 28px auto; padding: 26px; border: 1px solid #31506a; border-radius: 10px; background: linear-gradient(145deg, #07151d, #0b0914); }
+.controls-settings-heading { display: flex; align-items: end; justify-content: space-between; gap: 24px; border-bottom: 1px solid #31506a; padding-bottom: 16px; }
+.controls-settings-heading span { color: #6fffb0; font-family: var(--font-display); letter-spacing: .12em; text-transform: uppercase; }
+.controls-settings-heading h2 { margin: 3px 0 0; color: #f2f5ff; font-size: 2rem; }
+.controls-settings-heading button { border: 1px solid #6fffb0; border-radius: 5px; color: #6fffb0; background: transparent; padding: 9px 13px; }
+.controls-settings > p { color: #9eb8c8; }
+.controls-settings-list { display: grid; gap: 8px; }
+.control-binding { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 13px 15px; border: 1px solid #243d50; border-radius: 6px; color: #e9f2ff; background: #071018; text-align: left; }
+.control-binding:hover, .control-binding:focus-visible, .control-binding.is-listening { border-color: #6fffb0; box-shadow: 0 0 14px #6fffb033; }
+.control-binding kbd { min-width: 110px; padding: 7px 10px; border: 1px solid #617b8d; border-radius: 5px; color: #cfff3b; background: #020609; text-align: center; font: inherit; }
+/* Cinema of Japan: restrained washi-and-ink navigation shell. */
+.cinema-japan-page .curated-hero {
+  position: relative;
+  min-height: 0;
+  height: auto;
+  max-height: none;
+  overflow: hidden;
+  isolation: isolate;
+  background: #e9dcc0;
+  color: #171814;
+}
+
+.cinema-japan-page .curated-hero::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(245, 237, 218, 0.02), transparent 55%, rgba(24, 26, 24, 0.12));
+}
+
+.cinema-japan-page .curated-hero > img {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.cinema-japan-landing,
+.cinema-japan-subpage-hero {
+  aspect-ratio: 3 / 1;
+}
+
+.cinema-japan-landing > img {
+  object-position: 50% 58%;
+}
+
+.cinema-japan-title,
+.cinema-japan-subpage-title {
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  text-align: center;
+  transform: translateX(-50%);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+
+.cinema-japan-title {
+  top: 7%;
+}
+
+.cinema-japan-title h1,
+.cinema-japan-subpage-title h1 {
+  margin: 0;
+  color: #172630;
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  line-height: 1;
+}
+
+.cinema-japan-title h1 {
+  font-size: clamp(1.75rem, 4.3vw, 4.8rem);
+}
+
+.cinema-japan-title small,
+.cinema-japan-subpage-title small {
+  display: block;
+  margin-bottom: 0.28rem;
+  color: #9f3d2f;
+  font-family: serif;
+  font-size: clamp(0.75rem, 1.25vw, 1.3rem);
+  letter-spacing: 0.36em;
+}
+
+.cinema-japan-nav {
+  position: absolute;
+  z-index: 4;
+  left: 50%;
+  bottom: 3.8%;
+  width: min(94%, 104rem);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(0.25rem, 0.55vw, 0.58rem);
+  transform: translateX(-50%);
+}
+
+.cinema-japan-nav button {
+  flex: 0 1 calc(20% - 0.58rem);
+  min-width: 7.25rem;
+  min-height: clamp(2.65rem, 4.25vw, 4.35rem);
+  padding: 0.34rem 0.55rem;
+  display: grid;
+  place-content: center;
+  gap: 0.12rem;
+  border: 1px solid rgba(32, 48, 53, 0.56);
+  border-radius: 2px;
+  background:
+    linear-gradient(110deg, rgba(248, 240, 220, 0.9), rgba(224, 211, 183, 0.84)),
+    repeating-linear-gradient(0deg, transparent 0 5px, rgba(40, 48, 45, 0.06) 6px);
+  color: #1c2d34;
+  box-shadow: 0 0.25rem 0.8rem rgba(30, 33, 30, 0.15), inset 0 0 0 3px rgba(248, 242, 225, 0.42);
+  transition: transform 140ms ease, border-color 140ms ease, background-color 140ms ease;
+}
+
+.cinema-japan-nav button::before {
+  content: "";
+  width: 1.35rem;
+  height: 2px;
+  margin: 0 auto 0.12rem;
+  background: #a84332;
+}
+
+.cinema-japan-nav button span {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(0.7rem, 1.02vw, 1.04rem);
+  letter-spacing: 0.08em;
+}
+
+.cinema-japan-nav button small {
+  color: #4b554f;
+  font-size: clamp(0.5rem, 0.67vw, 0.68rem);
+  letter-spacing: 0.06em;
+}
+
+.cinema-japan-nav button:hover,
+.cinema-japan-nav button:focus-visible,
+.cinema-japan-nav button.active {
+  border-color: #a84332;
+  background-color: rgba(255, 250, 236, 0.96);
+  outline: none;
+  transform: translateY(-2px);
+}
+
+.cinema-japan-subpage-hero::after {
+  background: linear-gradient(90deg, rgba(238, 226, 201, 0.08), rgba(238, 226, 201, 0.42) 35%, rgba(238, 226, 201, 0.42) 65%, rgba(238, 226, 201, 0.08));
+}
+
+.cinema-japan-subpage-title {
+  top: 10%;
+  min-width: 50%;
+}
+
+.cinema-japan-subpage-title h1 {
+  font-size: clamp(1.65rem, 3.55vw, 3.8rem);
+}
+
+.cinema-japan-subpage-title span {
+  display: block;
+  margin-top: 0.35rem;
+  color: #414944;
+  font-size: clamp(0.6rem, 0.84vw, 0.84rem);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.cinema-japan-nav.compact {
+  bottom: 4.5%;
+  width: min(96%, 106rem);
+  flex-wrap: nowrap;
+  gap: 0.32rem;
+}
+
+.cinema-japan-nav.compact button {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: clamp(2.35rem, 3.75vw, 3.65rem);
+  padding: 0.25rem 0.14rem;
+}
+
+.cinema-japan-nav.compact button span {
+  font-size: clamp(0.5rem, 0.78vw, 0.82rem);
+}
+
+.cinema-japan-nav.compact button small {
+  font-size: clamp(0.42rem, 0.55vw, 0.58rem);
+}
+
+.cinema-japan-nav.compact button::before {
+  background: var(--japan-accent, #a84332);
+}
+
+.cinema-japan-landing .cinema-japan-nav {
+  width: min(96%, 108rem);
+  flex-wrap: nowrap;
+  gap: clamp(0.2rem, 0.38vw, 0.42rem);
+}
+
+.cinema-japan-landing .cinema-japan-nav button {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: clamp(2.35rem, 3.55vw, 3.65rem);
+  padding-inline: 0.22rem;
+}
+
+.cinema-japan-landing .cinema-japan-nav button span {
+  font-size: clamp(0.58rem, 0.84vw, 0.9rem);
+}
+
+.cinema-japan-landing .cinema-japan-nav button small {
+  font-size: clamp(0.43rem, 0.55vw, 0.58rem);
+}
+
+.cinema-japan-genres-hero .cinema-japan-subpage-title {
+  top: 5%;
+}
+
+.cinema-japan-genre-nav {
+  position: absolute;
+  z-index: 4;
+  left: 50%;
+  bottom: 4%;
+  width: min(96%, 108rem);
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: clamp(0.2rem, 0.42vw, 0.46rem);
+  transform: translateX(-50%);
+}
+
+.cinema-japan-genre-nav button {
+  grid-column: span 2;
+  min-width: 0;
+  min-height: clamp(2.4rem, 3.4vw, 3.45rem);
+  padding: 0.22rem 0.28rem;
+  display: grid;
+  place-content: center;
+  gap: 0.08rem;
+  border: 1px solid rgba(32, 48, 53, 0.56);
+  border-radius: 2px;
+  background: linear-gradient(110deg, rgba(248, 240, 220, 0.9), rgba(224, 211, 183, 0.84));
+  color: #1c2d34;
+  box-shadow: 0 0.2rem 0.65rem rgba(30, 33, 30, 0.14), inset 0 0 0 2px rgba(248, 242, 225, 0.4);
+}
+
+.cinema-japan-genre-nav button:nth-child(7) {
+  grid-column: 2 / span 2;
+}
+
+.cinema-japan-genre-nav button::before {
+  content: "";
+  width: 1.1rem;
+  height: 2px;
+  margin: 0 auto 0.08rem;
+  background: #a84332;
+}
+
+.cinema-japan-genre-nav button span {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(0.58rem, 0.82vw, 0.86rem);
+  letter-spacing: 0.06em;
+}
+
+.cinema-japan-genre-nav button small {
+  color: #4b554f;
+  font-size: clamp(0.4rem, 0.53vw, 0.56rem);
+  letter-spacing: 0.04em;
+}
+
+.cinema-japan-genre-nav button:hover,
+.cinema-japan-genre-nav button:focus-visible {
+  border-color: #a84332;
+  outline: none;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 760px) {
+  .cinema-japan-landing,
+  .cinema-japan-subpage-hero {
+    aspect-ratio: 4 / 3;
+  }
+
+  .cinema-japan-title {
+    top: 5%;
+    width: 90%;
+  }
+
+  .cinema-japan-nav,
+  .cinema-japan-nav.compact {
+    bottom: 2.5%;
+    width: 94%;
+    flex-wrap: wrap;
+    gap: 0.24rem;
+  }
+
+  .cinema-japan-nav button,
+  .cinema-japan-nav.compact button {
+    flex: 1 1 calc(33.333% - 0.3rem);
+    min-width: 0;
+    min-height: 2.35rem;
+    padding: 0.14rem;
+  }
+
+  .cinema-japan-subpage-title {
+    top: 6%;
+    width: 90%;
+  }
+
+  .cinema-japan-genre-nav {
+    bottom: 2.5%;
+    width: 94%;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.2rem;
+  }
+
+  .cinema-japan-genre-nav button {
+    grid-column: auto;
+    min-height: 2.25rem;
+    padding: 0.12rem;
+  }
+
+  .cinema-japan-genre-nav button:nth-child(7) {
+    grid-column: auto;
+  }
 }

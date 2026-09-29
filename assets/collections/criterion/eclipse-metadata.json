@@ -1,0 +1,140 @@
+{
+  "source": "Criterion Eclipse product pages",
+  "notes": "Curated cache for Criterion Eclipse set synopses and film-level specs. Summaries are concise Tobytube paraphrases of Criterion product copy rather than verbatim product-page text.",
+  "sets": {
+    "1": {
+      "productUrl": "https://www.criterion.com/boxsets/232-eclipse-series-1-early-bergman",
+      "source": "Criterion",
+      "summary": "A look at Ingmar Bergman's formative 1940s work, where the young director was already testing the romantic, psychological, and spiritual tensions that would define his later cinema."
+    },
+    "2": {
+      "productUrl": "https://www.criterion.com/boxsets/258-eclipse-series-2-the-documentaries-of-louis-malle",
+      "source": "Criterion",
+      "summary": "Louis Malle turns documentary into travelogue, social observation, and personal inquiry, moving from India and France to the United States with a restless eye for ordinary lives under pressure."
+    },
+    "3": {
+      "productUrl": "https://www.criterion.com/boxsets/256-eclipse-series-3-late-ozu",
+      "source": "Criterion",
+      "summary": "A late-career shelf of Yasujiro Ozu family dramas, centered on generational change, marriage, aging, and the quiet rituals of postwar Japanese domestic life."
+    },
+    "4": {
+      "productUrl": "https://www.criterion.com/boxsets/306-eclipse-series-4-raymond-bernard",
+      "source": "Criterion",
+      "summary": "Two major works by Raymond Bernard show the scale and humanism of 1930s French cinema, from wartime sacrifice to Victor Hugo's sweeping social epic."
+    },
+    "5": {
+      "productUrl": "https://www.criterion.com/boxsets/314-eclipse-series-5-the-first-films-of-samuel-fuller",
+      "source": "Criterion",
+      "summary": "Samuel Fuller's first features arrive already charged with pulp energy, moral conflict, and the hard-edged directness that would become his signature."
+    },
+    "6": {
+      "productUrl": "https://www.criterion.com/boxsets/344-eclipse-series-6-carlos-saura-s-flamenco-trilogy",
+      "source": "Criterion",
+      "summary": "Carlos Saura and Antonio Gades transform flamenco into cinema, using dance, music, and theatrical space to retell stories of passion, violence, and national memory."
+    },
+    "7": {
+      "productUrl": "https://www.criterion.com/boxsets/379-eclipse-series-7-postwar-kurosawa",
+      "source": "Criterion",
+      "summary": "A set of Akira Kurosawa's immediate postwar films, tracing occupation-era anxiety, social rebuilding, and the director's early experiments with noir, melodrama, and moral crisis."
+    },
+    "8": {
+      "productUrl": "https://www.criterion.com/boxsets/390-eclipse-series-8-lubitsch-musicals",
+      "source": "Criterion",
+      "summary": "Ernst Lubitsch's early sound musicals sparkle with elegance, innuendo, and playful romantic machinery, preserving the director's wit at the moment Hollywood learned to sing."
+    }
+  },
+  "films": {
+    "1": [
+      {
+        "title": "Torment",
+        "year": 1944,
+        "country": "Sweden",
+        "director": "Alf Sjöberg",
+        "language": "Swedish",
+        "summary": "A cruel schoolmaster and a troubled romance drive this early Bergman-scripted drama of youth, repression, and humiliation."
+      },
+      {
+        "title": "Crisis",
+        "year": 1946,
+        "country": "Sweden",
+        "director": "Ingmar Bergman",
+        "language": "Swedish",
+        "summary": "Bergman's directorial debut follows a young woman pulled between provincial security and the temptations of a more dangerous urban life."
+      },
+      {
+        "title": "Port of Call",
+        "year": 1948,
+        "country": "Sweden",
+        "director": "Ingmar Bergman",
+        "language": "Swedish",
+        "summary": "A dockworker and a woman with a painful past try to build a future in a raw social drama from Bergman's early period."
+      },
+      {
+        "title": "Thirst",
+        "year": 1949,
+        "country": "Sweden",
+        "director": "Ingmar Bergman",
+        "language": "Swedish",
+        "summary": "A fractured marriage and memories of earlier wounds form a tense psychological drama about desire, regret, and emotional damage."
+      },
+      {
+        "title": "To Joy",
+        "year": 1950,
+        "country": "Sweden",
+        "director": "Ingmar Bergman",
+        "language": "Swedish",
+        "summary": "A musician looks back on love, ambition, and grief in an early Bergman portrait of art and domestic life."
+      }
+    ],
+    "2": [
+      {
+        "title": "Vive le Tour",
+        "year": 1962,
+        "country": "France",
+        "director": "Louis Malle",
+        "language": "French",
+        "summary": "Malle's short Tour de France film observes the spectacle, exhaustion, and strange rituals around the race."
+      },
+      {
+        "title": "Phantom India",
+        "year": 1969,
+        "country": "France",
+        "director": "Louis Malle",
+        "language": "French",
+        "summary": "An extended documentary journey through India shaped by curiosity, contradiction, and Malle's outsider perspective."
+      },
+      {
+        "title": "Calcutta",
+        "year": 1969,
+        "country": "France",
+        "director": "Louis Malle",
+        "language": "French",
+        "summary": "A focused companion to Malle's India work, observing life in Calcutta with an eye toward poverty, crowds, politics, and daily endurance."
+      },
+      {
+        "title": "Humain, trop humain",
+        "year": 1973,
+        "country": "France",
+        "director": "Louis Malle",
+        "language": "French",
+        "summary": "A car factory becomes the subject of a patient, unsentimental look at industrial labor and repetition."
+      },
+      {
+        "title": "God's Country",
+        "year": 1985,
+        "country": "United States",
+        "director": "Louis Malle",
+        "language": "English",
+        "summary": "Malle visits rural Minnesota, then returns years later to find a community altered by economic and political change."
+      },
+      {
+        "title": "And the Pursuit of Happiness",
+        "year": 1986,
+        "country": "United States",
+        "director": "Louis Malle",
+        "language": "English",
+        "summary": "Malle examines immigrant experiences in America through portraits of people chasing versions of freedom and belonging."
+      }
+    ]
+  }
+}

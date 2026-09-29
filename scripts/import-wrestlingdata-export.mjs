@@ -23,8 +23,14 @@ let episodeCount = 0;
 let matchCount = 0;
 let peopleCount = 0;
 let titleCount = 0;
+let skippedTapingCount = 0;
 
 for (const event of exportData.events ?? []) {
+  if (isTapingScaffold(event)) {
+    skippedTapingCount += 1;
+    continue;
+  }
+
   const normalized = normalizeEvent(event);
   const table = normalized.recordType === "episode" ? db.episodes : db.events;
   const otherTable = normalized.recordType === "episode" ? db.events : db.episodes;
@@ -51,7 +57,7 @@ db.generatedAt = new Date().toISOString();
 await writeFile(referencePath, `${JSON.stringify(db, null, 2)}\n`);
 
 console.log(
-  `Imported Wrestlingdata export: ${eventCount} events, ${episodeCount} episodes, ${matchCount} matches, ${peopleCount} people, ${titleCount} championships.`,
+  `Imported Wrestlingdata export: ${eventCount} events, ${episodeCount} episodes, ${matchCount} matches, ${peopleCount} people, ${titleCount} championships, skipped ${skippedTapingCount} taping scaffold records.`,
 );
 
 function normalizeEvent(event) {
@@ -234,7 +240,18 @@ function upsertPromotion(db, promotion) {
 
 function isTelevisionEvent(event) {
   const type = `${event.eventType ?? ""} ${event.title ?? ""}`;
-  return /tv[-\s]?show|television|internet broadcast|webcast|weekly|episode|#\d+/i.test(type);
+  return /tv[-\s]?show|television|webcast|weekly|episode|#\d+/i.test(type);
+}
+
+function isTapingScaffold(event) {
+  const title = cleanText(event.title) ?? "";
+  const eventType = cleanText(event.eventType) ?? "";
+  return (
+    /internet broadcast/i.test(eventType) ||
+    /\b(?:TV-?Taping|TV Taping)\s*@\s+/i.test(title) ||
+    /^\s*(?:WCW|WWF|WWE|ECW|TNA|AEW|ROH|NJPW|AJPW|NOAH|AWA|WCCW|NWA|JCP)\b.*\s@\s+/i.test(title) ||
+    /^\s*(?:WCW|WWF|WWE|ECW|TNA|AEW|ROH|NJPW|AJPW|NOAH|AWA|WCCW)\s*@\s+/i.test(title)
+  );
 }
 
 function parseEpisodeNumber(title = "") {

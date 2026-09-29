@@ -1,0 +1,126 @@
+{
+  "schemaVersion": 1,
+  "seriesId": "history-of-the-national-wrestling-alliance",
+  "volume": 24,
+  "episodeLabel": "Volume 24",
+  "dateRange": { "start": "1985-01", "end": "1985-03" },
+  "curationPolicy": {
+    "rawSourceRetained": true,
+    "resultsHiddenFromDisplay": true,
+    "resultMayEstablishChampionshipContext": true,
+    "unknownPeopleDoNotCreateProfiles": true,
+    "notes": "Championships, champion markers, stipulations, source programmes, and clip status are promoted only when supported by the cover wording or its explicit result note. The underlying result evidence is retained for auditing but omitted from spoiler-safe display."
+  },
+  "items": [
+    {
+      "order": 1, "type": "match", "date": "1985-01-12",
+      "displayTitle": "Ric Flair vs Kerry Von Erich", "contextLine": "Joined in progress, 01/12/1985",
+      "sides": [{ "displayName": "Ric Flair", "participantIds": ["wrestler-ric-flair"] }, { "displayName": "Kerry Von Erich", "participantIds": ["wrestler-kerry-von-erich"] }],
+      "championship": null, "stipulations": [], "presentation": ["joined-in-progress"],
+      "rawSource": "Ric Flair vs. Kerry Von Erich (JIP) 1/12/1985", "reviewStatus": "curated"
+    },
+    {
+      "order": 2, "type": "interview", "date": "1985-01-16",
+      "displayTitle": "Ric Flair Interview", "contextLine": "Championship Wrestling from Florida (TV), 01/16/1985",
+      "subjects": [{ "id": "wrestler-ric-flair", "name": "Ric Flair" }], "sourceProgram": { "canonical": "Championship Wrestling from Florida (TV)", "raw": "NWA FL TV" },
+      "rawSource": "Ric Flair Interview - NWA FL TV 1/16/1985", "reviewStatus": "curated"
+    },
+    {
+      "order": 3, "type": "match", "date": "1985-01-16",
+      "displayTitle": "Ric Flair vs Jack Hart", "contextLine": "Championship Wrestling from Florida (TV), 01/16/1985",
+      "sides": [{ "displayName": "Ric Flair", "participantIds": ["wrestler-ric-flair"] }, { "displayName": "Jack Hart", "participantIds": ["wrestler-jack-hart"] }],
+      "sourceProgram": { "canonical": "Championship Wrestling from Florida (TV)", "raw": "NWA FL TV" }, "championship": null, "stipulations": [], "presentation": [],
+      "rawSource": "Ric Flair vs. Jack Hart - NWA FL TV 1/16/1985", "reviewStatus": "curated"
+    },
+    {
+      "order": 4, "type": "interview", "date": "1985-01-16",
+      "displayTitle": "Ric Flair Interview", "contextLine": "Championship Wrestling from Florida (TV), 01/16/1985",
+      "subjects": [{ "id": "wrestler-ric-flair", "name": "Ric Flair" }], "sourceProgram": { "canonical": "Championship Wrestling from Florida (TV)", "raw": "NWA FL TV" },
+      "rawSource": "Ric Flair Interview - NWA FL TV 1/16/1985", "reviewStatus": "curated"
+    },
+    {
+      "order": 5, "type": "match", "date": "1985-02-24",
+      "displayTitle": "Ric Flair vs Harley Race", "contextLine": "02/24/1985",
+      "sides": [{ "displayName": "Ric Flair", "participantIds": ["wrestler-ric-flair"] }, { "displayName": "Harley Race", "participantIds": ["wrestler-harley-race"] }],
+      "championship": null, "stipulations": [], "presentation": [], "rawSource": "Ric Flair vs. Harley Race 2/24/1985", "reviewStatus": "curated"
+    },
+    {
+      "order": 6, "type": "match", "date": "1985-03-02",
+      "displayTitle": "Tully Blanchard vs Dusty Rhodes", "contextLine": "Clips, 03/02/1985",
+      "sides": [{ "displayName": "Tully Blanchard", "participantIds": ["wrestler-tully-blanchard"] }, { "displayName": "Dusty Rhodes", "participantIds": ["wrestler-dusty-rhodes"] }],
+      "championship": null, "stipulations": [], "presentation": ["clips"], "rawSource": "Tully Blanchard vs. Dusty Rhodes (Clips) 03/02/1985", "reviewStatus": "curated"
+    },
+    {
+      "order": 7, "type": "match", "date": "1985-03-02",
+      "displayTitle": "Ricky Steamboat & Don Kernodle vs The Koloffs", "contextLine": "03/02/1985",
+      "sides": [{ "displayName": "Ricky Steamboat & Don Kernodle", "participantIds": ["wrestler-ricky-steamboat", "wrestler-don-kernodle"] }, { "displayName": "The Koloffs", "participantIds": [], "identityStatus": "members-unresolved" }],
+      "championship": null, "stipulations": [], "presentation": [], "rawSource": "Ricky Steamboat & Don Kernodle vs. The Koloffs 03/02/1985", "reviewStatus": "needs-identity-review"
+    },
+    {
+      "order": 8, "type": "match", "date": "1985-03-09",
+      "displayTitle": "Tully Blanchard vs Denny Brown", "contextLine": "03/09/1985",
+      "sides": [{ "displayName": "Tully Blanchard", "participantIds": ["wrestler-tully-blanchard"] }, { "displayName": "Denny Brown", "participantIds": ["wrestler-denny-brown"] }],
+      "championship": null, "stipulations": [], "presentation": [], "rawSource": "Tully Blanchard vs. Denny Brown 03/09/1985", "reviewStatus": "curated"
+    },
+    {
+      "order": 9, "type": "match", "date": "1985-03-09",
+      "displayTitle": "Ric Flair vs Gene Ligon", "contextLine": "NWA Saturday Night, 03/09/1985",
+      "sides": [{ "displayName": "Ric Flair", "participantIds": ["wrestler-ric-flair"] }, { "displayName": "Gene Ligon", "participantIds": ["wrestler-gene-ligon"] }],
+      "sourceProgram": { "canonical": "NWA Saturday Night", "raw": "NWA Sat" }, "championship": null, "stipulations": [], "presentation": [],
+      "rawSource": "Ric Flair vs. Gene Ligon - NWA Sat 03/9/1985", "reviewStatus": "needs-program-review"
+    },
+    {
+      "order": 10, "type": "match", "date": "1985-03-13",
+      "displayTitle": "Ric Flair vs Chris Adams", "contextLine": "03/13/1985",
+      "sides": [{ "displayName": "Ric Flair", "participantIds": ["wrestler-ric-flair"] }, { "displayName": "Chris Adams", "participantIds": ["wrestler-chris-adams"] }],
+      "championship": null, "stipulations": [], "presentation": [], "rawSource": "Ric Flair vs. Chris Adams 03/13/1985", "reviewStatus": "curated"
+    },
+    {
+      "order": 11, "type": "match", "date": "1985-03-16",
+      "displayTitle": "Arn Anderson vs Sam Houston", "contextLine": "Joined in progress, 03/16/1985",
+      "sides": [{ "displayName": "Arn Anderson", "participantIds": ["wrestler-arn-anderson"] }, { "displayName": "Sam Houston", "participantIds": ["wrestler-sam-houston"] }],
+      "championship": null, "stipulations": [], "presentation": ["joined-in-progress"], "rawSource": "Arn Anderson vs. Sam Houston (JIP) 03/16/1985", "reviewStatus": "curated"
+    },
+    {
+      "order": 12, "type": "match", "date": "1985-03-16",
+      "displayTitle": "Magnum T.A. vs Two Unidentified Opponents", "contextLine": "Two-on-one handicap match, 03/16/1985",
+      "sides": [{ "displayName": "Magnum T.A.", "participantIds": ["wrestler-magnum-ta"] }, { "displayName": "Two Unidentified Opponents", "participantIds": [], "identityStatus": "unidentified" }],
+      "championship": null, "stipulations": ["Two-on-One Handicap Match"], "presentation": [],
+      "rawSource": "Magnum TA vs. 2 Jobbers 03/16/1985", "reviewStatus": "needs-participant-review", "inference": "Match type follows directly from one named wrestler versus two opponents; opponent profiles must not be fabricated."
+    },
+    {
+      "order": 13, "type": "confrontation", "date": "1985-03-16",
+      "displayTitle": "Tully Blanchard and Dusty Rhodes Confrontation", "contextLine": "03/16/1985",
+      "subjects": [{ "id": "wrestler-tully-blanchard", "name": "Tully Blanchard" }, { "id": "wrestler-dusty-rhodes", "name": "Dusty Rhodes" }],
+      "rawSource": "Tully Blanchard/Dusty Rhodes Confrontation 03/16/1985", "reviewStatus": "curated"
+    },
+    {
+      "order": 14, "type": "match", "date": "1985-03-16",
+      "displayTitle": "Tully Blanchard (c) vs Dusty Rhodes", "contextLine": "NWA World Television Championship, 03/16/1985",
+      "sides": [{ "displayName": "Tully Blanchard", "participantIds": ["wrestler-tully-blanchard"], "champion": true }, { "displayName": "Dusty Rhodes", "participantIds": ["wrestler-dusty-rhodes"], "champion": false }],
+      "championship": { "id": "nwa-world-television-championship", "name": "NWA World Television Championship" }, "stipulations": [], "presentation": [],
+      "titleChange": true, "winnerId": "wrestler-dusty-rhodes", "displayResult": false,
+      "rawSource": "Dusty Rhodes vs. Tully Blanchard 03/16/1985 (Rhodes wins TV Title)", "reviewStatus": "curated-from-explicit-result"
+    },
+    {
+      "order": 15, "type": "match", "date": "1985-03-17",
+      "displayTitle": "Ric Flair vs Wahoo McDaniel", "contextLine": "03/17/1985",
+      "sides": [{ "displayName": "Ric Flair", "participantIds": ["wrestler-ric-flair"] }, { "displayName": "Wahoo McDaniel", "participantIds": ["wrestler-wahoo-mcdaniel"] }],
+      "championship": null, "stipulations": [], "presentation": [], "rawSource": "Ric Flair vs. Wahoo McDaniel 03/17/1985", "reviewStatus": "curated"
+    },
+    {
+      "order": 16, "type": "match", "date": "1985-03-23",
+      "displayTitle": "Wahoo McDaniel (c) vs Magnum T.A.", "contextLine": "NWA United States Heavyweight Championship — Steel Cage Match, 03/23/1985",
+      "sides": [{ "displayName": "Wahoo McDaniel", "participantIds": ["wrestler-wahoo-mcdaniel"], "champion": true }, { "displayName": "Magnum T.A.", "participantIds": ["wrestler-magnum-ta"], "champion": false }],
+      "championship": { "id": "nwa-united-states-heavyweight-championship", "name": "NWA United States Heavyweight Championship" }, "stipulations": ["Steel Cage Match"], "presentation": [],
+      "titleChange": true, "winnerId": "wrestler-magnum-ta", "displayResult": false,
+      "rawSource": "Magnum TA vs. Wahoo McDaniel - Cage Match 03/23/1985 (Magnum TA wins the US Title)", "reviewStatus": "curated-from-explicit-result"
+    },
+    {
+      "order": 17, "type": "interview", "date": "1985-03-23",
+      "displayTitle": "Magnum T.A. Post-Match Interview", "contextLine": "03/23/1985",
+      "subjects": [{ "id": "wrestler-magnum-ta", "name": "Magnum T.A." }],
+      "rawSource": "Magnum TA post match Interview 03/23/1985", "reviewStatus": "curated"
+    }
+  ]
+}

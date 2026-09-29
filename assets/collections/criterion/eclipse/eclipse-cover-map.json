@@ -1,0 +1,1847 @@
+{
+  "sets": {
+    "1": {
+      "title": "Early Bergman",
+      "path": "./assets/collections/criterion/eclipse/set-01-early-bergman.jpg",
+      "sourceName": "1. Early Bergman.jpg"
+    },
+    "2": {
+      "title": "Documentaries of Louis Malle",
+      "path": "./assets/collections/criterion/eclipse/set-02-documentaries-of-louis-malle.jpg",
+      "sourceName": "2. Documentaries of Louis Malle.jpg"
+    },
+    "3": {
+      "title": "Late Ozu",
+      "path": "./assets/collections/criterion/eclipse/set-03-late-ozu.jpg",
+      "sourceName": "3. Late Ozu.jpg"
+    },
+    "4": {
+      "title": "Raymond Bernard",
+      "path": "./assets/collections/criterion/eclipse/set-04-raymond-bernard.jpg",
+      "sourceName": "4. Raymond Bernard.jpg"
+    },
+    "5": {
+      "title": "The First Films of Samuel Fuller",
+      "path": "./assets/collections/criterion/eclipse/set-05-the-first-films-of-samuel-fuller.jpg",
+      "sourceName": "5. The First Films of Samuel Fuller.jpg"
+    },
+    "6": {
+      "title": "Carlos Saura's Flamenco Trilogy",
+      "path": "./assets/collections/criterion/eclipse/set-06-carlos-saura-s-flamenco-trilogy.jpg",
+      "sourceName": "6. Carlos Saura's Flamenco Trilogy.jpg"
+    },
+    "7": {
+      "title": "Postwar Kurosawa",
+      "path": "./assets/collections/criterion/eclipse/set-07-postwar-kurosawa.jpg",
+      "sourceName": "7. Postwar Kurosawa.jpg"
+    },
+    "8": {
+      "title": "Lubtisch Musicals",
+      "path": "./assets/collections/criterion/eclipse/set-08-lubtisch-musicals.jpg",
+      "sourceName": "8. Lubtisch Musicals.jpg"
+    },
+    "9": {
+      "title": "Delerious Fictions of William Klein",
+      "path": "./assets/collections/criterion/eclipse/set-09-delerious-fictions-of-william-klein.jpg",
+      "sourceName": "9. Delerious Fictions of William Klein.jpg"
+    },
+    "10": {
+      "title": "Silent Ozu - Three Family Comedies",
+      "path": "./assets/collections/criterion/eclipse/set-10-silent-ozu-three-family-comedies.jpg",
+      "sourceName": "10. Silent Ozu - Three Family Comedies.jpg"
+    },
+    "11": {
+      "title": "Larisa Shepitko",
+      "path": "./assets/collections/criterion/eclipse/set-11-larisa-shepitko.jpg",
+      "sourceName": "11. Larisa Shepitko.jpg"
+    },
+    "12": {
+      "title": "Aki Kaurismaki's Proletariat Trilogy",
+      "path": "./assets/collections/criterion/eclipse/set-12-aki-kaurismaki-s-proletariat-trilogy.jpg",
+      "sourceName": "12. Aki Kaurismaki's Proletariat Trilogy.jpg"
+    },
+    "13": {
+      "title": "Kenji Mizoguchi's Fallen Women",
+      "path": "./assets/collections/criterion/eclipse/set-13-kenji-mizoguchi-s-fallen-women.jpg",
+      "sourceName": "13. Kenji Mizoguchi's Fallen Women.jpg"
+    },
+    "14": {
+      "title": "Rossellini's History Films - Renaissance and Englightenment",
+      "path": "./assets/collections/criterion/eclipse/set-14-rossellini-s-history-films-renaissance-and-englightenment.jpg",
+      "sourceName": "14. Rossellini's History Films - Renaissance and Englightenment.jpg"
+    },
+    "15": {
+      "title": "Travels with Hiroshi Shimizu",
+      "path": "./assets/collections/criterion/eclipse/set-15-travels-with-hiroshi-shimizu.jpg",
+      "sourceName": "15. Travels with Hiroshi Shimizu.jpg"
+    },
+    "16": {
+      "title": "Alexander Korda's Private Lives",
+      "path": "./assets/collections/criterion/eclipse/set-16-alexander-korda-s-private-lives.jpg",
+      "sourceName": "16. Alexander Korda's Private Lives.jpg"
+    },
+    "17": {
+      "title": "Nikkatsu Noir",
+      "path": "./assets/collections/criterion/eclipse/set-17-nikkatsu-noir.jpg",
+      "sourceName": "17. Nikkatsu Noir.jpg"
+    },
+    "18": {
+      "title": "Dusan Makavejev - Free Radical",
+      "path": "./assets/collections/criterion/eclipse/set-18-dusan-makavejev-free-radical.jpg",
+      "sourceName": "18. Dusan Makavejev - Free Radical.jpg"
+    },
+    "19": {
+      "title": "Chantal Akerman in the Seventies",
+      "path": "./assets/collections/criterion/eclipse/set-19-chantal-akerman-in-the-seventies.jpg",
+      "sourceName": "19. Chantal Akerman in the Seventies.jpg"
+    },
+    "20": {
+      "title": "George Bernard Shaw on Film",
+      "path": "./assets/collections/criterion/eclipse/set-20-george-bernard-shaw-on-film.jpg",
+      "sourceName": "20. George Bernard Shaw on Film.jpg"
+    },
+    "21": {
+      "title": "Oshima's Outlaw Sixties",
+      "path": "./assets/collections/criterion/eclipse/set-21-oshima-s-outlaw-sixties.jpg",
+      "sourceName": "21. Oshima's Outlaw Sixties.jpg"
+    },
+    "22": {
+      "title": "Presenting Sacha Guitry",
+      "path": "./assets/collections/criterion/eclipse/set-22-presenting-sacha-guitry.jpg",
+      "sourceName": "22. Presenting Sacha Guitry.jpg"
+    },
+    "23": {
+      "title": "The First Films of Akira Kurosawa",
+      "path": "./assets/collections/criterion/eclipse/set-23-the-first-films-of-akira-kurosawa.jpg",
+      "sourceName": "23. The First Films of Akira Kurosawa.jpg"
+    },
+    "24": {
+      "title": "The Actuality Dramas of Allan King",
+      "path": "./assets/collections/criterion/eclipse/set-24-the-actuality-dramas-of-allan-king.jpg",
+      "sourceName": "24. The Actuality Dramas of Allan King.jpg"
+    },
+    "25": {
+      "title": "Basil Dearden's London Underground",
+      "path": "./assets/collections/criterion/eclipse/set-25-basil-dearden-s-london-underground.jpg",
+      "sourceName": "25. Basil Dearden's London Underground.jpg"
+    },
+    "26": {
+      "title": "Silent Naruse",
+      "path": "./assets/collections/criterion/eclipse/set-26-silent-naruse.jpg",
+      "sourceName": "26. Silent Naruse.jpg"
+    },
+    "27": {
+      "title": "Raffaello Matarazzo’s Runaway Melodramas",
+      "path": "./assets/collections/criterion/eclipse/set-27-raffaello-matarazzo-s-runaway-melodramas.jpg",
+      "sourceName": "27. Raffaello Matarazzo’s Runaway Melodramas.jpg"
+    },
+    "28": {
+      "title": "The Warped World of Koreyoshi Kurahara",
+      "path": "./assets/collections/criterion/eclipse/set-28-the-warped-world-of-koreyoshi-kurahara.jpg",
+      "sourceName": "28. The Warped World of Koreyoshi Kurahara.jpg"
+    },
+    "29": {
+      "title": "Aki Kaurismaki’s Leningrad Cowboys",
+      "path": "./assets/collections/criterion/eclipse/set-29-aki-kaurismaki-s-leningrad-cowboys.jpg",
+      "sourceName": "29. Aki Kaurismaki’s Leningrad Cowboys.jpg"
+    },
+    "30": {
+      "title": "Sabu!",
+      "path": "./assets/collections/criterion/eclipse/set-30-sabu.jpg",
+      "sourceName": "30. Sabu!.jpg"
+    },
+    "31": {
+      "title": "Three Popular Films by Jean-Pierre Gorin",
+      "path": "./assets/collections/criterion/eclipse/set-31-three-popular-films-by-jean-pierre-gorin.jpg",
+      "sourceName": "31. Three Popular Films by Jean-Pierre Gorin.jpg"
+    },
+    "32": {
+      "title": "Pearls of the Czech New Wave",
+      "path": "./assets/collections/criterion/eclipse/set-32-pearls-of-the-czech-new-wave.jpg",
+      "sourceName": "32. Pearls of the Czech New Wave.jpg"
+    },
+    "33": {
+      "title": "Up All Night with Robert Downey Sr.",
+      "path": "./assets/collections/criterion/eclipse/set-33-up-all-night-with-robert-downey-sr.jpg",
+      "sourceName": "33. Up All Night with Robert Downey Sr..jpg"
+    },
+    "34": {
+      "title": "Jean Grémillon During the Occupation",
+      "path": "./assets/collections/criterion/eclipse/set-34-jean-gremillon-during-the-occupation.jpg",
+      "sourceName": "34. Jean Grémillon During the Occupation.jpg"
+    },
+    "35": {
+      "title": "Maidstone and Other Films by Norman Mailer",
+      "path": "./assets/collections/criterion/eclipse/set-35-maidstone-and-other-films-by-norman-mailer.jpg",
+      "sourceName": "35. Maidstone and Other Films by Norman Mailer.jpg"
+    },
+    "36": {
+      "title": "Three Wicked Melodramas from Gainsborough Pictures",
+      "path": "./assets/collections/criterion/eclipse/set-36-three-wicked-melodramas-from-gainsborough-pictures.jpg",
+      "sourceName": "36. Three Wicked Melodramas from Gainsborough Pictures.jpg"
+    },
+    "37": {
+      "title": "When Horror Came to Shochiku",
+      "path": "./assets/collections/criterion/eclipse/set-37-when-horror-came-to-shochiku.jpg",
+      "sourceName": "37. When Horror Came to Shochiku.jpg"
+    },
+    "38": {
+      "title": "Masaki Kobayashi Against the System",
+      "path": "./assets/collections/criterion/eclipse/set-38-masaki-kobayashi-against-the-system.jpg",
+      "sourceName": "38. Masaki Kobayashi Against the System.jpg"
+    },
+    "39": {
+      "title": "Early Fassbinder",
+      "path": "./assets/collections/criterion/eclipse/set-39-early-fassbinder.jpg",
+      "sourceName": "39. Early Fassbinder.jpg"
+    },
+    "40": {
+      "title": "Late Ray",
+      "path": "./assets/collections/criterion/eclipse/set-40-late-ray.jpg",
+      "sourceName": "40. Late Ray.jpg"
+    },
+    "41": {
+      "title": "Kinoshita and World War II",
+      "path": "./assets/collections/criterion/eclipse/set-41-kinoshita-and-world-war-ii.jpg",
+      "sourceName": "41. Kinoshita and World War II.jpg"
+    },
+    "42": {
+      "title": "Silent Ozu—Three Crime Dramas",
+      "path": "./assets/collections/criterion/eclipse/set-42-silent-ozu-three-crime-dramas.jpg",
+      "sourceName": "42. Silent Ozu—Three Crime Dramas.jpg"
+    },
+    "43": {
+      "title": "Agnès Varda in California",
+      "path": "./assets/collections/criterion/eclipse/set-43-agnes-varda-in-california.jpg",
+      "sourceName": "43. Agnès Varda in California.jpg"
+    },
+    "44": {
+      "title": "Julien Duvivier in the Thirties",
+      "path": "./assets/collections/criterion/eclipse/set-44-julien-duvivier-in-the-thirties.jpg",
+      "sourceName": "44. Julien Duvivier in the Thirties.jpg"
+    },
+    "45": {
+      "title": "Claude Autant-Lara—Four Romantic Escapes from Occupied France",
+      "path": "./assets/collections/criterion/eclipse/set-45-claude-autant-lara-four-romantic-escapes-from-occupied-france.jpg",
+      "sourceName": "45. Claude Autant-Lara—Four Romantic Escapes from Occupied France.jpg"
+    },
+    "46": {
+      "title": "Ingrid Bergman’s Swedish Years",
+      "path": "./assets/collections/criterion/eclipse/set-46-ingrid-bergman-s-swedish-years.jpg",
+      "sourceName": "46. Ingrid Bergman’s Swedish Years.jpg"
+    },
+    "47": {
+      "title": "Abbas Kiarostami—Early Shorts and Features",
+      "path": "./assets/collections/criterion/eclipse/set-47-abbas-kiarostami-early-shorts-and-features.jpg",
+      "sourceName": "47. Abbas Kiarostami—Early Shorts and Features.jpg"
+    },
+    "48": {
+      "title": "Kinuyo Tanaka Directs",
+      "path": "./assets/collections/criterion/eclipse/set-48-kinuyo-tanaka-directs.jpg",
+      "sourceName": "48. Kinuyo Tanaka Directs.jpg"
+    },
+    "49": {
+      "title": "Five Radical Documentaries by Kazuo Hara and Sachiko Kobayashi",
+      "path": "./assets/collections/criterion/eclipse/set-49-five-radical-documentaries-by-kazuo-hara-and-sachiko-kobayashi.jpg",
+      "sourceName": "49. Five Radical Documentaries by Kazuo Hara and Sachiko Kobayashi.jpg"
+    }
+  },
+  "films": {
+    "1": [
+      {
+        "title": "Torment",
+        "year": 1944,
+        "filmNumber": 5,
+        "path": "./assets/collections/criterion/eclipse/set-01-film-05-torment-1944.jpg",
+        "sourceName": "1.5 Torment (1944).jpg"
+      },
+      {
+        "title": "Crisis",
+        "year": 1946,
+        "filmNumber": 4,
+        "path": "./assets/collections/criterion/eclipse/set-01-film-04-crisis-1946.jpg",
+        "sourceName": "1.4 Crisis (1946).jpg"
+      },
+      {
+        "title": "Port of Call",
+        "year": 1948,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-01-film-03-port-of-call-1948.jpg",
+        "sourceName": "1.3 Port of Call (1948).jpg"
+      },
+      {
+        "title": "Thirst",
+        "year": 1949,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-01-film-02-thirst-1949.jpg",
+        "sourceName": "1.2 Thirst (1949).jpg"
+      },
+      {
+        "title": "To Joy",
+        "year": 1950,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-01-film-01-to-joy-1950.jpg",
+        "sourceName": "1.1 To Joy (1950).jpg"
+      }
+    ],
+    "2": [
+      {
+        "title": "Vive le Tour",
+        "year": 1962,
+        "filmNumber": 6,
+        "path": "./assets/collections/criterion/eclipse/set-02-film-06-vive-le-tour-1962.jpg",
+        "sourceName": "2.6 Vive le Tour (1962).jpg"
+      },
+      {
+        "title": "Calcutta",
+        "year": 1969,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-02-film-03-calcutta-1969.jpg",
+        "sourceName": "2.3 Calcutta (1969).jpg"
+      },
+      {
+        "title": "Phantom India",
+        "year": 1969,
+        "filmNumber": 4,
+        "path": "./assets/collections/criterion/eclipse/set-02-film-04-phantom-india-1969.jpg",
+        "sourceName": "2.4 Phantom India (1969).jpg"
+      },
+      {
+        "title": "Humain, trop humain",
+        "year": 1973,
+        "filmNumber": 5,
+        "path": "./assets/collections/criterion/eclipse/set-02-film-05-humain-trop-humain-1973.jpg",
+        "sourceName": "2.5 Humain, trop humain (1973).jpg"
+      },
+      {
+        "title": "4 Place de la République",
+        "year": 1974,
+        "filmNumber": null,
+        "path": "./assets/collections/criterion/eclipse/set-02-film-extra-4-place-de-la-republique-1974.jpg",
+        "sourceName": "2. 4 Place de la République (1974).jpg"
+      },
+      {
+        "title": "God’s Country",
+        "year": 1985,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-02-film-02-god-s-country-1985.jpg",
+        "sourceName": "2.2 God’s Country (1985).jpg"
+      },
+      {
+        "title": ". . . And the Pursuit of Happiness",
+        "year": 1986,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-02-film-01-and-the-pursuit-of-happiness-1986.jpg",
+        "sourceName": "2.1 . . . And the Pursuit of Happiness (1986).jpg"
+      }
+    ],
+    "3": [
+      {
+        "title": "Early Spring",
+        "year": 1956,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-03-film-01-early-spring-1956.jpg",
+        "sourceName": "3.1 Early Spring (1956).jpg"
+      },
+      {
+        "title": "Tokyo Twilight",
+        "year": 1957,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-03-film-02-tokyo-twilight-1957.jpg",
+        "sourceName": "3.2 Tokyo Twilight (1957).jpg"
+      },
+      {
+        "title": "Equinox Flower",
+        "year": 1958,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-03-film-03-equinox-flower-1958.jpg",
+        "sourceName": "3.3 Equinox Flower (1958).jpg"
+      },
+      {
+        "title": "Late Autumn",
+        "year": 1960,
+        "filmNumber": 4,
+        "path": "./assets/collections/criterion/eclipse/set-03-film-04-late-autumn-1960.jpg",
+        "sourceName": "3.4 Late Autumn (1960).jpg"
+      },
+      {
+        "title": "The End of Summer",
+        "year": 1961,
+        "filmNumber": 5,
+        "path": "./assets/collections/criterion/eclipse/set-03-film-05-the-end-of-summer-1961.jpg",
+        "sourceName": "3.5 The End of Summer (1961).jpg"
+      }
+    ],
+    "4": [
+      {
+        "title": "Wooden Crosses",
+        "year": 1932,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-04-film-01-wooden-crosses-1932.jpg",
+        "sourceName": "4.1 Wooden Crosses (1932).jpg"
+      },
+      {
+        "title": "Les misérables",
+        "year": 1934,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-04-film-02-les-miserables-1934.jpg",
+        "sourceName": "4.2 Les misérables (1934).jpg"
+      }
+    ],
+    "5": [
+      {
+        "title": "I Shot Jesse James",
+        "year": 1949,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-05-film-01-i-shot-jesse-james-1949.jpg",
+        "sourceName": "5.1 I Shot Jesse James (1949).jpg"
+      },
+      {
+        "title": "The Baron of Arizona",
+        "year": 1950,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-05-film-02-the-baron-of-arizona-1950.jpg",
+        "sourceName": "5.2 The Baron of Arizona (1950).jpg"
+      },
+      {
+        "title": "The Steel Helmet",
+        "year": 1951,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-05-film-03-the-steel-helmet-1951.jpg",
+        "sourceName": "5.3 The Steel Helmet (1951).jpg"
+      }
+    ],
+    "6": [
+      {
+        "title": "Blood Wedding",
+        "year": 1981,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-06-film-01-blood-wedding-1981.jpg",
+        "sourceName": "6.1 Blood Wedding (1981).jpg"
+      },
+      {
+        "title": "Carmen",
+        "year": 1983,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-06-film-02-carmen-1983.jpg",
+        "sourceName": "6.2 Carmen (1983).jpg"
+      },
+      {
+        "title": "El amor brujo",
+        "year": 1986,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-06-film-03-el-amor-brujo-1986.jpg",
+        "sourceName": "6.3 El amor brujo (1986).jpg"
+      }
+    ],
+    "7": [
+      {
+        "title": "No Regrets for Our Youth",
+        "year": 1946,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-07-film-01-no-regrets-for-our-youth-1946.jpg",
+        "sourceName": "7.1 No Regrets for Our Youth (1946).jpg"
+      },
+      {
+        "title": "One Wonderful Sunday",
+        "year": 1947,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-07-film-02-one-wonderful-sunday-1947.jpg",
+        "sourceName": "7.2 One Wonderful Sunday (1947).jpg"
+      },
+      {
+        "title": "Scandal",
+        "year": 1950,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-07-film-03-scandal-1950.jpg",
+        "sourceName": "7.3 Scandal (1950).jpg"
+      },
+      {
+        "title": "The Idiot",
+        "year": 1951,
+        "filmNumber": 4,
+        "path": "./assets/collections/criterion/eclipse/set-07-film-04-the-idiot-1951.jpg",
+        "sourceName": "7.4 The Idiot (1951).jpg"
+      },
+      {
+        "title": "I Live in Fear",
+        "year": 1955,
+        "filmNumber": 5,
+        "path": "./assets/collections/criterion/eclipse/set-07-film-05-i-live-in-fear-1955.jpg",
+        "sourceName": "7.5 I Live in Fear (1955).jpg"
+      }
+    ],
+    "8": [
+      {
+        "title": "The Love Parade",
+        "year": 1929,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-08-film-01-the-love-parade-1929.jpg",
+        "sourceName": "8.1 The Love Parade (1929).jpg"
+      },
+      {
+        "title": "Monte Carlo",
+        "year": 1930,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-08-film-02-monte-carlo-1930.jpg",
+        "sourceName": "8.2 Monte Carlo (1930).jpg"
+      },
+      {
+        "title": "The Smiling Lieutenant",
+        "year": 1931,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-08-film-03-the-smiling-lieutenant-1931.jpg",
+        "sourceName": "8.3 The Smiling Lieutenant (1931).jpg"
+      },
+      {
+        "title": "One Hour with You",
+        "year": 1932,
+        "filmNumber": 4,
+        "path": "./assets/collections/criterion/eclipse/set-08-film-04-one-hour-with-you-1932.jpg",
+        "sourceName": "8.4 One Hour with You (1932).jpg"
+      }
+    ],
+    "9": [
+      {
+        "title": "Who Are You, Polly Maggoo",
+        "year": 1966,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-09-film-01-who-are-you-polly-maggoo-1966.jpg",
+        "sourceName": "9.1 Who Are You, Polly Maggoo (1966).jpg"
+      },
+      {
+        "title": "Mr. Freedom",
+        "year": 1969,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-09-film-02-mr-freedom-1969.jpg",
+        "sourceName": "9.2 Mr. Freedom (1969).jpg"
+      },
+      {
+        "title": "The Model Couple",
+        "year": 1977,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-09-film-03-the-model-couple-1977.jpg",
+        "sourceName": "9.3 The Model Couple (1977).jpg"
+      }
+    ],
+    "10": [
+      {
+        "title": "Tokyo Chorus",
+        "year": 1931,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-10-film-01-tokyo-chorus-1931.jpg",
+        "sourceName": "10.1 Tokyo Chorus (1931).jpg"
+      },
+      {
+        "title": "I was Born But...",
+        "year": 1932,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-10-film-02-i-was-born-but-1932.jpg",
+        "sourceName": "10.2 I was Born But... (1932).jpg"
+      },
+      {
+        "title": "Passing Fancy",
+        "year": 1933,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-10-film-03-passing-fancy-1933.jpg",
+        "sourceName": "10.3 Passing Fancy (1933).jpg"
+      }
+    ],
+    "11": [
+      {
+        "title": "Wings",
+        "year": 1966,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-11-film-01-wings-1966.jpg",
+        "sourceName": "11.1 Wings (1966).jpg"
+      },
+      {
+        "title": "The Ascent",
+        "year": 1977,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-11-film-02-the-ascent-1977.jpg",
+        "sourceName": "11.2 The Ascent (1977).jpg"
+      }
+    ],
+    "12": [
+      {
+        "title": "Shadows in Paradise",
+        "year": 1986,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-12-film-01-shadows-in-paradise-1986.jpg",
+        "sourceName": "12.1 Shadows in Paradise (1986).jpg"
+      },
+      {
+        "title": "Ariel",
+        "year": 1988,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-12-film-02-ariel-1988.jpg",
+        "sourceName": "12.2 Ariel (1988).jpg"
+      },
+      {
+        "title": "The Match Factory Girl",
+        "year": 1990,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-12-film-03-the-match-factory-girl-1990.jpg",
+        "sourceName": "12.3 The Match Factory Girl (1990).jpg"
+      }
+    ],
+    "13": [
+      {
+        "title": "Osaka Elegy",
+        "year": 1936,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-13-film-01-osaka-elegy-1936.jpg",
+        "sourceName": "13.1 Osaka Elegy (1936).jpg"
+      },
+      {
+        "title": "Osaka Elegy",
+        "year": 1936,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-13-film-02-osaka-elegy-1936.jpg",
+        "sourceName": "13.2 Osaka Elegy (1936).jpg"
+      },
+      {
+        "title": "Women of the Night",
+        "year": 1948,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-13-film-03-women-of-the-night-1948.jpg",
+        "sourceName": "13.3 Women of the Night (1948).jpg"
+      },
+      {
+        "title": "Street of Shame",
+        "year": 1956,
+        "filmNumber": 4,
+        "path": "./assets/collections/criterion/eclipse/set-13-film-04-street-of-shame-1956.jpg",
+        "sourceName": "13.4 Street of Shame (1956).jpg"
+      }
+    ],
+    "14": [
+      {
+        "title": "Blaise Pascal",
+        "year": 1972,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-14-film-03-blaise-pascal-1972.jpg",
+        "sourceName": "14.3 Blaise Pascal (1972).jpg"
+      },
+      {
+        "title": "The Age of the Medici",
+        "year": 1973,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-14-film-01-the-age-of-the-medici-1973.jpg",
+        "sourceName": "14.1 The Age of the Medici (1973).jpg"
+      },
+      {
+        "title": "Cartesius",
+        "year": 1974,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-14-film-02-cartesius-1974.jpg",
+        "sourceName": "14.2 Cartesius (1974).jpg"
+      }
+    ],
+    "15": [
+      {
+        "title": "Japanese Girls at the Harbor",
+        "year": 1933,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-15-film-01-japanese-girls-at-the-harbor-1933.jpg",
+        "sourceName": "15.1 Japanese Girls at the Harbor (1933).jpg"
+      },
+      {
+        "title": "Mr. Thank You",
+        "year": 1936,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-15-film-02-mr-thank-you-1936.jpg",
+        "sourceName": "15.2 Mr. Thank You (1936).jpg"
+      },
+      {
+        "title": "Mr. Thank You",
+        "year": 1936,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-15-film-03-mr-thank-you-1936.jpg",
+        "sourceName": "15.3 Mr. Thank You (1936).jpg"
+      },
+      {
+        "title": "The Masseurs and a Woman",
+        "year": 1938,
+        "filmNumber": 4,
+        "path": "./assets/collections/criterion/eclipse/set-15-film-04-the-masseurs-and-a-woman-1938.jpg",
+        "sourceName": "15.4 The Masseurs and a Woman (1938).jpg"
+      },
+      {
+        "title": "Ornamental Hairpin",
+        "year": 1941,
+        "filmNumber": 5,
+        "path": "./assets/collections/criterion/eclipse/set-15-film-05-ornamental-hairpin-1941.jpg",
+        "sourceName": "15.5 Ornamental Hairpin (1941).jpg"
+      }
+    ],
+    "16": [
+      {
+        "title": "The Private Life of Henry VIII",
+        "year": 1933,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-16-film-01-the-private-life-of-henry-viii-1933.jpg",
+        "sourceName": "16.1 The Private Life of Henry VIII (1933).jpg"
+      },
+      {
+        "title": "The Rise of Catherine the Great",
+        "year": 1934,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-16-film-02-the-rise-of-catherine-the-great-1934.jpg",
+        "sourceName": "16.2 The Rise of Catherine the Great (1934).jpg"
+      },
+      {
+        "title": "The Private Life of Don Juan",
+        "year": 1934,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-16-film-03-the-private-life-of-don-juan-1934.jpg",
+        "sourceName": "16.3 The Private Life of Don Juan (1934).jpg"
+      },
+      {
+        "title": "Rembrandt",
+        "year": 1936,
+        "filmNumber": 4,
+        "path": "./assets/collections/criterion/eclipse/set-16-film-04-rembrandt-1936.jpg",
+        "sourceName": "16.4 Rembrandt (1936).jpg"
+      }
+    ],
+    "17": [
+      {
+        "title": "I Am Waiting",
+        "year": 1957,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-17-film-01-i-am-waiting-1957.jpg",
+        "sourceName": "17.1 I Am Waiting (1957).jpg"
+      },
+      {
+        "title": "Rusty Knife",
+        "year": 1958,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-17-film-02-rusty-knife-1958.jpg",
+        "sourceName": "17.2 Rusty Knife (1958).jpg"
+      },
+      {
+        "title": "Take Aim at the Police Van",
+        "year": 1960,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-17-film-03-take-aim-at-the-police-van-1960.jpg",
+        "sourceName": "17.3 Take Aim at the Police Van (1960).jpg"
+      },
+      {
+        "title": "Cruel Gun Story",
+        "year": 1964,
+        "filmNumber": 4,
+        "path": "./assets/collections/criterion/eclipse/set-17-film-04-cruel-gun-story-1964.jpg",
+        "sourceName": "17.4 Cruel Gun Story (1964).jpg"
+      },
+      {
+        "title": "A Colt Is My Passport",
+        "year": 1967,
+        "filmNumber": 5,
+        "path": "./assets/collections/criterion/eclipse/set-17-film-05-a-colt-is-my-passport-1967.jpg",
+        "sourceName": "17.5 A Colt Is My Passport (1967).jpg"
+      }
+    ],
+    "18": [
+      {
+        "title": "Man Is Not a Bird",
+        "year": 1965,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-18-film-01-man-is-not-a-bird-1965.jpg",
+        "sourceName": "18.1 Man Is Not a Bird (1965).jpg"
+      },
+      {
+        "title": "Love Affair, or the Case of the Missing Switchboard Operator",
+        "year": 1967,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-18-film-02-love-affair-or-the-case-of-the-missing-switchboard-operator-1967.jpg",
+        "sourceName": "18.2 Love Affair, or the Case of the Missing Switchboard Operator (1967).jpg"
+      },
+      {
+        "title": "Innocence Unprotected",
+        "year": 1968,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-18-film-03-innocence-unprotected-1968.jpg",
+        "sourceName": "18.3 Innocence Unprotected (1968).jpg"
+      }
+    ],
+    "19": [
+      {
+        "title": "La chambre",
+        "year": 1972,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-19-film-01-la-chambre-1972.jpg",
+        "sourceName": "19.1 La chambre (1972).jpg"
+      },
+      {
+        "title": "Hotel Monterey",
+        "year": 1972,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-19-film-02-hotel-monterey-1972.jpg",
+        "sourceName": "19.2 Hotel Monterey (1972).jpg"
+      },
+      {
+        "title": "Je tu il elle",
+        "year": 1975,
+        "filmNumber": 4,
+        "path": "./assets/collections/criterion/eclipse/set-19-film-04-je-tu-il-elle-1975.jpg",
+        "sourceName": "19.4 Je tu il elle (1975).jpg"
+      },
+      {
+        "title": "News from Home",
+        "year": 1976,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-19-film-03-news-from-home-1976.jpg",
+        "sourceName": "19.3 News from Home (1976).jpg"
+      },
+      {
+        "title": "Les rendez-vous d’Anna",
+        "year": 1978,
+        "filmNumber": 5,
+        "path": "./assets/collections/criterion/eclipse/set-19-film-05-les-rendez-vous-d-anna-1978.jpg",
+        "sourceName": "19.5 Les rendez-vous d’Anna (1978).jpg"
+      }
+    ],
+    "20": [
+      {
+        "title": "Major Barbara",
+        "year": 1941,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-20-film-01-major-barbara-1941.jpg",
+        "sourceName": "20.1 Major Barbara (1941).jpg"
+      },
+      {
+        "title": "Caesar and Cleopatra",
+        "year": 1945,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-20-film-02-caesar-and-cleopatra-1945.jpg",
+        "sourceName": "20.2 Caesar and Cleopatra (1945).jpg"
+      },
+      {
+        "title": "Androcles and the Lion",
+        "year": 1952,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-20-film-03-androcles-and-the-lion-1952.jpg",
+        "sourceName": "20.3 Androcles and the Lion (1952).jpg"
+      }
+    ],
+    "21": [
+      {
+        "title": "Pleasures of the Flesh",
+        "year": 1965,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-21-film-01-pleasures-of-the-flesh-1965.jpg",
+        "sourceName": "21.1 Pleasures of the Flesh (1965).jpg"
+      },
+      {
+        "title": "Violence at Noon",
+        "year": 1966,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-21-film-02-violence-at-noon-1966.jpg",
+        "sourceName": "21.2 Violence at Noon (1966).jpg"
+      },
+      {
+        "title": "Sing a Song of Sex",
+        "year": 1967,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-21-film-03-sing-a-song-of-sex-1967.jpg",
+        "sourceName": "21.3 Sing a Song of Sex (1967).jpg"
+      },
+      {
+        "title": "Japanese Summer Double Suicide",
+        "year": 1967,
+        "filmNumber": 4,
+        "path": "./assets/collections/criterion/eclipse/set-21-film-04-japanese-summer-double-suicide-1967.jpg",
+        "sourceName": "21.4 Japanese Summer Double Suicide (1967).jpg"
+      },
+      {
+        "title": "Three Resurrected Drunkards",
+        "year": 1968,
+        "filmNumber": 5,
+        "path": "./assets/collections/criterion/eclipse/set-21-film-05-three-resurrected-drunkards-1968.jpg",
+        "sourceName": "21.5 Three Resurrected Drunkards (1968).jpg"
+      }
+    ],
+    "22": [
+      {
+        "title": "The Story of a Cheat",
+        "year": 1936,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-22-film-01-the-story-of-a-cheat-1936.jpg",
+        "sourceName": "22.1 The Story of a Cheat (1936).jpg"
+      },
+      {
+        "title": "The Pearls of the Crown",
+        "year": 1937,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-22-film-02-the-pearls-of-the-crown-1937.jpg",
+        "sourceName": "22.2 The Pearls of the Crown (1937).jpg"
+      },
+      {
+        "title": "Désiré",
+        "year": 1937,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-22-film-03-desire-1937.jpg",
+        "sourceName": "22.3 Désiré (1937).jpg"
+      },
+      {
+        "title": "Quadrille",
+        "year": 1938,
+        "filmNumber": 4,
+        "path": "./assets/collections/criterion/eclipse/set-22-film-04-quadrille-1938.jpg",
+        "sourceName": "22.4 Quadrille (1938).jpg"
+      }
+    ],
+    "23": [
+      {
+        "title": "Sanshiro Sugata",
+        "year": 1943,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-23-film-01-sanshiro-sugata-1943.jpg",
+        "sourceName": "23.1 Sanshiro Sugata (1943).jpg"
+      },
+      {
+        "title": "The Most Beautiful",
+        "year": 1944,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-23-film-02-the-most-beautiful-1944.jpg",
+        "sourceName": "23.2 The Most Beautiful (1944).jpg"
+      },
+      {
+        "title": "Sanshiro Sugata, Part Two",
+        "year": 1945,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-23-film-03-sanshiro-sugata-part-two-1945.jpg",
+        "sourceName": "23.3 Sanshiro Sugata, Part Two (1945).jpg"
+      },
+      {
+        "title": "The Men Who Tread on the Tiger’s Tail",
+        "year": 1945,
+        "filmNumber": 4,
+        "path": "./assets/collections/criterion/eclipse/set-23-film-04-the-men-who-tread-on-the-tiger-s-tail-1945.jpg",
+        "sourceName": "23.4 The Men Who Tread on the Tiger’s Tail (1945).jpg"
+      }
+    ],
+    "24": [
+      {
+        "title": "Warrendale",
+        "year": 1967,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-24-film-01-warrendale-1967.jpg",
+        "sourceName": "24.1 Warrendale (1967).jpg"
+      },
+      {
+        "title": "A Married Couple",
+        "year": 1969,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-24-film-02-a-married-couple-1969.jpg",
+        "sourceName": "24.2 A Married Couple (1969).jpg"
+      },
+      {
+        "title": "Come On Children",
+        "year": 1972,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-24-film-03-come-on-children-1972.jpg",
+        "sourceName": "24.3 Come On Children (1972).jpg"
+      },
+      {
+        "title": "Dying at Grace",
+        "year": 2003,
+        "filmNumber": 4,
+        "path": "./assets/collections/criterion/eclipse/set-24-film-04-dying-at-grace-2003.jpg",
+        "sourceName": "24.4 Dying at Grace (2003).jpg"
+      },
+      {
+        "title": "Memory for Max, Claire, Ida and Company",
+        "year": 2005,
+        "filmNumber": 5,
+        "path": "./assets/collections/criterion/eclipse/set-24-film-05-memory-for-max-claire-ida-and-company-2005.jpg",
+        "sourceName": "24.5 Memory for Max, Claire, Ida and Company (2005).jpg"
+      }
+    ],
+    "25": [
+      {
+        "title": "Sapphire",
+        "year": 1959,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-25-film-01-sapphire-1959.jpg",
+        "sourceName": "25.1 Sapphire (1959).jpg"
+      },
+      {
+        "title": "The League of Gentlemen",
+        "year": 1960,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-25-film-02-the-league-of-gentlemen-1960.jpg",
+        "sourceName": "25.2 The League of Gentlemen (1960).jpg"
+      },
+      {
+        "title": "Victim",
+        "year": 1961,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-25-film-03-victim-1961.jpg",
+        "sourceName": "25.3 Victim (1961).jpg"
+      },
+      {
+        "title": "All Night Long",
+        "year": 1962,
+        "filmNumber": 4,
+        "path": "./assets/collections/criterion/eclipse/set-25-film-04-all-night-long-1962.jpg",
+        "sourceName": "25.4 All Night Long (1962).jpg"
+      }
+    ],
+    "26": [
+      {
+        "title": "Flunky, Work Hard",
+        "year": 1931,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-26-film-01-flunky-work-hard-1931.jpg",
+        "sourceName": "26.1 Flunky, Work Hard (1931).jpg"
+      },
+      {
+        "title": "No Blood Relation",
+        "year": 1932,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-26-film-02-no-blood-relation-1932.jpg",
+        "sourceName": "26.2 No Blood Relation (1932).jpg"
+      },
+      {
+        "title": "Apart from You",
+        "year": 1933,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-26-film-03-apart-from-you-1933.jpg",
+        "sourceName": "26.3 Apart from You (1933).jpg"
+      },
+      {
+        "title": "Every-Night Dreams",
+        "year": 1933,
+        "filmNumber": 4,
+        "path": "./assets/collections/criterion/eclipse/set-26-film-04-every-night-dreams-1933.jpg",
+        "sourceName": "26.4 Every-Night Dreams (1933).jpg"
+      },
+      {
+        "title": "Street Without End",
+        "year": 1934,
+        "filmNumber": 5,
+        "path": "./assets/collections/criterion/eclipse/set-26-film-05-street-without-end-1934.jpg",
+        "sourceName": "26.5 Street Without End (1934).jpg"
+      }
+    ],
+    "27": [
+      {
+        "title": "Chains",
+        "year": 1949,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-27-film-01-chains-1949.jpg",
+        "sourceName": "27.1 Chains (1949).jpg"
+      },
+      {
+        "title": "Tormento",
+        "year": 1950,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-27-film-02-tormento-1950.jpg",
+        "sourceName": "27.2 Tormento (1950).jpg"
+      },
+      {
+        "title": "Nobody’s Children",
+        "year": 1952,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-27-film-03-nobody-s-children-1952.jpg",
+        "sourceName": "27.3 Nobody’s Children (1952).jpg"
+      },
+      {
+        "title": "The White Angel",
+        "year": 1955,
+        "filmNumber": 4,
+        "path": "./assets/collections/criterion/eclipse/set-27-film-04-the-white-angel-1955.jpg",
+        "sourceName": "27.4 The White Angel (1955).jpg"
+      }
+    ],
+    "28": [
+      {
+        "title": "The Warped Ones",
+        "year": 1960,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-28-film-02-the-warped-ones-1960.jpg",
+        "sourceName": "28.2 The Warped Ones (1960).jpg"
+      },
+      {
+        "title": "Intimidation",
+        "year": 1960,
+        "filmNumber": null,
+        "path": "./assets/collections/criterion/eclipse/set-28-film-extra-intimidation-1960.jpg",
+        "sourceName": "28. Intimidation (1960).jpg"
+      },
+      {
+        "title": "I Hate But Love",
+        "year": 1962,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-28-film-03-i-hate-but-love-1962.jpg",
+        "sourceName": "28.3 I Hate But Love (1962).jpg"
+      },
+      {
+        "title": "4 Black Sun",
+        "year": 1964,
+        "filmNumber": null,
+        "path": "./assets/collections/criterion/eclipse/set-28-film-extra-4-black-sun-1964.jpg",
+        "sourceName": "28. 4 Black Sun (1964).jpg"
+      },
+      {
+        "title": "Thirst for Love",
+        "year": 1967,
+        "filmNumber": 5,
+        "path": "./assets/collections/criterion/eclipse/set-28-film-05-thirst-for-love-1967.jpg",
+        "sourceName": "28.5 Thirst for Love (1967).jpg"
+      }
+    ],
+    "29": [
+      {
+        "title": "Leningrad Cowboys Go America",
+        "year": 1989,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-29-film-01-leningrad-cowboys-go-america-1989.jpg",
+        "sourceName": "29.1 Leningrad Cowboys Go America (1989).jpg"
+      },
+      {
+        "title": "Leningrad Cowboys Meet Moses",
+        "year": 1994,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-29-film-02-leningrad-cowboys-meet-moses-1994.jpg",
+        "sourceName": "29.2 Leningrad Cowboys Meet Moses (1994).jpg"
+      },
+      {
+        "title": "Total Balalaika Show",
+        "year": 1994,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-29-film-03-total-balalaika-show-1994.jpg",
+        "sourceName": "29.3 Total Balalaika Show (1994).jpg"
+      }
+    ],
+    "30": [
+      {
+        "title": "Elephant Boy",
+        "year": 1937,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-30-film-01-elephant-boy-1937.jpg",
+        "sourceName": "30.1 Elephant Boy (1937).jpg"
+      },
+      {
+        "title": "The Drum",
+        "year": 1938,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-30-film-02-the-drum-1938.jpg",
+        "sourceName": "30.2 The Drum (1938).jpg"
+      },
+      {
+        "title": "Jungle Book",
+        "year": 1942,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-30-film-03-jungle-book-1942.jpg",
+        "sourceName": "30.3 Jungle Book (1942).jpg"
+      }
+    ],
+    "31": [
+      {
+        "title": "Poto and Cabengo",
+        "year": 1980,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-31-film-01-poto-and-cabengo-1980.jpg",
+        "sourceName": "31.1 Poto and Cabengo (1980).jpg"
+      },
+      {
+        "title": "Routine Pleasures",
+        "year": 1986,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-31-film-02-routine-pleasures-1986.jpg",
+        "sourceName": "31.2 Routine Pleasures (1986).jpg"
+      },
+      {
+        "title": "My Crasy Life",
+        "year": 1992,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-31-film-03-my-crasy-life-1992.jpg",
+        "sourceName": "31.3 My Crasy Life (1992).jpg"
+      }
+    ],
+    "32": [
+      {
+        "title": "Pearls of the Deep",
+        "year": 1966,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-32-film-01-pearls-of-the-deep-1966.jpg",
+        "sourceName": "32.1 Pearls of the Deep (1966).jpg"
+      },
+      {
+        "title": "Daisies",
+        "year": 1966,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-32-film-02-daisies-1966.jpg",
+        "sourceName": "32.2 Daisies (1966).jpg"
+      },
+      {
+        "title": "A Report on the Party and Guests",
+        "year": 1966,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-32-film-03-a-report-on-the-party-and-guests-1966.jpg",
+        "sourceName": "32.3 A Report on the Party and Guests (1966).jpg"
+      },
+      {
+        "title": "A Report on the Party and Guests",
+        "year": 1966,
+        "filmNumber": 4,
+        "path": "./assets/collections/criterion/eclipse/set-32-film-04-a-report-on-the-party-and-guests-1966.jpg",
+        "sourceName": "32.4 A Report on the Party and Guests (1966).jpg"
+      },
+      {
+        "title": "Return of the Prodigal Son",
+        "year": 1967,
+        "filmNumber": 5,
+        "path": "./assets/collections/criterion/eclipse/set-32-film-05-return-of-the-prodigal-son-1967.jpg",
+        "sourceName": "32.5 Return of the Prodigal Son (1967).jpg"
+      },
+      {
+        "title": "Capricious Summer",
+        "year": 1968,
+        "filmNumber": 6,
+        "path": "./assets/collections/criterion/eclipse/set-32-film-06-capricious-summer-1968.jpg",
+        "sourceName": "32.6 Capricious Summer (1968).jpg"
+      },
+      {
+        "title": "The Joke",
+        "year": 1969,
+        "filmNumber": 7,
+        "path": "./assets/collections/criterion/eclipse/set-32-film-07-the-joke-1969.jpg",
+        "sourceName": "32.7 The Joke (1969).jpg"
+      }
+    ],
+    "33": [
+      {
+        "title": "Babo 73",
+        "year": 1964,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-33-film-01-babo-73-1964.jpg",
+        "sourceName": "33.1 Babo 73 (1964).jpg"
+      },
+      {
+        "title": "Chafed Elbows",
+        "year": 1966,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-33-film-02-chafed-elbows-1966.jpg",
+        "sourceName": "33.2 Chafed Elbows (1966).jpg"
+      },
+      {
+        "title": "No More Excuses",
+        "year": 1968,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-33-film-03-no-more-excuses-1968.jpg",
+        "sourceName": "33.3 No More Excuses (1968).jpg"
+      },
+      {
+        "title": "Putney Swope",
+        "year": 1969,
+        "filmNumber": 4,
+        "path": "./assets/collections/criterion/eclipse/set-33-film-04-putney-swope-1969.jpg",
+        "sourceName": "33.4 Putney Swope (1969).jpg"
+      },
+      {
+        "title": "Two Tons of Turquoise to Taos Tonight",
+        "year": 1975,
+        "filmNumber": 5,
+        "path": "./assets/collections/criterion/eclipse/set-33-film-05-two-tons-of-turquoise-to-taos-tonight-1975.jpg",
+        "sourceName": "33.5 Two Tons of Turquoise to Taos Tonight (1975).jpg"
+      }
+    ],
+    "34": [
+      {
+        "title": "Remorques",
+        "year": 1941,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-34-film-01-remorques-1941.jpg",
+        "sourceName": "34.1 Remorques (1941).jpg"
+      },
+      {
+        "title": "Lumière d’été",
+        "year": 1943,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-34-film-02-lumiere-d-ete-1943.jpg",
+        "sourceName": "34.2 Lumière d’été (1943).jpg"
+      },
+      {
+        "title": "Le ciel est à vous",
+        "year": 1944,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-34-film-03-le-ciel-est-a-vous-1944.jpg",
+        "sourceName": "34.3 Le ciel est à vous (1944).jpg"
+      }
+    ],
+    "35": [
+      {
+        "title": "Wild 90",
+        "year": 1968,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-35-film-02-wild-90-1968.jpg",
+        "sourceName": "35.2 Wild 90 (1968).jpg"
+      },
+      {
+        "title": "Beyond the Law",
+        "year": 1968,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-35-film-03-beyond-the-law-1968.jpg",
+        "sourceName": "35.3 Beyond the Law (1968).jpg"
+      },
+      {
+        "title": "Maidstone",
+        "year": 1970,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-35-film-01-maidstone-1970.jpg",
+        "sourceName": "35.1 Maidstone (1970).jpg"
+      }
+    ],
+    "36": [
+      {
+        "title": "The Man in Grey",
+        "year": 1943,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-36-film-01-the-man-in-grey-1943.jpg",
+        "sourceName": "36.1 The Man in Grey (1943).jpg"
+      },
+      {
+        "title": "Madonna of the Seven Moons",
+        "year": 1945,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-36-film-02-madonna-of-the-seven-moons-1945.jpg",
+        "sourceName": "36.2 Madonna of the Seven Moons (1945).jpg"
+      },
+      {
+        "title": "The Wicked Lady",
+        "year": 1945,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-36-film-03-the-wicked-lady-1945.jpg",
+        "sourceName": "36.3 The Wicked Lady (1945).jpg"
+      }
+    ],
+    "37": [
+      {
+        "title": "The X from Outer Space",
+        "year": 1967,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-37-film-01-the-x-from-outer-space-1967.jpg",
+        "sourceName": "37.1 The X from Outer Space (1967).jpg"
+      },
+      {
+        "title": "Goke, Body Snatcher from Hell",
+        "year": 1968,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-37-film-02-goke-body-snatcher-from-hell-1968.jpg",
+        "sourceName": "37.2 Goke, Body Snatcher from Hell (1968).jpg"
+      },
+      {
+        "title": "The Living Skeleton",
+        "year": 1968,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-37-film-03-the-living-skeleton-1968.jpg",
+        "sourceName": "37.3 The Living Skeleton (1968).jpg"
+      },
+      {
+        "title": "Genocide",
+        "year": 1968,
+        "filmNumber": 4,
+        "path": "./assets/collections/criterion/eclipse/set-37-film-04-genocide-1968.jpg",
+        "sourceName": "37.4 Genocide (1968).jpg"
+      }
+    ],
+    "38": [
+      {
+        "title": "The Thick-Walled Room",
+        "year": 1956,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-38-film-01-the-thick-walled-room-1956.jpg",
+        "sourceName": "38.1 The Thick-Walled Room (1956).jpg"
+      },
+      {
+        "title": "I Will Buy You",
+        "year": 1956,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-38-film-02-i-will-buy-you-1956.jpg",
+        "sourceName": "38.2 I Will Buy You (1956).jpg"
+      },
+      {
+        "title": "Black River",
+        "year": 1956,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-38-film-03-black-river-1956.jpg",
+        "sourceName": "38.3 Black River (1956).jpg"
+      },
+      {
+        "title": "The Inheritance",
+        "year": 1962,
+        "filmNumber": 4,
+        "path": "./assets/collections/criterion/eclipse/set-38-film-04-the-inheritance-1962.jpg",
+        "sourceName": "38.4 The Inheritance (1962).jpg"
+      }
+    ],
+    "39": [
+      {
+        "title": "Love Is Colder Than Death",
+        "year": 1969,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-39-film-01-love-is-colder-than-death-1969.jpg",
+        "sourceName": "39.1 Love Is Colder Than Death (1969).jpg"
+      },
+      {
+        "title": "Katzelmacher",
+        "year": 1969,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-39-film-02-katzelmacher-1969.jpg",
+        "sourceName": "39.2 Katzelmacher (1969).jpg"
+      },
+      {
+        "title": "Gods of the Plague",
+        "year": 1969,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-39-film-03-gods-of-the-plague-1969.jpg",
+        "sourceName": "39.3 Gods of the Plague (1969).jpg"
+      },
+      {
+        "title": "The American Soldier",
+        "year": 1970,
+        "filmNumber": 4,
+        "path": "./assets/collections/criterion/eclipse/set-39-film-04-the-american-soldier-1970.jpg",
+        "sourceName": "39.4 The American Soldier (1970).jpg"
+      },
+      {
+        "title": "Beware of a Holy Whore",
+        "year": 1970,
+        "filmNumber": 5,
+        "path": "./assets/collections/criterion/eclipse/set-39-film-05-beware-of-a-holy-whore-1970.jpg",
+        "sourceName": "39.5 Beware of a Holy Whore (1970).jpg"
+      }
+    ],
+    "40": [
+      {
+        "title": "The Home and the World",
+        "year": 1984,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-40-film-01-the-home-and-the-world-1984.jpg",
+        "sourceName": "40.1 The Home and the World (1984).jpg"
+      },
+      {
+        "title": "An Enemy of the People",
+        "year": 1989,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-40-film-02-an-enemy-of-the-people-1989.jpg",
+        "sourceName": "40.2 An Enemy of the People (1989).jpg"
+      },
+      {
+        "title": "The Stranger",
+        "year": 1991,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-40-film-03-the-stranger-1991.jpg",
+        "sourceName": "40.3 The Stranger (1991).jpg"
+      }
+    ],
+    "41": [
+      {
+        "title": "Port of Flowers",
+        "year": 1943,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-41-film-01-port-of-flowers-1943.jpg",
+        "sourceName": "41.1 Port of Flowers (1943).jpg"
+      },
+      {
+        "title": "The Living Magoroku",
+        "year": 1943,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-41-film-02-the-living-magoroku-1943.jpg",
+        "sourceName": "41.2 The Living Magoroku (1943).jpg"
+      },
+      {
+        "title": "Jubilation Street",
+        "year": 1944,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-41-film-03-jubilation-street-1944.jpg",
+        "sourceName": "41.3 Jubilation Street (1944).jpg"
+      },
+      {
+        "title": "Army",
+        "year": 1944,
+        "filmNumber": 4,
+        "path": "./assets/collections/criterion/eclipse/set-41-film-04-army-1944.jpg",
+        "sourceName": "41.4 Army (1944).jpg"
+      },
+      {
+        "title": "Morning for the Osone Family",
+        "year": 1946,
+        "filmNumber": 5,
+        "path": "./assets/collections/criterion/eclipse/set-41-film-05-morning-for-the-osone-family-1946.jpg",
+        "sourceName": "41.5 Morning for the Osone Family (1946).jpg"
+      }
+    ],
+    "42": [
+      {
+        "title": "Walk Cheerfully",
+        "year": 1930,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-42-film-01-walk-cheerfully-1930.jpg",
+        "sourceName": "42.1 Walk Cheerfully (1930).jpg"
+      },
+      {
+        "title": "That Night’s Wife",
+        "year": 1930,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-42-film-02-that-night-s-wife-1930.jpg",
+        "sourceName": "42.2 That Night’s Wife (1930).jpg"
+      },
+      {
+        "title": "Dragnet Girl",
+        "year": 1933,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-42-film-03-dragnet-girl-1933.jpg",
+        "sourceName": "42.3 Dragnet Girl (1933).jpg"
+      }
+    ],
+    "43": [
+      {
+        "title": "Uncle Yanco",
+        "year": 1968,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-43-film-01-uncle-yanco-1968.jpg",
+        "sourceName": "43.1 Uncle Yanco (1968).jpg"
+      },
+      {
+        "title": "Lions Love (. . . and Lies)",
+        "year": 1969,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-43-film-03-lions-love-and-lies-1969.jpg",
+        "sourceName": "43.3 Lions Love (. . . and Lies) (1969).jpg"
+      },
+      {
+        "title": "Black Panthers",
+        "year": 1970,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-43-film-02-black-panthers-1970.jpg",
+        "sourceName": "43.2 Black Panthers (1970).jpg"
+      },
+      {
+        "title": "Mur Murs",
+        "year": 1981,
+        "filmNumber": 4,
+        "path": "./assets/collections/criterion/eclipse/set-43-film-04-mur-murs-1981.jpg",
+        "sourceName": "43.4 Mur Murs (1981).jpg"
+      },
+      {
+        "title": "Documenteur",
+        "year": 1981,
+        "filmNumber": 5,
+        "path": "./assets/collections/criterion/eclipse/set-43-film-05-documenteur-1981.jpg",
+        "sourceName": "43.5 Documenteur (1981).jpg"
+      }
+    ],
+    "44": [
+      {
+        "title": "David Golder",
+        "year": 1930,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-44-film-01-david-golder-1930.jpg",
+        "sourceName": "44.1 David Golder (1930).jpg"
+      },
+      {
+        "title": "Poil de carotte",
+        "year": 1932,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-44-film-02-poil-de-carotte-1932.jpg",
+        "sourceName": "44.2 Poil de carotte (1932).jpg"
+      },
+      {
+        "title": "La tête d’un homme",
+        "year": 1933,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-44-film-03-la-tete-d-un-homme-1933.jpg",
+        "sourceName": "44.3 La tête d’un homme (1933).jpg"
+      },
+      {
+        "title": "Un carnet de bal",
+        "year": 1937,
+        "filmNumber": 4,
+        "path": "./assets/collections/criterion/eclipse/set-44-film-04-un-carnet-de-bal-1937.jpg",
+        "sourceName": "44.4 Un carnet de bal (1937).jpg"
+      }
+    ],
+    "45": [
+      {
+        "title": "Le mariage de Chiffon",
+        "year": 1942,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-45-film-01-le-mariage-de-chiffon-1942.jpg",
+        "sourceName": "45.1 Le mariage de Chiffon (1942).jpg"
+      },
+      {
+        "title": "Lettres d’amour",
+        "year": 1942,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-45-film-02-lettres-d-amour-1942.jpg",
+        "sourceName": "45.2 Lettres d’amour (1942).jpg"
+      },
+      {
+        "title": "Douce",
+        "year": 1943,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-45-film-03-douce-1943.jpg",
+        "sourceName": "45.3 Douce (1943).jpg"
+      },
+      {
+        "title": "Sylvie et le fantôme",
+        "year": 1946,
+        "filmNumber": 4,
+        "path": "./assets/collections/criterion/eclipse/set-45-film-04-sylvie-et-le-fantome-1946.jpg",
+        "sourceName": "45.4 Sylvie et le fantôme (1946).jpg"
+      }
+    ],
+    "46": [
+      {
+        "title": "The Count of the Old Town",
+        "year": 1935,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-46-film-01-the-count-of-the-old-town-1935.jpg",
+        "sourceName": "46.1 The Count of the Old Town (1935).jpg"
+      },
+      {
+        "title": "Walpurgis Night",
+        "year": 1935,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-46-film-02-walpurgis-night-1935.jpg",
+        "sourceName": "46.2 Walpurgis Night (1935).jpg"
+      },
+      {
+        "title": "Intermezzo",
+        "year": 1936,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-46-film-03-intermezzo-1936.jpg",
+        "sourceName": "46.3 Intermezzo (1936).jpg"
+      },
+      {
+        "title": "Dollar",
+        "year": 1938,
+        "filmNumber": 4,
+        "path": "./assets/collections/criterion/eclipse/set-46-film-04-dollar-1938.jpg",
+        "sourceName": "46.4 Dollar (1938).jpg"
+      },
+      {
+        "title": "A Woman’s Face",
+        "year": 1938,
+        "filmNumber": 5,
+        "path": "./assets/collections/criterion/eclipse/set-46-film-05-a-woman-s-face-1938.jpg",
+        "sourceName": "46.5 A Woman’s Face (1938).jpg"
+      },
+      {
+        "title": "June Night",
+        "year": 1940,
+        "filmNumber": 6,
+        "path": "./assets/collections/criterion/eclipse/set-46-film-06-june-night-1940.jpg",
+        "sourceName": "46.6 June Night (1940).jpg"
+      }
+    ],
+    "47": [
+      {
+        "title": "Bread and Alley",
+        "year": 1970,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-47-film-01-bread-and-alley-1970.jpg",
+        "sourceName": "47.1 Bread and Alley (1970).jpg"
+      },
+      {
+        "title": "Breaktime",
+        "year": 1972,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-47-film-02-breaktime-1972.jpg",
+        "sourceName": "47.2 Breaktime (1972).jpg"
+      },
+      {
+        "title": "Experience",
+        "year": 1973,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-47-film-03-experience-1973.jpg",
+        "sourceName": "47.3 Experience (1973).jpg"
+      },
+      {
+        "title": "The Traveler",
+        "year": 1974,
+        "filmNumber": 4,
+        "path": "./assets/collections/criterion/eclipse/set-47-film-04-the-traveler-1974.jpg",
+        "sourceName": "47.4 The Traveler (1974).jpg"
+      },
+      {
+        "title": "Two Solutions for One Problem",
+        "year": 1975,
+        "filmNumber": 5,
+        "path": "./assets/collections/criterion/eclipse/set-47-film-05-two-solutions-for-one-problem-1975.jpg",
+        "sourceName": "47.5 Two Solutions for One Problem (1975).jpg"
+      },
+      {
+        "title": "So Can I",
+        "year": 1975,
+        "filmNumber": 6,
+        "path": "./assets/collections/criterion/eclipse/set-47-film-06-so-can-i-1975.jpg",
+        "sourceName": "47.6 So Can I (1975).jpg"
+      },
+      {
+        "title": "Colors",
+        "year": 1976,
+        "filmNumber": 7,
+        "path": "./assets/collections/criterion/eclipse/set-47-film-07-colors-1976.jpg",
+        "sourceName": "47.7 Colors (1976).jpg"
+      },
+      {
+        "title": "A Wedding Suit",
+        "year": 1976,
+        "filmNumber": 8,
+        "path": "./assets/collections/criterion/eclipse/set-47-film-08-a-wedding-suit-1976.jpg",
+        "sourceName": "47.8 A Wedding Suit (1976).jpg"
+      },
+      {
+        "title": "Tribute to Teachers",
+        "year": 1977,
+        "filmNumber": 9,
+        "path": "./assets/collections/criterion/eclipse/set-47-film-09-tribute-to-teachers-1977.jpg",
+        "sourceName": "47.9 Tribute to Teachers (1977).jpg"
+      },
+      {
+        "title": "Solution No. 1",
+        "year": 1978,
+        "filmNumber": 10,
+        "path": "./assets/collections/criterion/eclipse/set-47-film-10-solution-no-1-1978.jpg",
+        "sourceName": "47.10 Solution No. 1 (1978).jpg"
+      },
+      {
+        "title": "First Case, Second Case",
+        "year": 1979,
+        "filmNumber": 11,
+        "path": "./assets/collections/criterion/eclipse/set-47-film-11-first-case-second-case-1979.jpg",
+        "sourceName": "47.11 First Case, Second Case (1979).jpg"
+      },
+      {
+        "title": "Toothache",
+        "year": 1980,
+        "filmNumber": 12,
+        "path": "./assets/collections/criterion/eclipse/set-47-film-12-toothache-1980.jpg",
+        "sourceName": "47.12 Toothache (1980).jpg"
+      },
+      {
+        "title": "Orderly or Disorderly",
+        "year": 1981,
+        "filmNumber": 13,
+        "path": "./assets/collections/criterion/eclipse/set-47-film-13-orderly-or-disorderly-1981.jpg",
+        "sourceName": "47.13 Orderly or Disorderly (1981).jpg"
+      },
+      {
+        "title": "The Chorus",
+        "year": 1982,
+        "filmNumber": 14,
+        "path": "./assets/collections/criterion/eclipse/set-47-film-14-the-chorus-1982.jpg",
+        "sourceName": "47.14 The Chorus (1982).jpg"
+      },
+      {
+        "title": "Fellow Citizen",
+        "year": 1983,
+        "filmNumber": 15,
+        "path": "./assets/collections/criterion/eclipse/set-47-film-15-fellow-citizen-1983.jpg",
+        "sourceName": "47.15 Fellow Citizen (1983).jpg"
+      },
+      {
+        "title": "First Graders",
+        "year": 1984,
+        "filmNumber": 16,
+        "path": "./assets/collections/criterion/eclipse/set-47-film-16-first-graders-1984.jpg",
+        "sourceName": "47.16 First Graders (1984).jpg"
+      },
+      {
+        "title": "Homework",
+        "year": 1989,
+        "filmNumber": 17,
+        "path": "./assets/collections/criterion/eclipse/set-47-film-17-homework-1989.jpg",
+        "sourceName": "47.17 Homework (1989).jpg"
+      }
+    ],
+    "48": [
+      {
+        "title": "Love Letter",
+        "year": 1953,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-48-film-01-love-letter-1953.jpg",
+        "sourceName": "48.1 Love Letter (1953).jpg"
+      },
+      {
+        "title": "The Moon Has Risen",
+        "year": 1955,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-48-film-02-the-moon-has-risen-1955.jpg",
+        "sourceName": "48.2 The Moon Has Risen (1955).jpg"
+      },
+      {
+        "title": "Forever a Woman",
+        "year": 1955,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-48-film-03-forever-a-woman-1955.jpg",
+        "sourceName": "48.3 Forever a Woman (1955).jpg"
+      },
+      {
+        "title": "The Wandering Princess",
+        "year": 1960,
+        "filmNumber": 4,
+        "path": "./assets/collections/criterion/eclipse/set-48-film-04-the-wandering-princess-1960.jpg",
+        "sourceName": "48.4 The Wandering Princess (1960).jpg"
+      },
+      {
+        "title": "Girls of the Night",
+        "year": 1961,
+        "filmNumber": 5,
+        "path": "./assets/collections/criterion/eclipse/set-48-film-05-girls-of-the-night-1961.jpg",
+        "sourceName": "48.5 Girls of the Night (1961).jpg"
+      },
+      {
+        "title": "Love Under the Crucifix",
+        "year": 1962,
+        "filmNumber": 6,
+        "path": "./assets/collections/criterion/eclipse/set-48-film-06-love-under-the-crucifix-1962.jpg",
+        "sourceName": "48.6 Love Under the Crucifix (1962).jpg"
+      }
+    ],
+    "49": [
+      {
+        "title": "Goodbye CP",
+        "year": 1972,
+        "filmNumber": 1,
+        "path": "./assets/collections/criterion/eclipse/set-49-film-01-goodbye-cp-1972.jpg",
+        "sourceName": "49.1 Goodbye CP (1972).jpg"
+      },
+      {
+        "title": "Extreme Private Eros - Love Song 1974",
+        "year": 1974,
+        "filmNumber": 2,
+        "path": "./assets/collections/criterion/eclipse/set-49-film-02-extreme-private-eros-love-song-1974-1974.jpg",
+        "sourceName": "49.2 Extreme Private Eros - Love Song 1974 (1974).jpg"
+      },
+      {
+        "title": "The Emperor’s Naked Army Marches On",
+        "year": 1987,
+        "filmNumber": 3,
+        "path": "./assets/collections/criterion/eclipse/set-49-film-03-the-emperor-s-naked-army-marches-on-1987.jpg",
+        "sourceName": "49.3 The Emperor’s Naked Army Marches On (1987).jpg"
+      },
+      {
+        "title": "A Dedicated Life",
+        "year": 1994,
+        "filmNumber": 4,
+        "path": "./assets/collections/criterion/eclipse/set-49-film-04-a-dedicated-life-1994.jpg",
+        "sourceName": "49.4 A Dedicated Life (1994).jpg"
+      },
+      {
+        "title": "Sennan Asbestos Disaster",
+        "year": 2016,
+        "filmNumber": 5,
+        "path": "./assets/collections/criterion/eclipse/set-49-film-05-sennan-asbestos-disaster-2016.jpg",
+        "sourceName": "49.5 Sennan Asbestos Disaster (2016).jpg"
+      }
+    ]
+  }
+}

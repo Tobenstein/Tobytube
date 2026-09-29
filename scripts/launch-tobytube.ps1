@@ -24,7 +24,11 @@ Set-Location $root
 if (-not $env:PORT) {
   $env:PORT = "8092"
 }
+if (-not $env:TOBYTUBE_LAN_ACCESS) {
+  $env:TOBYTUBE_LAN_ACCESS = "true"
+}
 
 Write-Host "Tobytube launching at http://127.0.0.1:$env:PORT/"
+Write-Host "TTMV access is available to paired devices on this trusted LAN."
 Write-Host "Press Ctrl+C in this window to stop the service."
 & $node scripts\tobytube-server.mjs

@@ -1,4 +1,5 @@
 import { spawn } from "node:child_process";
+import { closeSync, openSync } from "node:fs";
 import http from "node:http";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -6,6 +7,11 @@ import { fileURLToPath } from "node:url";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const port = Number(process.env.PORT ?? 8092);
 const url = `http://127.0.0.1:${port}/`;
+const serviceEnvironment = {
+  ...process.env,
+  PORT: String(port),
+  TOBYTUBE_LAN_ACCESS: process.env.TOBYTUBE_LAN_ACCESS ?? "true",
+};
 
 if (await isListening(port)) {
   console.log(`Tobytube already running at ${url}`);
@@ -47,30 +53,26 @@ function delay(ms) {
 function launchDetachedServer() {
   if (process.platform === "win32") {
     const logPath = path.join(root, `tobytube-service-${port}.log`);
-    const command = [
-      `$env:PORT = '${port}'`,
-      `Set-Location -LiteralPath '${escapePowerShell(root)}'`,
-      `Start-Process -FilePath '${escapePowerShell(process.execPath)}' -ArgumentList 'scripts\\tobytube-server.mjs' -WorkingDirectory '${escapePowerShell(root)}' -RedirectStandardOutput '${escapePowerShell(logPath)}' -RedirectStandardError '${escapePowerShell(path.join(root, `tobytube-service-${port}.err.log`))}' -WindowStyle Hidden`,
-    ].join("; ");
-    const child = spawn("powershell.exe", ["-NoProfile", "-ExecutionPolicy", "Bypass", "-Command", command], {
+    const stdout = openSync(logPath, "a");
+    const stderr = openSync(path.join(root, `tobytube-service-${port}.err.log`), "a");
+    const child = spawn(process.execPath, ["scripts\\tobytube-server.mjs"], {
       cwd: root,
       detached: true,
-      stdio: "ignore",
+      env: serviceEnvironment,
+      stdio: ["ignore", stdout, stderr],
       windowsHide: true,
     });
     child.unref();
+    closeSync(stdout);
+    closeSync(stderr);
     return;
   }
 
   const child = spawn(process.execPath, ["scripts/tobytube-server.mjs"], {
     cwd: root,
     detached: true,
-    env: { ...process.env, PORT: String(port) },
+    env: serviceEnvironment,
     stdio: "ignore",
   });
   child.unref();
-}
-
-function escapePowerShell(value) {
-  return String(value).replace(/'/g, "''");
 }

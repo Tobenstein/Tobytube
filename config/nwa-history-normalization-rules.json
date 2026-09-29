@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "sourcePrograms": {
+    "CWF": "Championship Wrestling from Florida (TV)",
+    "NWA FL TV": "Championship Wrestling from Florida (TV)",
+    "FL TV": "Championship Wrestling from Florida (TV)",
+    "AJPW TV": "All Japan Pro Wrestling (TV)",
+    "NWA Georgia TV": "Georgia Championship Wrestling (TV)",
+    "GA TV": "Georgia Championship Wrestling (TV)",
+    "MA TV": "Mid-Atlantic Championship Wrestling (TV)",
+    "NWA Sat": "NWA Saturday Night",
+    "Main Event": "NWA/WCW Main Event",
+    "WWW": "NWA Worldwide Wrestling",
+    "Clash": "Clash of the Champions",
+    "Bash 90": "Bash at the Beach 1990"
+  },
+  "championships": {
+    "NWA Title": { "id": "nwa-worlds-heavyweight-championship", "name": "NWA World's Heavyweight Championship" },
+    "GA TV Title": { "id": "nwa-georgia-television-championship", "name": "NWA Georgia Television Championship", "laterName": "NWA National Television Championship" },
+    "NWA National TV Title": { "id": "nwa-national-television-championship", "name": "NWA National Television Championship", "formerName": "NWA Georgia Television Championship" },
+    "NWA TV Title": { "id": "nwa-world-television-championship", "name": "NWA World Television Championship" },
+    "TV Title": { "id": "nwa-world-television-championship", "name": "NWA World Television Championship" },
+    "NWA Tag Titles": { "id": "nwa-world-tag-team-championship", "name": "NWA World Tag Team Championship" },
+    "NWA United States Championship": { "id": "nwa-united-states-heavyweight-championship", "name": "NWA United States Heavyweight Championship", "laterName": "WCW United States Heavyweight Championship", "lineageNote": "Lex Luger is the final NWA-recognized champion before the 1991 WCW naming transition." },
+    "US Title": { "id": "nwa-united-states-heavyweight-championship", "name": "NWA United States Heavyweight Championship", "laterName": "WCW United States Heavyweight Championship" },
+    "FL TV Title": { "id": "nwa-florida-television-championship", "name": "NWA Florida Television Championship" }
+  },
+  "participantAliases": {
+    "JYD": "Junkyard Dog",
+    "Magnum TA": "Magnum T.A."
+  },
+  "presentationFlags": {
+    "JIP": "Joined in progress",
+    "JP": "Joined in progress",
+    "Clips": "Clips"
+  }
+}

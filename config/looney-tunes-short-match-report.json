@@ -1,0 +1,45 @@
+{
+  "generatedAt": "2026-09-09T13:40:08.927Z",
+  "source": "TMDB exact title/year matching",
+  "total": 356,
+  "attempted": 5,
+  "matched": 356,
+  "unmatched": [],
+  "results": [
+    {
+      "id": "looney-golden-v2-d2-the-dover-boys-at-pimento-university",
+      "title": "The Dover Boys at Pimento University",
+      "year": 1942,
+      "matched": true,
+      "tmdbId": 121171
+    },
+    {
+      "id": "looney-golden-v4-d3-the-wild-chase",
+      "title": "The Wild Chase",
+      "year": 1965,
+      "matched": true,
+      "tmdbId": 162223
+    },
+    {
+      "id": "looney-golden-v5-d2-the-bear-s-tale",
+      "title": "The Bear's Tale",
+      "year": 1940,
+      "matched": true,
+      "tmdbId": 173438
+    },
+    {
+      "id": "looney-golden-v6-d4-miss-glory",
+      "title": "Page Miss Glory",
+      "year": 1936,
+      "matched": true,
+      "tmdbId": 188781
+    },
+    {
+      "id": "looney-golden-v6-d4-martian-through-georgia",
+      "title": "Martian Through Georgia",
+      "year": 1962,
+      "matched": true,
+      "tmdbId": 234537
+    }
+  ]
+}

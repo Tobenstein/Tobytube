@@ -1,0 +1,74 @@
+{
+  "id": "universal-monsters",
+  "title": "Universal Monsters",
+  "collectionType": "Sagas",
+  "folderAliases": ["Universal Monsters", "Universal Horror", "Universal Classic Monsters"],
+  "sections": [
+    {
+      "id": "crossovers",
+      "title": "Crossovers",
+      "mediaType": "movie",
+      "items": [["Van Helsing", 2004], ["Abbott and Costello Meet Frankenstein", 1948], ["Abbott and Costello Meet the Invisible Man", 1951], ["Abbott and Costello Meet Dr. Jekyll and Mr. Hyde", 1953], ["Abbott and Costello Meet the Mummy", 1955], ["Abbott and Costello Meet the Creature from the Black Lagoon", 1954], ["Van Helsing: The London Assignment", 2004]]
+    },
+    {
+      "id": "dracula",
+      "title": "Dracula",
+      "mediaType": "movie",
+      "items": [["Dracula", 1931], ["Drácula", 1931], ["Dracula's Daughter", 1936], ["Son of Dracula", 1943], ["House of Frankenstein", 1944], ["House of Dracula", 1945], ["Abbott and Costello Meet Frankenstein", 1948], ["Dracula", 1979], ["Bram Stoker's Dracula", 1992], ["Dracula Untold", 2014], ["Renfield", 2023], ["The Last Voyage of the Demeter", 2023], ["Abigail", 2024], ["Dracula: A Love Tale", 2025]]
+    },
+    {
+      "id": "frankenstein",
+      "title": "Frankenstein",
+      "mediaType": "movie",
+      "items": [["Frankenstein", 1931], ["Bride of Frankenstein", 1935], ["Son of Frankenstein", 1939], ["The Ghost of Frankenstein", 1942], ["Frankenstein Meets the Wolf Man", 1943], ["House of Frankenstein", 1944], ["House of Dracula", 1945], ["Abbott and Costello Meet Frankenstein", 1948], ["Mary Shelley's Frankenstein", 1994], ["Victor Frankenstein", 2015]]
+    },
+    {
+      "id": "the-mummy",
+      "title": "The Mummy",
+      "mediaType": "movie",
+      "items": [["The Mummy", 1932], ["The Mummy's Hand", 1940], ["The Mummy's Tomb", 1942], ["The Mummy's Ghost", 1944], ["The Mummy's Curse", 1944], ["Abbott and Costello Meet the Mummy", 1955], ["The Mummy", 1999], ["The Mummy Returns", 2001], ["The Scorpion King", 2002], ["The Mummy: Tomb of the Dragon Emperor", 2008], ["The Mummy", 2017], ["The Scorpion King 2: Rise of a Warrior", 2008], ["The Scorpion King 3: Battle for Redemption", 2012], ["The Scorpion King 4: Quest for Power", 2015], ["The Scorpion King: Book of Souls", 2018], ["The Mummy: The Animated Series", 2001, "tv"]]
+    },
+    {
+      "id": "invisible-man",
+      "title": "The Invisible Man",
+      "mediaType": "movie",
+      "items": [["The Invisible Man", 1933], ["The Invisible Man Returns", 1940], ["The Invisible Woman", 1940], ["Invisible Agent", 1942], ["The Invisible Man's Revenge", 1944], ["Abbott and Costello Meet the Invisible Man", 1951], ["Hollow Man", 2000], ["The Invisible Man", 2020]]
+    },
+    {
+      "id": "wolf-man",
+      "title": "The Wolf Man",
+      "mediaType": "movie",
+      "items": [["Werewolf of London", 1935], ["The Wolf Man", 1941], ["Frankenstein Meets the Wolf Man", 1943], ["House of Frankenstein", 1944], ["House of Dracula", 1945], ["Abbott and Costello Meet Frankenstein", 1948], ["Wolf", 1994], ["The Wolfman", 2010], ["Wolf Man", 2025]]
+    },
+    {
+      "id": "creature-from-the-black-lagoon",
+      "title": "Creature from the Black Lagoon",
+      "mediaType": "movie",
+      "items": [["Creature from the Black Lagoon", 1954], ["Revenge of the Creature", 1955], ["The Creature Walks Among Us", 1956]]
+    },
+    {
+      "id": "other-monsters",
+      "title": "Other Monsters",
+      "mediaType": "movie",
+      "items": [["Dr. Jekyll and Mr. Hyde", 1913], ["Nosferatu", 1922], ["The Hunchback of Notre Dame", 1923], ["The Phantom of the Opera", 1925], ["Murders in the Rue Morgue", 1932], ["The Old Dark House", 1932], ["King Kong", 1933], ["The Black Cat", 1934], ["The Raven", 1935], ["The Invisible Ray", 1936], ["Phantom of the Opera", 1943], ["She-Wolf of London", 1946], ["This Island Earth", 1955], ["Godzilla", 1954], ["Night of the Living Dead", 1968], ["An American Werewolf in London", 1981], ["The Fly", 1986], ["Candyman", 1992], ["Monster Force", 1994, "tv"]]
+    },
+    {
+      "id": "hammer-horror",
+      "title": "Hammer Horror",
+      "mediaType": "tv",
+      "items": [["Hammer House of Horror", 1980]]
+    },
+    {
+      "id": "hammer-dracula-vampires",
+      "title": "Hammer's Dracula / Vampires",
+      "mediaType": "movie",
+      "items": [["Horror of Dracula", 1958], ["Dracula: Prince of Darkness", 1966], ["Dracula Has Risen from the Grave", 1968], ["Taste the Blood of Dracula", 1970], ["Scars of Dracula", 1970]]
+    },
+    {
+      "id": "hammer-frankenstein",
+      "title": "Hammer's Frankenstein",
+      "mediaType": "movie",
+      "items": [["The Curse of Frankenstein", 1957], ["The Revenge of Frankenstein", 1958], ["The Evil of Frankenstein", 1964], ["Frankenstein Created Woman", 1967], ["Frankenstein Must Be Destroyed", 1969]]
+    }
+  ]
+}

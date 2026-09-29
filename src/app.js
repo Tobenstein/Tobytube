@@ -10,6 +10,15 @@ import {
   tvShows,
   wweDocumentaries,
 } from "./data.js";
+import { rankRelatedMovies } from "./recommendation-engine.js";
+import { buildPlaybackRecoveryState, getAbsolutePlaybackTime } from "./player-time.js";
+import { getNextSequentialShortId, selectRandomShortId, SHORT_PLAYBACK_RANDOM_POOL, SHORT_PLAYBACK_SEQUENTIAL } from "./shorts-playback.js";
+import {
+  appendAnimationRandomHistory,
+  getNextAnimationMediaKind,
+  moveAnimationRandomHistory,
+  selectAnimationRandomCandidate,
+} from "./animation-randomizer.js";
 
 const state = {
   section: "home",
@@ -19,6 +28,8 @@ const state = {
   selectedChampionshipId: null,
   selectedTvSeason: null,
   selectedTvSubcollection: null,
+  looneyTunesSort: "disc",
+  disneyShortsSort: "release",
   selectedTvEpisodeId: null,
   selectedTvGuideItemId: null,
   selectedCollectionId: null,
@@ -32,6 +43,10 @@ const state = {
   selectedCriterionSubCollectionId: null,
   selectedIndiaView: "home",
   selectedIndiaLanguageId: null,
+  selectedJapanView: "home",
+  selectedHolidayChaosView: "theatre",
+  wrestlingLandingView: "major",
+  selectedWrestlingShowKey: null,
   selectedYear: 2001,
   view: "overview",
   subView: "home",
@@ -51,8 +66,12 @@ const state = {
   batcaveMediaOpenSections: new Set(),
   batcaveUnmatchedOpenSections: new Set(),
   batcaveMetadataDraft: null,
+  batcaveUsers: null,
+  batcaveUsersLoading: false,
+  batcaveSelectedUserId: null,
   titleCardView: "full",
   query: "",
+  searchActive: false,
   returnPage: null,
   navigationStack: [],
   powerOffMode: null,
@@ -68,9 +87,12 @@ const state = {
   mergeSelection: new Set(),
   playbackQueue: [],
   player: null,
+  animationRandomizer: null,
+  controlsListeningFor: null,
 };
 
 const app = document.querySelector("#app");
+app?.addEventListener("click", handleDelegatedRandomTvEpisodeClick);
 let tmdbPosters = {};
 const personFilmographyIndex = new Map();
 let generatedMetadata = { records: [], unmatchedFiles: [] };
@@ -108,6 +130,8 @@ let mcuDetailIndex = {};
 let criterionCollectionIndex = null;
 let criterionDetailIndex = {};
 let curatedManifestIndex = { collections: {} };
+let disneyShortsIndex = { collections: [] };
+let looneyTunesGoldenIndex = { volumes: [] };
 let teebeeShuffleTimer = null;
 let movieHotspotResizeObserver = null;
 let tvGuideClockTimer = null;
@@ -115,6 +139,15 @@ let playerAutoplayTimer = null;
 let playerAutoplayInterval = null;
 let metadataToastTimer = null;
 let hydrationRenderTimer = null;
+let searchRenderTimer = null;
+let searchTextCache = new Map();
+let searchDetailHydrationRequested = false;
+let searchMovieDetailsByIdentity = new Map();
+let searchTvDetailsByIdentity = new Map();
+let initialCatalogReady = false;
+let initialCatalogRetryTimer = null;
+let initialCatalogProgress = 0;
+let initialCatalogProgressLabel = "Connecting to the live library";
 let gamepadNavigationFrame = null;
 let gamepadNavigationState = { direction: null, actionPressed: false, backPressed: false, repeatedAt: 0 };
 let movieDetailLoadPromise = null;
@@ -127,32 +160,90 @@ let overrideIdsByIdentityTitle = null;
 let curatedHydrationIndex = null;
 const RESUME_THRESHOLD_SECONDS = 60;
 const TV_CURRENT_EPISODE_THRESHOLD_SECONDS = 3 * 60;
-const PLAYBACK_BUILD_ID = "playback-hls-026";
+const PLAYBACK_BUILD_ID = "playback-session-lifecycle-028";
 const RESUME_SCHEMA_VERSION = 3;
+const TV_COMPLETION_THRESHOLD = 0.95;
+const PLAYBACK_CONTROLS_STORAGE_KEY = "tobytube.player.controls.v1";
+const DEFAULT_PLAYBACK_CONTROLS = Object.freeze({ playPause: "Space", seekBackward: "ArrowLeft", seekForward: "ArrowRight", volumeDown: "ArrowDown", volumeUp: "ArrowUp", subtitles: "KeyS", fullscreen: "KeyF", mute: "KeyM" });
 const PERF_WARN_MS = 80;
+let backgroundRenderDeferredForPlayback = false;
 
 function scheduleHydrationRender(delay = 2500) {
+  if (!initialCatalogReady) return;
   if (hydrationRenderTimer) clearTimeout(hydrationRenderTimer);
   hydrationRenderTimer = setTimeout(() => {
     hydrationRenderTimer = null;
+    if (state.player) {
+      backgroundRenderDeferredForPlayback = true;
+      return;
+    }
+    // Hydration and scanner-status updates are background work. Rebuilding the
+    // app for them must not navigate the user back to the top of the library.
+    preservePageScrollForNextRender();
     render();
   }, delay);
 }
 
+function updateInitialCatalogProgress(value, label) {
+  initialCatalogProgress = Math.max(0, Math.min(100, Math.round(Number(value) || 0)));
+  if (label) initialCatalogProgressLabel = label;
+  const progress = document.querySelector("[data-catalog-progress]");
+  const fill = document.querySelector("[data-catalog-progress-fill]");
+  const copy = document.querySelector("[data-catalog-progress-copy]");
+  if (progress) progress.setAttribute("aria-valuenow", String(initialCatalogProgress));
+  if (fill) fill.style.width = `${initialCatalogProgress}%`;
+  if (copy) copy.textContent = `${initialCatalogProgressLabel} · ${initialCatalogProgress}%`;
+}
+
+async function readJsonResponseWithProgress(response) {
+  const total = Number(response.headers.get("content-length") ?? 0);
+  if (!response.body || !total) {
+    updateInitialCatalogProgress(45, "Downloading the live catalog");
+    return JSON.parse(await response.text());
+  }
+  const reader = response.body.getReader();
+  const chunks = [];
+  let received = 0;
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    chunks.push(value);
+    received += value.byteLength;
+    updateInitialCatalogProgress(5 + ((received / total) * 75), "Downloading the live catalog");
+  }
+  const bytes = new Uint8Array(received);
+  let offset = 0;
+  chunks.forEach((chunk) => {
+    bytes.set(chunk, offset);
+    offset += chunk.byteLength;
+  });
+  updateInitialCatalogProgress(84, "Reading the catalog");
+  await new Promise((resolve) => requestAnimationFrame(resolve));
+  return JSON.parse(new TextDecoder().decode(bytes));
+}
+
 async function ensureMovieDetailIndex() {
   if (movieDetailLoadPromise) return movieDetailLoadPromise;
-  movieDetailLoadPromise = fetch("./src/movie-detail.generated.json", { cache: "no-store" })
+  movieDetailLoadPromise = fetch("./src/movie-detail.generated.json", { cache: "no-cache" })
     .then((response) => (response.ok ? response.json() : { movies: {} }))
-    .then((data) => { movieDetailIndex = data.movies ?? {}; })
+    .then((data) => {
+      movieDetailIndex = data.movies ?? {};
+      searchMovieDetailsByIdentity = buildSearchDetailsIdentityIndex(movieDetailIndex);
+      searchTextCache.clear();
+    })
     .catch(() => {});
   return movieDetailLoadPromise;
 }
 
 async function ensureTvDetailIndex() {
   if (tvDetailLoadPromise) return tvDetailLoadPromise;
-  tvDetailLoadPromise = fetch("./src/tv-detail.generated.json", { cache: "no-store" })
+  tvDetailLoadPromise = fetch("./src/tv-detail.generated.json", { cache: "no-cache" })
     .then((response) => (response.ok ? response.json() : { shows: {} }))
-    .then((data) => { tvDetailIndex = data.shows ?? {}; })
+    .then((data) => {
+      tvDetailIndex = data.shows ?? {};
+      searchTvDetailsByIdentity = buildSearchDetailsIdentityIndex(tvDetailIndex);
+      searchTextCache.clear();
+    })
     .catch(() => {});
   return tvDetailLoadPromise;
 }
@@ -173,14 +264,26 @@ function invalidateMediaCaches() {
   getMovieLibraryItems.cache = null;
   getTvLibraryItems.cache = null;
   getVisibleCollections.cache = null;
+  getCollectionNavigationCards.cache = null;
+  getCollectionItem.cache = null;
   getAllTvTitleItems.cache = null;
+  getTvTitleItem.cache = null;
   getAvailableTvSeasons.cache = new Map();
   getTvDetails.cache = new Map();
+  findTvEpisode.cache = new Map();
   findAvailableTvEpisode.cache = new Map();
   itemOverrideCache = new Map();
   metadataAliasCache = new Map();
   overrideIdsByIdentityTitle = null;
   curatedHydrationIndex = null;
+  searchTextCache.clear();
+  getGeneratedCollectionFolderEntries.cache = null;
+  getCriterionFolderSubCollections.cache = null;
+  getCriterionDetailItem.cache = null;
+  getCriterionLiveMovieForSource.cache = null;
+  getCriterionLiveSubCollectionItems.cache = new Map();
+  getCriterionCollectionData.cache = new Map();
+  getBatcaveCollectionAllocatorTree.cache = null;
 }
 
 function getMetadataCacheKey() {
@@ -213,20 +316,69 @@ function ensureMediaPreflightIndex() {
 function buildEpisodeId(showId, season, episode) {
   const seasonNumber = Number(season);
   const episodeNumber = Number(episode);
-  if (!showId || !seasonNumber || !episodeNumber) return null;
+  if (!showId || !Number.isInteger(seasonNumber) || seasonNumber < 0 || !Number.isInteger(episodeNumber) || episodeNumber < 1) return null;
   return `${showId}-s${seasonNumber}-e${episodeNumber}`;
 }
 
 
 resetResumeStateForNewPlaybackBuild();
+migrateOfficeCombinedEpisodeState();
+
+function migrateOfficeCombinedEpisodeState() {
+  const migrationKey = "tobytube.migration.office-combined-episodes-v1";
+  try {
+    if (localStorage.getItem(migrationKey)) return;
+    const seasonMappings = {
+      "04": { 1: 1, 3: 2, 5: 3, 7: 4, 9: 5, 10: 6, 11: 7, 12: 8, 13: 9, 14: 10, 15: 11, 16: 12, 17: 13, 18: 14 },
+      "06": { 1: 1, 2: 2, 3: 3, 4: 4, 6: 5, 7: 6, 8: 7, 9: 8, 10: 9, 11: 10, 12: 11, 13: 12, 14: 13, 15: 14, 16: 15, 17: 16, 19: 17, 20: 18, 21: 19, 22: 20, 23: 21, 24: 22, 25: 23, 26: 24 },
+      "07": { 1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 10: 10, 11: 11, 13: 12, 14: 13, 15: 14, 16: 15, 17: 16, 18: 17, 19: 18, 20: 19, 21: 20, 22: 21, 23: 22, 24: 23, 25: 24 },
+    };
+    const idMap = new Map();
+    Object.entries(seasonMappings).forEach(([season, episodes]) => {
+      Object.entries(episodes).forEach(([from, to]) => {
+        if (Number(from) === Number(to)) return;
+        idMap.set(`office-us-s${season}-e${String(from).padStart(2, "0")}`, `office-us-s${season}-e${String(to).padStart(2, "0")}`);
+        idMap.set(`scan-tv-the-office-us-s${season}e${String(from).padStart(2, "0")}`, `scan-tv-the-office-us-s${season}e${String(to).padStart(2, "0")}`);
+      });
+    });
+    const migrateId = (id) => idMap.get(id) ?? id;
+    const completed = readLocalJson("tobytube.completed.tv-episodes", []).map(migrateId);
+    writeLocalJson("tobytube.completed.tv-episodes", [...new Set(completed)]);
+    const counts = readLocalJson("tobytube.rentals.tv-episode-counts", {});
+    const migratedCounts = {};
+    Object.entries(counts).forEach(([id, count]) => {
+      const target = migrateId(id);
+      migratedCounts[target] = Math.max(Number(migratedCounts[target]) || 0, Number(count) || 0);
+    });
+    writeLocalJson("tobytube.rentals.tv-episode-counts", migratedCounts);
+    const history = readLocalJson("tobytube.playHistory", []).map((entry) => ({ ...entry, itemId: migrateId(entry?.itemId) }));
+    writeLocalJson("tobytube.playHistory", history);
+    const resumeMoves = [];
+    Array.from({ length: localStorage.length }, (_, index) => localStorage.key(index)).filter(Boolean).forEach((key) => {
+      if (!key.startsWith("tobytube.resume.tv:")) return;
+      const oldId = key.slice("tobytube.resume.tv:".length);
+      const newId = migrateId(oldId);
+      if (newId === oldId) return;
+      const value = localStorage.getItem(key);
+      if (!value) return;
+      try {
+        const entry = JSON.parse(value);
+        resumeMoves.push({ oldKey: key, newKey: `tobytube.resume.tv:${newId}`, value: JSON.stringify({ ...entry, key: `tv:${newId}`, episodeId: newId }) });
+      } catch {}
+    });
+    resumeMoves.forEach(({ oldKey }) => localStorage.removeItem(oldKey));
+    resumeMoves.forEach(({ newKey, value }) => localStorage.setItem(newKey, value));
+    localStorage.setItem(migrationKey, new Date().toISOString());
+  } catch {}
+}
 
 function resetResumeStateForNewPlaybackBuild() {
   try {
     const storedBuild = localStorage.getItem("tobytube.playbackBuildId");
     if (storedBuild === PLAYBACK_BUILD_ID) return;
-    Object.keys(localStorage)
-      .filter((key) => key.startsWith("tobytube.resume."))
-      .forEach((key) => localStorage.removeItem(key));
+    // Playback implementation changes must never erase a viewer's position.
+    // Resume entries already carry their own schema version and are ignored
+    // individually when incompatible.
     localStorage.setItem("tobytube.playbackBuildId", PLAYBACK_BUILD_ID);
   } catch {}
 }
@@ -235,7 +387,7 @@ const TOBY_TV_LOGO_FALLBACK = "./assets/banners/tobytube-tv-logo-4.png";
 
 const tvGuideChannels = [
   { number: "001", title: "Featured", color: "gold", mode: "recent" },
-  { number: "002", title: "BBC", color: "cyan", shows: ["Little Britain", "Mighty Boosh", "Upstart Crow", "BBC Shakespeare", "Red Dwarf", "Luther", "Citizen Khan", "Gavin & Stacey", "Nighty Night", "Chewin' the Fat", "Still Game", "Mrs. Brown's Boys", "Doctor Who", "Doctor Who Classic", "Father Brown", "Man Like Mobeen"] },
+  { number: "002", title: "BBC", color: "cyan", shows: ["Little Britain", "Little Britain USA", "Mighty Boosh", "Upstart Crow", "BBC Shakespeare", "Red Dwarf", "Luther", "Citizen Khan", "Gavin & Stacey", "Nighty Night", "Chewin' the Fat", "Still Game", "Mrs. Brown's Boys", "Doctor Who", "Doctor Who Classic", "Father Brown", "Man Like Mobeen"] },
   { number: "003", title: "ITV", color: "green", shows: ["The Chase", "Mr. Bean", "Byker Grove", "Downton Abbey", "George & Mildred", "The Jewel in the Crown", "Worzel Gummidge", "Bagpuss", "The New Statesman"] },
   { number: "004", title: "Channel 4", color: "orange", shows: ["Toast of London", "Desmond's", "Two Pints of Lager and a Packet of Crisps", "The Cockfields", "Derry Girls", "Red Dwarf", "Taskmaster", "London Irish", "Hollyoaks", "The Great British Bake Off", "Stath Lets Flats", "The Pharmacy", "The World of Lee Evans", "Year of the Rabbit", "Garth Marenghi's Darkplace", "Friday Night Dinner", "Father Ted", "Spaced", "Black Books", "The IT Crowd", "Chewing Gum"] },
   { number: "005", title: "The Movie Channel", color: "red", mode: "movies" },
@@ -347,6 +499,22 @@ fetch("./src/curated-manifest.generated.json", { cache: "no-store" })
   })
   .catch(() => {});
 
+fetch("./src/disney-shorts.generated.json", { cache: "no-store" })
+  .then((response) => (response.ok ? response.json() : { collections: [] }))
+  .then((data) => {
+    disneyShortsIndex = data ?? { collections: [] };
+    scheduleHydrationRender(100);
+  })
+  .catch(() => {});
+
+fetch("./src/looney-tunes-golden-collection.generated.json", { cache: "no-store" })
+  .then((response) => (response.ok ? response.json() : { volumes: [] }))
+  .then((data) => {
+    looneyTunesGoldenIndex = data ?? { volumes: [] };
+    scheduleHydrationRender(100);
+  })
+  .catch(() => {});
+
 refreshMetadataStatus();
 setInterval(refreshMetadataStatus, 5000);
 
@@ -428,43 +596,13 @@ const movieMockCollections = [
   },
 ];
 
-const tvMockCollections = [
-  {
-    id: "tv-comedy",
-    scope: "tv",
-    title: "Comedy",
-    description: "The Mighty Boosh, Toast of London, Peep Show, and other comfort nonsense.",
-    itemIds: ["mighty-boosh", "toast", "peep-show"],
-    posterA: "#3a2f46",
-    posterB: "#d1a05c",
-  },
-  {
-    id: "tv-animation",
-    scope: "tv",
-    title: "Animation",
-    description: "Bob's Burgers, Spider-Man, Doug, and the Saturday-afternoon shelf.",
-    itemIds: ["bobs-burgers", "spider-man-animated", "doug"],
-    posterA: "#2f4d69",
-    posterB: "#d94b42",
-  },
-  {
-    id: "tv-anime",
-    scope: "tv",
-    title: "Anime",
-    description: "Pokemon, Dragon Ball, Naruto, and gateway-show nostalgia.",
-    itemIds: ["pokemon", "dragon-ball", "naruto"],
-    posterA: "#2f5f86",
-    posterB: "#e28a35",
-  },
-];
-
 const tvPlaylistIds = ["mighty-boosh", "bobs-burgers", "pokemon", "toast", "spider-man-animated"];
 
 const movieGenreCollectionSpecs = [
   {
     id: "action",
     title: "Action",
-    heroImage: "./assets/collections/action/action-banner-display-2.png?v=20260803c",
+    heroImage: "./assets/collections/action/action-banner-1920x540-v3-fast.jpg?v=20260905b",
     buttonImage: "./assets/collections/action/button.png",
     posterA: "#171010",
     posterB: "#ff8b2d",
@@ -500,7 +638,8 @@ const movieGenreCollectionSpecs = [
   {
     id: "comedy",
     title: "Comedy",
-    heroImage: "./assets/collections/comedy/comedy-banner-display.png?v=20260803",
+    heroImage: "./assets/collections/comedy/comedy-banner-1920x540-v7.jpg?v=20260906b",
+    heroFallbackImage: "./assets/collections/comedy/hero-1920x540-v2.png?v=20260818",
     buttonImage: "./assets/collections/comedy/button.png",
     posterA: "#21140c",
     posterB: "#f0b55a",
@@ -509,7 +648,7 @@ const movieGenreCollectionSpecs = [
       "Buddy Comedies",
       "Odd Couples",
       "Fish-out-of-Water",
-      "Black Excellence",
+      "Black",
       "Slapstick",
       "Indefensible Stupidity",
       "Road Trips",
@@ -519,6 +658,7 @@ const movieGenreCollectionSpecs = [
       "Observational",
       "Mockumentary",
       "Parody",
+      "Musicals",
       "Stoner Comedy",
       "Teen",
       "Family",
@@ -546,7 +686,7 @@ const movieGenreCollectionSpecs = [
   {
     id: "documentary",
     title: "Documentary",
-    heroImage: "./assets/collections/documentary/documentary-banner-display.png?v=20260803b",
+    heroImage: "./assets/collections/documentary/documentary-banner-1920x540-v6.jpg?v=20260906c",
     buttonImage: "./assets/collections/documentary/button.png",
     posterA: "#12171a",
     posterB: "#d0d8df",
@@ -586,7 +726,7 @@ const movieGenreCollectionSpecs = [
   {
     id: "drama",
     title: "Drama",
-    heroImage: "./assets/collections/drama/drama-banner-display.png?v=20260803b",
+    heroImage: "./assets/collections/drama/drama-banner-1920x540-v6.jpg?v=20260906c",
     buttonImage: "./assets/collections/drama/button.png",
     posterA: "#20140f",
     posterB: "#e0a43f",
@@ -628,7 +768,7 @@ const movieGenreCollectionSpecs = [
   {
     id: "fantasy",
     title: "Fantasy",
-    heroImage: "./assets/collections/fantasy/fantasy-banner-7.0.png?v=20260802f",
+    heroImage: "./assets/collections/fantasy/fantasy-banner-1920x540-v13.jpg?v=20260906b",
     buttonImage: "./assets/collections/fantasy/button.png",
     posterA: "#211233",
     posterB: "#c868ff",
@@ -638,7 +778,7 @@ const movieGenreCollectionSpecs = [
   {
     id: "romance",
     title: "Romance",
-    heroImage: "./assets/collections/romance/romance-banner-display.png?v=20260803b",
+    heroImage: "./assets/collections/romance/romance-banner-1920x540-v3.jpg?v=20260906c",
     buttonImage: "./assets/collections/romance/button.png",
     posterA: "#2b1117",
     posterB: "#ff6c8b",
@@ -648,7 +788,7 @@ const movieGenreCollectionSpecs = [
   {
     id: "sci-fi",
     title: "Sci-Fi",
-    heroImage: "./assets/collections/sci-fi/scifi-banner-display.png?v=20260803",
+    heroImage: "./assets/collections/sci-fi/scifi-banner-1920x540-v3.jpg?v=20260906c",
     buttonImage: "./assets/collections/sci-fi/button.png",
     posterA: "#071822",
     posterB: "#75f08a",
@@ -672,7 +812,7 @@ const movieGenreCollectionSpecs = [
   {
     id: "sports",
     title: "Sport",
-    heroImage: "./assets/collections/sports/sports-banner-display.png?v=20260803b",
+    heroImage: "./assets/collections/sports/sports-banner-1920x540-v3.jpg?v=20260906c",
     buttonImage: "./assets/collections/sports/button.png",
     posterA: "#111b35",
     posterB: "#5aa8ff",
@@ -682,7 +822,7 @@ const movieGenreCollectionSpecs = [
   {
     id: "western",
     title: "Western",
-    heroImage: "./assets/collections/western/western-banner-display.png?v=20260803b",
+    heroImage: "./assets/collections/western/western-banner-1920x540-v2.jpg?v=20260906c",
     buttonImage: "./assets/collections/western/button.png",
     posterA: "#24180e",
     posterB: "#d99c56",
@@ -711,7 +851,7 @@ const profileCollectionSpecs = [
     title: "Martin Scorsese's World Cinema Project",
     description: "Five Criterion volumes of restored films from around the world.",
     heroImage: "./assets/collections/criterion/world-cinema-project/volume-1.jpg",
-    buttonImage: "./assets/collections/criterion/world-cinema-project-button.png",
+    buttonImage: "./assets/collections/criterion/world-cinema-project-button-v2-display.webp",
     posterA: "#050505",
     posterB: "#f05f4a",
     continueTitle: "Continue watching",
@@ -760,8 +900,8 @@ const profileCollectionSpecs = [
     id: "david-cronenberg",
     title: "David Cronenberg",
     description: "Body horror, media rot, identity slippage, and the new flesh as a director shelf.",
-    heroImage: "./assets/collections/criterion/cronenberg-button.png",
-    buttonImage: "./assets/collections/criterion/cronenberg-button.png",
+    heroImage: "./assets/collections/criterion/director-showcase-hero.png",
+    buttonImage: "./assets/collections/criterion/director-showcase/david-cronenberg-square-button-display.webp",
     posterA: "#120d0e",
     posterB: "#b54a34",
     continueTitle: "Continue watching",
@@ -840,8 +980,8 @@ const profileCollectionSpecs = [
     id: "wes-anderson",
     title: "Wes Anderson",
     description: "Symmetry, family systems, little rooms, soft melancholy, and precisely packed luggage.",
-    heroImage: "./assets/collections/criterion/wes-anderson-button.png",
-    buttonImage: "./assets/collections/criterion/wes-anderson-button.png",
+    heroImage: "./assets/collections/criterion/director-showcase-hero.png",
+    buttonImage: "./assets/collections/criterion/director-showcase/wes-anderson-square-button-display.webp",
     posterA: "#263622",
     posterB: "#d49b64",
     continueTitle: "Continue",
@@ -980,8 +1120,8 @@ const curatedCollectionPages = [
     id: "star-wars",
     title: "Star Wars",
     description: "Sagas, side quests, desert broadcasts, animation, and distant transmissions.",
-    heroImage: "./assets/collections/star-wars/hero.png",
-    buttonImage: "./assets/collections/star-wars/button.png",
+    heroImage: "./assets/collections/star-wars/star-wars-banner-1920x540-v3.jpg?v=20260909",
+    buttonImage: "./assets/collections/star-wars/button-integrated-v2.png?v=20260909c",
     posterA: "#46321f",
     posterB: "#e8a755",
     menuRows: [["skywalker-saga", "solo-adventures", "live-action-series", "animated-series"]],
@@ -1018,7 +1158,7 @@ const curatedCollectionPages = [
     id: "horror",
     title: "Horror",
     description: "Late fees, locked doors, bad weather, worse decisions, and the beautiful ugly stuff.",
-    heroImage: "./assets/collections/horror/horror-banner-display.png?v=20260803",
+    heroImage: "./assets/collections/horror/horror-banner-1920x540-v3.jpg?v=20260906c",
     buttonImage: "./assets/collections/horror/button.png",
     continueTitle: "Current Rentals",
     posterA: "#1c1012",
@@ -1048,7 +1188,7 @@ const curatedCollectionPages = [
     id: "kaiju",
     title: "Kaiju",
     description: "Giant monsters, city-sized grudges, rubber suits, atomic scars, and cathedral-scale spectacle.",
-    heroImage: "./assets/collections/kaiju/hero.png",
+    heroImage: "./assets/collections/kaiju/kaiju-banner-1920x540-v3-rampage.jpg?v=20260907b",
     buttonImage: "./assets/collections/kaiju/button.png",
     posterA: "#16140f",
     posterB: "#d07639",
@@ -1095,7 +1235,7 @@ const curatedCollectionPages = [
       curatedSection("New Arrivals", [curatedItem("The Woman King", 2022, "movie", "Drama")], { id: "new-arrivals" }),
       curatedSection("Cinema", [curatedItem("Do the Right Thing", 1989, "movie", "Drama")]),
       curatedSection("TV Classics", [curatedItem("The Fresh Prince of Bel-Air", 1990, "tv", "Comedy")]),
-      curatedSection("The Prestige Collection", [curatedItem("Moonlight", 2016, "movie", "Drama")], { id: "umoja-unity-the-prestige-collection" }),
+      curatedSection("Drama", [curatedItem("Moonlight", 2016, "movie", "Drama")], { id: "umoja-unity-the-prestige-collection" }),
       curatedSection("Stand-Up Comedy", [curatedItem("Richard Pryor: Live in Concert", 1979, "movie", "Stand-up")], { id: "kujichagulia-self-determination-stand-up-comedy" }),
       curatedSection("Sketches & Animation", [curatedItem("A Black Lady Sketch Show", 2019, "tv", "Comedy")], { id: "ujima-collective-work-and-responsibility-sketches-and-animation" }),
       curatedSection("Horror", [curatedItem("Get Out", 2017, "movie", "Horror")], { id: "ujamaa-cooperative-economics-horror-because-it-doesn-t-fit-anywhere-else" }),
@@ -1142,17 +1282,32 @@ const curatedCollectionPages = [
     id: "animation",
     title: "Animation",
     description: "Hand-drawn dreams, stop-motion oddities, computer-age spectacles, shorts, series, and strange little masterpieces.",
-    heroImage: "./assets/collections/animation/hero.png?v=20260807b",
-    buttonImage: "./assets/collections/animation/button.png",
+    heroImage: "./assets/collections/animation/hero-v3.png?v=20260919b",
+    buttonImage: "./assets/collections/animation/button.png?v=20260909b",
     posterA: "#102029",
     posterB: "#53c6c8",
     continueTitle: "Current Rentals",
-    menuRows: [["features", "tv", "shorts", "grown-up-animation"]],
+    menuRows: [
+      ["absurdities", "adult-swim", "after-school-comfortoons", "anime-sampler"],
+      ["cartoon-network", "cinema", "disney", "kids-classics"],
+      ["movies", "mtv-alternative", "nickelodeon", "shorts"],
+      ["the-toy-shelf-1980s", "the-toy-shelf-1990s"],
+    ],
     sections: [
-      curatedSection("Features", [curatedItem("Spirited Away", 2001, "movie", "Animation")]),
-      curatedSection("TV", [curatedTvItem("Bob's Burgers", 2011, "Animation", "bobs-burgers"), curatedItem("Adventure Time", 2010, "tv", "Animation")]),
-      curatedSection("Shorts", [curatedItem("Steamboat Willie", 1928, "movie", "Animation")]),
-      curatedSection("Grown-Up Animation", [curatedItem("Perfect Blue", 1997, "movie", "Animation")]),
+      curatedSection("Absurdities", [], { id: "absurdities" }),
+      curatedSection("Adult Swim", [], { id: "adult-swim" }),
+      curatedSection("After School Comfortoons", [], { id: "after-school-comfortoons" }),
+      curatedSection("Anime Sampler", [], { id: "anime-sampler" }),
+      curatedSection("Cartoon Network", [], { id: "cartoon-network" }),
+      curatedSection("Cinema", [], { id: "cinema" }),
+      curatedSection("Disney", [], { id: "disney" }),
+      curatedSection("Kids Classics", [], { id: "kids-classics" }),
+      curatedSection("Movies", [], { id: "movies" }),
+      curatedSection("MTV & Alternative", [], { id: "mtv-alternative" }),
+      curatedSection("Nickelodeon", [], { id: "nickelodeon" }),
+      curatedSection("Shorts", [], { id: "shorts" }),
+      curatedSection("The Toy Shelf (1980s)", [], { id: "the-toy-shelf-1980s" }),
+      curatedSection("The Toy Shelf (1990s)", [], { id: "the-toy-shelf-1990s" }),
     ],
   },
   {
@@ -1219,44 +1374,73 @@ const curatedCollectionPages = [
     ],
   },
   {
+    id: "holiday-chaos",
+    title: "Holiday Chaos",
+    description: "Holiday films, seasonal television, and gloriously unruly Christmas viewing.",
+    heroImage: "./assets/collections/holiday-chaos/holiday-chaos-banner-v2.png?v=20260927",
+    buttonImage: "./assets/collections/holiday-chaos/holiday-chaos-button-v1.png?v=20260927",
+    posterA: "#27082b",
+    posterB: "#e6b94f",
+    sections: [
+      curatedSection("Hirry's Favs", [
+        curatedItem("Elf", 2003, "movie"),
+        curatedItem("Miracle on 34th Street", 1994, "movie"),
+        curatedItem("Home Alone", 1990, "movie"),
+        curatedItem("Home Alone 2 Lost in New York", 1992, "movie"),
+      ], { id: "hirrys-favs" }),
+      curatedSection("Classics", [
+        curatedItem("Elf", 2003, "movie"),
+        curatedItem("Miracle on 34th Street", 1994, "movie"),
+        curatedItem("Home Alone", 1990, "movie"),
+        curatedItem("Home Alone 2 Lost in New York", 1992, "movie"),
+        curatedItem("A Christmas Story", 1983, "movie"),
+      ], { id: "classics" }),
+      curatedSection("I'll Be Home for Christmas", [], { id: "ill-be-home-for-christmas" }),
+      curatedSection("Holiday Horror", [
+        curatedItem("The Nightmare Before Christmas", 1993, "movie"),
+        curatedItem("Batman Returns", 1992, "movie"),
+      ], { id: "holiday-horror" }),
+      curatedSection("Miracles and Fairy Tales", [], { id: "miracles-and-fairy-tales" }),
+      curatedSection("Hallmark", [], { id: "hallmark", menuOnly: true }),
+      curatedSection("Lifetime", [], { id: "lifetime", menuOnly: true }),
+    ],
+  },
+  {
     id: "star-trek",
     title: "Star Trek",
     description: "Starships, captains, cosmic diplomacy, strange new worlds, and boldly syndicated comfort.",
-    heroImage: "./assets/collections/star-trek/hero.png",
+    heroImage: "./assets/collections/star-trek/star-trek-banner-1920x540-v3.jpg?v=20260909",
     buttonImage: "./assets/collections/star-trek/button.png",
     posterA: "#0c1231",
     posterB: "#6faeff",
-    menuRows: [["original-crew", "next-generation", "kelvin-timeline", "television"]],
+    menuRows: [["original-crew", "next-generation", "kelvin-timeline", "tv-series"]],
     sections: [
       curatedSection("Original Crew", [curatedItem("Star Trek: The Motion Picture", 1979, "movie", "Sci-Fi"), curatedItem("Star Trek II: The Wrath of Khan", 1982, "movie", "Sci-Fi")]),
       curatedSection("Next Generation", [curatedItem("Star Trek: First Contact", 1996, "movie", "Sci-Fi")]),
       curatedSection("Kelvin Timeline", [curatedItem("Star Trek", 2009, "movie", "Sci-Fi")]),
-      curatedSection("Television", [curatedItem("Star Trek", 1966, "tv", "Sci-Fi"), curatedItem("Star Trek: The Next Generation", 1987, "tv", "Sci-Fi")]),
+      curatedSection("TV Series", [curatedItem("Star Trek", 1966, "tv", "Sci-Fi"), curatedItem("Star Trek: The Next Generation", 1987, "tv", "Sci-Fi")], { id: "tv-series" }),
     ],
   },
   {
-    id: "2010s",
-    title: "2010s",
-    description: "A decade shelf for the test pass, currently proving itself one burger at a time.",
-    posterA: "#1a120c",
-    posterB: "#f3b018",
-    menuRows: [["comedy"]],
-    sections: [curatedSection("Comedy", [curatedTvItem("Bob's Burgers", 2011, "Comedy", "bobs-burgers")])],
-  },
-  {
-    id: "dc-animation",
-    title: "DC Animation",
-    description: "Animated universes, direct-to-video eras, continuity resets, and capes drawn with shadows.",
-    heroImage: "./assets/collections/dc-animation/hero.png?v=20260807b",
-    buttonImage: "./assets/collections/dc-animation/button.png",
+    id: "dc",
+    title: "DC",
+    description: "Live action, animation, television, parallel worlds, and every DC continuity under one roof.",
+    heroImage: "./assets/collections/dc-animation/dc-hall-banner-1920x540-v2.jpg?v=20260907",
+    buttonImage: "./assets/collections/dc-animation/dc-button-v2-display.jpg?v=20260907",
+    folderAliases: ["DC Animation", "Arrowverse"],
     posterA: "#172133",
     posterB: "#5f91d6",
-    menuRows: [["timmverse", "new-52", "tomorrowverse", "infinite-earths"]],
+    menuRows: [["arrowverse", "batman", "extended-universe", "infinite-earths", "new-52"], ["standalones", "superman", "timmverse-dcau", "tomorrowverse"]],
     sections: [
-      curatedSection("Timmverse", [curatedItem("Batman: The Animated Series", 1992, "tv", "Animation")]),
-      curatedSection("New 52", [curatedItem("Justice League: War", 2014, "movie", "Animation")]),
-      curatedSection("Tomorrowverse", [curatedItem("Superman: Man of Tomorrow", 2020, "movie", "Animation")]),
+      curatedSection("Arrowverse", [curatedItem("Arrow", 2012, "tv", "Superhero")]),
+      curatedSection("Batman", [curatedItem("Batman", 1989, "movie", "Superhero")]),
+      curatedSection("Extended Universe", [curatedItem("Man of Steel", 2013, "movie", "Superhero")]),
       curatedSection("Infinite Earths", [curatedItem("Justice League: Crisis on Infinite Earths", 2024, "movie", "Animation")]),
+      curatedSection("New 52", [curatedItem("Justice League: War", 2014, "movie", "Animation")]),
+      curatedSection("Standalones", [curatedItem("The Batman", 2022, "movie", "Superhero")]),
+      curatedSection("Superman", [curatedItem("Superman", 1978, "movie", "Superhero")]),
+      curatedSection("Timmverse (DCAU)", [curatedItem("Batman: The Animated Series", 1992, "tv", "Animation")], { id: "timmverse-dcau" }),
+      curatedSection("Tomorrowverse", [curatedItem("Superman: Man of Tomorrow", 2020, "movie", "Animation")]),
     ],
   },
   {
@@ -1308,9 +1492,10 @@ const curatedCollectionPages = [
   {
     id: "universal-monsters",
     title: "Universal Monsters",
+    folderAliases: ["Universal Horror", "Universal Classic Monsters"],
     description: "Classic monsters, crossovers, laboratories, crypts, lagoons, castles, and midnight howls.",
-    heroImage: "./assets/collections/universal-monsters/hero.png",
-    buttonImage: "./assets/collections/universal-monsters/button.png",
+    heroImage: "./assets/collections/universal-monsters/hero-1920x540-v2.png?v=20260905",
+    buttonImage: "./assets/collections/universal-monsters/button-integrated-v2.png?v=20260909c",
     posterA: "#171a19",
     posterB: "#a7b0a6",
     continueTitle: "Current Rentals",
@@ -2557,6 +2742,16 @@ const titleDetails = {
 };
 
 function render() {
+  const activeSearch = document.activeElement?.matches?.(".nav-search .search")
+    ? {
+        start: document.activeElement.selectionStart ?? state.query.length,
+        end: document.activeElement.selectionEnd ?? document.activeElement.selectionStart ?? state.query.length,
+      }
+    : null;
+  if (!state.player && backgroundRenderDeferredForPlayback) backgroundRenderDeferredForPlayback = false;
+  if (!state.player && state.animationRandomizer?.active) stopAnimationRandomizer();
+  if (state.player) stopTeebeeShuffle();
+  document.documentElement.classList.toggle("global-search-active", state.searchActive);
   clearPlayerAutoplayCountdown();
   stopActivePlaybackElements();
   const metadataOverlayOpen = Boolean(state.metadataOverlay);
@@ -2568,10 +2763,23 @@ function render() {
     return;
   }
 
+  if (!initialCatalogReady) {
+    app.innerHTML = `
+      <main class="catalog-loading-screen" aria-live="polite" aria-busy="true">
+        <img class="catalog-loading-logo" src="./assets/banners/tobytube-tv-logo.png" alt="Toby's 24-Hour TV" />
+        <div class="catalog-loading-progress" data-catalog-progress role="progressbar" aria-label="Loading the live library" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${initialCatalogProgress}">
+          <i data-catalog-progress-fill style="width: ${initialCatalogProgress}%"></i>
+        </div>
+        <p data-catalog-progress-copy>${escapeHtml(initialCatalogProgressLabel)} &middot; ${initialCatalogProgress}%</p>
+      </main>
+    `;
+    return;
+  }
+
   const sidebarMarkup = renderSidebar();
   const contentMarkup = renderContent();
   const appMarkup = `
-    <div class="app-shell ${state.tvGuideTheaterMode && state.section === "tv" && state.subView === "guide" ? "tv-guide-theater-mode" : ""}">
+    <div class="app-shell ${state.searchActive ? "search-active" : ""} ${state.tvGuideTheaterMode && state.section === "tv" && state.subView === "guide" ? "tv-guide-theater-mode" : ""}">
       ${sidebarMarkup}
       <main class="main">
         <section class="content">
@@ -2590,6 +2798,14 @@ function render() {
   app.innerHTML = appMarkup;
 
   bindEvents();
+  if (activeSearch && state.searchActive) {
+    const search = document.querySelector(".nav-search .search");
+    if (search) {
+      search.value = state.query;
+      search.focus({ preventScroll: true });
+      search.setSelectionRange?.(Math.min(activeSearch.start, state.query.length), Math.min(activeSearch.end, state.query.length));
+    }
+  }
   syncPlayerOverlay();
   if (!(state.section === "wrestling" && state.promotionId) && !state.selectedCollectionId) syncUniversalMetadataMenus();
   syncCarouselNavigation();
@@ -2670,15 +2886,10 @@ function renderSidebar() {
         ${navButton("movies", "Movies", String(sidebarMediaCounts.movies ?? movies.length), state.section === "movies", "film")}
         ${navButton("tv", "TV", String(sidebarMediaCounts.tv ?? tvShows.length), state.section === "tv", "tv")}
         ${navButton("wrestling", "Wrestling", String(promotions.length), state.section === "wrestling", "ring")}
-        ${navButton("collections", "Collections", String(getVisibleCollections().length), state.section === "collections", "books")}
+        ${navButton("collections", "Collections", String(getCollectionNavigationCards().filter((collection) => !["action", "comedy", "documentary", "drama", "fantasy", "horror", "romance", "sci-fi", "sports", "western"].includes(collection.id)).length), state.section === "collections", "books")}
       </nav>
       <div class="nav-divider" aria-hidden="true"></div>
       <div class="nav-group nav-utilities">
-        <button class="nav-button utility media-archive-toggle" type="button" data-action="toggle-library-mode" aria-label="Toggle Media or Archive">
-          ${icon("radar")}
-          <span class="nav-label">${state.libraryMode === "media" ? "Media" : "Archive"}</span>
-          <span class="nav-count">${state.libraryMode === "media" ? "Live" : "Template"}</span>
-        </button>
         <button class="nav-button utility" type="button" data-action="options" aria-label="Options">
           ${icon("gear")}
           <span class="nav-label">Options</span>
@@ -2752,7 +2963,8 @@ function renderMetadataStatus() {
 }
 
 function renderContent() {
-  if (state.query.trim() && !state.selectedTitleId && !state.selectedChampionshipId && !state.selectedTvEpisodeId && !state.selectedTvSeason && !state.selectedCollectionId && state.section !== "batcave") return renderSearchResults();
+  if (state.section === "options") return renderOptionsPage();
+  if (state.searchActive && state.query.trim()) return renderSearchResults();
   if (state.selectedChampionshipId) return renderChampionshipDetailPage(state.selectedChampionshipId);
   if (state.selectedPersonId) return renderPersonScreen(state.selectedPersonId);
   if (state.selectedMcuSeasonId) return renderMcuSeasonScreen(state.selectedMcuSeasonId);
@@ -2760,12 +2972,18 @@ function renderContent() {
   if (state.selectedCollectionId === "mcu") return renderMcuCollectionPage();
   if (state.selectedCollectionId === "criterion") return renderCriterionCollectionPage();
   if (state.selectedCollectionId === "cinema-of-india") return renderCinemaOfIndiaCollectionPage();
+  if (state.selectedCollectionId === "cinema-of-japan") return renderCinemaOfJapanCollectionPage();
+  if (state.selectedCollectionId === "holiday-chaos") return renderHolidayChaosCollectionPage();
   if (state.selectedCollectionId && getCuratedCollectionPage(state.selectedCollectionId)) return renderCuratedCollectionPage(getCuratedCollectionPage(state.selectedCollectionId));
   if (state.selectedTvEpisodeId) return renderTvEpisodeScreen(state.selectedTvEpisodeId);
   if (state.selectedTvSubcollection && state.selectedTvSubcollection.showId === state.selectedTitleId) return renderTvSubcollectionScreen(state.selectedTvSubcollection.showId, state.selectedTvSubcollection.collectionId);
   if (state.selectedTvSeason) return renderTvSeasonScreen(state.selectedTvSeason.showId, state.selectedTvSeason.seasonNumber);
   if (state.selectedTitleId) {
     const item = getTitleItem(state.selectedTitleId) ?? resolveStaleTitleId(state.selectedTitleId);
+    if (item?.mediaType === "disney-shorts-collection") return renderDisneyShortsCollectionPage(item);
+    if (item?.mediaType === "looney-tunes-volume") return renderLooneyTunesVolumePage(item);
+    if (item?.mediaType === "looney-tunes-short") return renderLooneyTunesShortDetailPage(item);
+    if (item?.mediaType === "disney-short") return renderDisneyShortDetailPage(item);
     if (item?.mediaType === "tv") return renderTvProgramScreen(item);
     if (item?.mediaType === "movie") return renderMovieTitleScreen(item);
     if (item?.mediaType === "franchise") return renderFranchiseTitleScreen(item);
@@ -2781,11 +2999,32 @@ function renderContent() {
   return state.promotionId ? renderPromotionDetail() : renderWrestlingHome();
 }
 
+function readPlaybackControls() {
+  const stored = readLocalJson(PLAYBACK_CONTROLS_STORAGE_KEY, {});
+  return { ...DEFAULT_PLAYBACK_CONTROLS, ...(stored && typeof stored === "object" ? stored : {}) };
+}
+
+function writePlaybackControls(controls) { writeLocalJson(PLAYBACK_CONTROLS_STORAGE_KEY, controls); }
+function formatControlKey(code) { return ({ Space: "Space", ArrowLeft: "←", ArrowRight: "→", ArrowUp: "↑", ArrowDown: "↓" })[code] ?? String(code).replace(/^Key/, "").replace(/^Digit/, ""); }
+
+function renderOptionsPage() {
+  const controls = readPlaybackControls();
+  const rows = [["playPause", "Play / pause"], ["seekBackward", "Rewind 15 seconds"], ["seekForward", "Fast-forward 15 seconds"], ["volumeDown", "Volume down"], ["volumeUp", "Volume up"], ["subtitles", "Subtitles"], ["fullscreen", "Fullscreen"], ["mute", "Mute"]];
+  return `${renderLibraryHeader("Options", "Set how Tobytube responds while a video is playing.", null, false)}
+    <section class="controls-settings" aria-labelledby="controls-settings-title">
+      <div class="controls-settings-heading"><div><span>Playback</span><h2 id="controls-settings-title">Controls</h2></div><button type="button" data-action="reset-playback-controls">Restore defaults</button></div>
+      <p>Select a control, then press the key you want to use.</p>
+      <div class="controls-settings-list">${rows.map(([action, label]) => `<button type="button" class="control-binding ${state.controlsListeningFor === action ? "is-listening" : ""}" data-control-binding="${action}"><span>${label}</span><kbd>${state.controlsListeningFor === action ? "Press a key…" : escapeHtml(formatControlKey(controls[action]))}</kbd></button>`).join("")}</div>
+    </section>`;
+}
+
 function renderSearchResults() {
   const query = state.query.trim();
   const movieResults = filterLibraryItems(getMovieLibraryItems());
   const tvResults = filterLibraryItems(getTvLibraryItems());
   const wrestlingResults = filterLibraryItems(getHomeWrestlingItems());
+  const shortsCollectionResults = filterLibraryItems([...(looneyTunesGoldenIndex.volumes ?? []), ...(disneyShortsIndex.collections ?? [])]);
+  const individualShortResults = filterLibraryItems(getIndividualShortsForSearch());
   const collectionResults = getVisibleCollections().filter((collection) =>
     [collection.title, collection.description, collection.category].filter(Boolean).some((value) => String(value).toLowerCase().includes(query.toLowerCase())),
   );
@@ -2795,6 +3034,8 @@ function renderSearchResults() {
       ${renderPosterShelf("Movies", movieResults.slice(0, 18), "movie", renderLibraryCard, null, "", { section: "movies", subview: "library" })}
       ${renderPosterShelf("TV", tvResults.slice(0, 18), "show", renderTvCard, null, "", { section: "tv", subview: "library" })}
       ${renderPosterShelf("Wrestling", wrestlingResults.slice(0, 18), "event", renderLibraryCard, null, "", { section: "wrestling" })}
+      ${individualShortResults.length ? renderPosterShelf("Shorts", individualShortResults.slice(0, 18), "short", renderLibraryCard) : ""}
+      ${shortsCollectionResults.length ? renderPosterShelf("Shorts Collections", shortsCollectionResults.slice(0, 18), "shorts-collection", renderLibraryCard) : ""}
       ${renderPosterShelf("Collections", collectionResults.slice(0, 18), "collection", renderCollectionShelfCard, null, "", { section: "collections" })}
     </div>
   `;
@@ -2812,12 +3053,55 @@ function syncUniversalMetadataMenus() {
 }
 
 function readMergedItemGroups() {
+  const durableGroups = new Map();
+  Object.entries(metadataOverrides?.items ?? {}).forEach(([itemId, stored]) => {
+    const metadata = stored?.metadata ?? stored ?? {};
+    const primaryId = metadata.mergedIntoId;
+    if (!primaryId || !["single-film", "single-series"].includes(metadata.mergeType)) return;
+    if (!durableGroups.has(primaryId)) {
+      durableGroups.set(primaryId, {
+        id: `catalogue-merge-${primaryId}`,
+        primaryId,
+        itemIds: new Set([primaryId]),
+        mergeType: metadata.mergeType,
+        durable: true,
+      });
+    }
+    durableGroups.get(primaryId).itemIds.add(itemId);
+  });
   try {
-    const groups = JSON.parse(localStorage.getItem("tobytube.mergedItems") ?? "[]");
-    return Array.isArray(groups) ? groups.filter((group) => group?.primaryId && Array.isArray(group.itemIds) && group.itemIds.length > 1) : [];
+    const localGroups = JSON.parse(localStorage.getItem("tobytube.mergedItems") ?? "[]");
+    const storedGroups = Array.isArray(localGroups) ? localGroups : [];
+    const safeLocalGroups = storedGroups.filter(isSafeLegacyMergeGroup);
+    if (safeLocalGroups.length !== storedGroups.length) {
+      localStorage.setItem("tobytube.mergedItems", JSON.stringify(safeLocalGroups));
+    }
+    safeLocalGroups.forEach((group) => {
+      if (!group?.primaryId || !Array.isArray(group.itemIds)) return;
+      if (!durableGroups.has(group.primaryId)) {
+        durableGroups.set(group.primaryId, { ...group, itemIds: new Set([group.primaryId]) });
+      }
+      group.itemIds.forEach((itemId) => durableGroups.get(group.primaryId).itemIds.add(itemId));
+    });
   } catch {
-    return [];
+    // Catalogue-backed merges remain available if legacy browser storage is bad.
   }
+  return [...durableGroups.values()]
+    .map((group) => ({ ...group, itemIds: [...group.itemIds] }))
+    .filter((group) => group.itemIds.length > 1);
+}
+
+function isSafeLegacyMergeGroup(group) {
+  if (!group?.primaryId || !Array.isArray(group.itemIds)) return false;
+  const identities = [...new Set([group.primaryId, ...group.itemIds])]
+    .map(getRawItemIdentity)
+    .filter(Boolean);
+  const tvIdentities = identities.filter((identity) => identity.mediaType === "tv");
+  if (tvIdentities.length < 2) return true;
+  // Legacy browser merges predate the stricter series matcher. A merge may
+  // combine duplicate records for one programme, but never a named spinoff or
+  // regional edition such as Little Britain USA with its parent series.
+  return new Set(tvIdentities.map((identity) => normalizeTitleForMatch(identity.title))).size === 1;
 }
 
 function getUserFranchiseItems() {
@@ -2829,6 +3113,7 @@ function getUserFranchiseItems() {
       title: metadata.title || "Untitled Franchise",
       mediaType: "franchise",
       recordType: "franchise",
+      templateType: metadata.templateType ?? "franchise",
       summary: metadata.summary || "A custom Tobytube franchise.",
       posterUrl: metadata.posterUrl || null,
       backdropUrl: metadata.backdropUrl || null,
@@ -2841,6 +3126,27 @@ function getUserFranchiseItems() {
   });
 }
 
+function getUserCriterionSubCollections() {
+  return Object.entries(metadataOverrides?.items ?? {}).flatMap(([id, stored]) => {
+    const metadata = stored?.metadata ?? stored ?? {};
+    if (metadata.recordType !== "criterion-subcollection") return [];
+    const templateType = metadata.templateType === "criterion-channel" ? "criterion-channel" : "criterion-boxed-set";
+    return [{
+      id,
+      title: metadata.title || "Untitled Criterion Collection",
+      description: metadata.summary || `${metadata.title || "Untitled collection"} in TobyTube's Criterion library.`,
+      category: templateType === "criterion-channel" ? "Criterion Channel Collections" : "Boxed Sets",
+      templateType,
+      itemIds: [...new Set(metadata.itemIds ?? [])],
+      heroImage: metadata.backdropUrl || null,
+      buttonImage: metadata.buttonImage || metadata.posterUrl || null,
+      posterA: "#171410",
+      posterB: templateType === "criterion-channel" ? "#b47ad4" : "#c5a46a",
+      userCreated: true,
+    }];
+  });
+}
+
 function getFranchisesForItem(itemId) {
   if (!itemId) return [];
   const explicitIds = getItemMetadataOverride(itemId).franchiseIds ?? [];
@@ -2848,7 +3154,7 @@ function getFranchisesForItem(itemId) {
 }
 
 function syncCarouselNavigation() {
-  document.querySelectorAll(".carousel, .toby-tv-season-carousel, .toby-tv-episode-carousel, .related-media-carousel, .curated-jump-bar").forEach((carousel, index) => {
+  document.querySelectorAll(".carousel, .episode-carousel, .toby-tv-season-carousel, .toby-tv-episode-carousel, .related-media-carousel, .curated-jump-bar").forEach((carousel, index) => {
     if (state.resetCuratedJumpRail && carousel.classList.contains("curated-jump-bar")) carousel.scrollLeft = 0;
     const host = carousel.closest(".curated-jump-shell, .lane, .toby-tv-shelf, .batcave-existing-collections section, .batcave-panel") ?? carousel.parentElement;
     if (!host || host.querySelector(`:scope > [data-carousel-edge-for="${index}"]`)) return;
@@ -2891,10 +3197,42 @@ function updateCarouselEdgeControls(carousel, host) {
 }
 
 function handleGlobalKeyboard(event) {
-  if (state.section === "tv" && state.subView === "guide") return;
   const tag = event.target?.tagName;
   const isTyping = ["INPUT", "TEXTAREA", "SELECT"].includes(tag) || event.target?.isContentEditable;
+  if (state.controlsListeningFor) {
+    event.preventDefault();
+    if (event.key === "Escape") state.controlsListeningFor = null;
+    else {
+      const controls = readPlaybackControls();
+      Object.keys(controls).forEach((action) => { if (controls[action] === event.code) controls[action] = ""; });
+      controls[state.controlsListeningFor] = event.code;
+      writePlaybackControls(controls);
+      state.controlsListeningFor = null;
+    }
+    render();
+    return;
+  }
+  if (!isTyping && ((event.ctrlKey && event.key.toLowerCase() === "k") || event.key === "/")) {
+    event.preventDefault();
+    state.searchActive = true;
+    state.tvGuideTheaterMode = false;
+    document.documentElement.classList.add("global-search-active");
+    document.querySelector(".app-shell")?.classList.remove("tv-guide-theater-mode");
+    document.querySelector(".app-shell")?.classList.add("search-active");
+    document.querySelector(".nav-search .search")?.focus();
+    return;
+  }
+  if (state.section === "tv" && state.subView === "guide") return;
   if (event.key === "Escape") {
+    if (state.searchActive) {
+      event.preventDefault();
+      state.searchActive = false;
+      state.query = "";
+      if (searchRenderTimer) clearTimeout(searchRenderTimer);
+      searchRenderTimer = null;
+      render();
+      return;
+    }
     if (!(state.player || state.metadataOverlay || state.metadataMenu || state.castOverlay || state.notesOverlay || state.defenseOverlay || state.batcaveCollectionId)) return;
     event.preventDefault();
     state.player = null;
@@ -2909,6 +3247,7 @@ function handleGlobalKeyboard(event) {
     return;
   }
   if (isTyping) return;
+  if (state.player && runPlaybackHotkey(event)) return;
   if (event.key === "ContextMenu" || (event.shiftKey && event.key === "F10")) {
     const trigger = getMetadataMenuTrigger(event.target);
     if (!trigger || trigger.classList.contains("gear")) return;
@@ -2932,6 +3271,31 @@ function handleGlobalKeyboard(event) {
   const next = getSpatialNavigationTarget(active, focusable, event.key) ?? focusable[0];
   next?.focus();
   next?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+}
+
+function runPlaybackHotkey(event) {
+  if (event.ctrlKey || event.altKey || event.metaKey) return false;
+  const action = Object.entries(readPlaybackControls()).find(([, code]) => code && code === event.code)?.[0];
+  if (!action) return false;
+  const video = document.querySelector(".toby-player-video");
+  if (!video) return false;
+  event.preventDefault();
+  if (action === "playPause") handlePlayerControl("toggle-play", video);
+  if (action === "seekBackward") handlePlayerControl("rewind", video);
+  if (action === "seekForward") handlePlayerControl("forward", video);
+  if (action === "subtitles") handlePlayerControl("subtitles", video);
+  if (action === "fullscreen") handlePlayerControl("fullscreen", video);
+  if (action === "mute") { video.muted = !video.muted; showPlayerFeedback(video.muted ? "Muted" : "Sound on"); }
+  if (action === "volumeUp" || action === "volumeDown") {
+    const next = Math.max(0, Math.min(200, Number(readPlayerVolume()) + (action === "volumeUp" ? 5 : -5)));
+    applyPlayerVolume(video, next); writePlayerVolume(next);
+    const slider = document.querySelector("[data-player-volume]");
+    const label = document.querySelector("[data-player-volume-label]");
+    if (slider) slider.value = String(next);
+    if (label) label.textContent = `${next}%`;
+    showPlayerFeedback(`Volume ${next}%`);
+  }
+  return true;
 }
 
 function getSpatialNavigationTargets() {
@@ -3061,6 +3425,13 @@ function toggleMergeSelection(id) {
   else state.mergeSelection.add(id);
 }
 
+function refreshMergeSelectionUi() {
+  document.querySelectorAll("[data-action='metadata-menu'][data-metadata-id]").forEach((button) => {
+    button.classList.toggle("merge-selected", state.mergeSelection.has(button.dataset.metadataId));
+  });
+  app.querySelectorAll(":scope > .metadata-menu-scrim, :scope > .metadata-context-menu").forEach((element) => element.remove());
+}
+
 function createMergedItemGroup(primaryId, itemIds) {
   const ids = [...new Set(itemIds.filter(Boolean))];
   if (!primaryId || ids.length < 2) return;
@@ -3096,6 +3467,38 @@ function mountMetadataContextMenu() {
   });
 }
 
+function mountMetadataOverlayPanel() {
+  app.querySelectorAll(":scope > .metadata-match-overlay, :scope > .metadata-menu-scrim, :scope > .metadata-context-menu").forEach((element) => element.remove());
+  const isOpen = Boolean(state.metadataOverlay);
+  document.documentElement.classList.toggle("metadata-overlay-open", isOpen);
+  document.body.classList.toggle("metadata-overlay-open", isOpen);
+  if (!isOpen) return;
+
+  app.insertAdjacentHTML("beforeend", renderMetadataOverlayPanel());
+  const overlay = app.querySelector(":scope > .metadata-match-overlay");
+  overlay?.querySelectorAll("[data-action='metadata-command']").forEach((button) => {
+    button.addEventListener("click", async (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      await handleMetadataCommand(button.dataset.command, button.dataset.metadataId, button.dataset);
+    });
+  });
+  overlay?.querySelectorAll("[data-action='close-metadata-overlay']").forEach((button) => {
+    button.addEventListener("click", (event) => {
+      if (event.target.closest("[data-metadata-panel]") && event.target.dataset.action !== "close-metadata-overlay") return;
+      const refreshPage = Boolean(state.metadataOverlay?.refreshPageOnClose);
+      state.metadataOverlay = null;
+      state.batcaveMetadataDraft = null;
+      if (refreshPage) {
+        preservePageScrollForNextRender();
+        render();
+      } else {
+        mountMetadataOverlayPanel();
+      }
+    });
+  });
+}
+
 function renderMetadataToast() {
   const toast = state.metadataToast;
   if (!toast) return "";
@@ -3107,6 +3510,10 @@ function showMetadataToast(status, message) {
   state.metadataToast = { status, message };
   metadataToastTimer = setTimeout(() => {
     state.metadataToast = null;
+    if (state.player) {
+      backgroundRenderDeferredForPlayback = true;
+      return;
+    }
     preservePageScrollForNextRender();
     render();
   }, 3200);
@@ -3150,6 +3557,13 @@ function renderActionIconSvg(icon) {
 }
 
 const TV_EPISODE_COMPLETIONS_KEY = "tobytube.completed.tv-episodes";
+const TV_EPISODE_RENTAL_COUNTS_KEY = "tobytube.rentals.tv-episode-counts";
+let tvEpisodeRentalCountsCache = null;
+
+function getTvEpisodeRentalCounts() {
+  if (!tvEpisodeRentalCountsCache) tvEpisodeRentalCountsCache = readLocalJson(TV_EPISODE_RENTAL_COUNTS_KEY, {});
+  return tvEpisodeRentalCountsCache;
+}
 
 function getCompletedTvEpisodeIds() {
   return new Set(readLocalJson(TV_EPISODE_COMPLETIONS_KEY, []));
@@ -3160,6 +3574,9 @@ function markTvEpisodeCompleted(episodeId) {
   const completed = getCompletedTvEpisodeIds();
   completed.add(episodeId);
   writeLocalJson(TV_EPISODE_COMPLETIONS_KEY, [...completed]);
+  const counts = getTvEpisodeRentalCounts();
+  counts[episodeId] = Math.max(0, Number(counts[episodeId]) || 0) + 1;
+  writeLocalJson(TV_EPISODE_RENTAL_COUNTS_KEY, counts);
 }
 
 function isTvEpisodeCompleted(episodeId) {
@@ -3174,6 +3591,18 @@ function isTvSeasonCompleted(show, season) {
 function isTvShowCompleted(show) {
   const seasons = show ? getAvailableTvSeasons(show) : [];
   return Boolean(seasons.length && seasons.every((season) => isTvSeasonCompleted(show, season)));
+}
+
+function getTvEpisodeRentalCount(episodeId) {
+  if (!episodeId) return 0;
+  const counts = getTvEpisodeRentalCounts();
+  const stored = Math.max(0, Number(counts[episodeId]) || 0);
+  return stored || (isTvEpisodeCompleted(episodeId) ? 1 : 0);
+}
+
+function getTvScopeRentalCount(episodes) {
+  const counts = (episodes ?? []).map((episode) => getTvEpisodeRentalCount(episode.id));
+  return counts.length ? Math.min(...counts) : 0;
 }
 
 function isItemCompleted(item) {
@@ -3191,6 +3620,31 @@ function isMarkedWatched(id) {
 function markItemWatched(id) {
   if (!id) return;
   localStorage.setItem(`tobytube.watched.${id}`, new Date().toISOString());
+  removeResumeEntriesForItem(id);
+}
+
+function getItemRentalCount(id) {
+  if (!id) return 0;
+  const history = readLocalJson("tobytube.playHistory", []);
+  const count = Array.isArray(history)
+    ? history.filter((entry) => entry?.itemId === id && /(?:watched|completion-threshold)/.test(String(entry.source ?? ""))).length
+    : 0;
+  return count || (isMarkedWatched(id) ? 1 : 0);
+}
+
+function removeResumeEntriesForItem(itemId) {
+  if (!itemId) return;
+  try {
+    Array.from({ length: localStorage.length }, (_, index) => localStorage.key(index))
+      .filter((key) => key?.startsWith("tobytube.resume."))
+      .forEach((key) => {
+        const resumeKey = key.replace("tobytube.resume.", "");
+        const entry = readResumeEntry(resumeKey);
+        if (entry?.itemId === itemId || resumeKey === `movie:${itemId}` || resumeKey === `wrestling:${itemId}`) {
+          localStorage.removeItem(key);
+        }
+      });
+  } catch {}
 }
 
 function addItemToLocalList(key, id) {
@@ -3321,9 +3775,28 @@ async function persistMetadataOverridesBatch(overrides) {
     body: JSON.stringify({ overrides }),
   });
   if (!response.ok) throw new Error(`Batch override save failed: ${response.status}`);
-  Object.entries(overrides).forEach(([itemId, override]) => mergeMetadataOverride(itemId, override));
+  const payload = await response.json();
+  const now = new Date().toISOString();
+  const items = { ...(metadataOverrides?.items ?? {}) };
+  Object.entries(overrides).forEach(([itemId, override]) => {
+    const existing = items[itemId] ?? {};
+    items[itemId] = {
+      ...existing,
+      ...(override ?? {}),
+      ...(override?.metadata && typeof override.metadata === "object"
+        ? { metadata: { ...(existing.metadata ?? {}), ...override.metadata } }
+        : {}),
+    };
+  });
+  // A franchise can update dozens of records at once. Replacing the items map
+  // once avoids cloning the complete metadata catalogue separately per member.
+  metadataOverrides = {
+    ...(metadataOverrides ?? { version: 1 }),
+    updatedAt: now,
+    items,
+  };
   invalidateMediaCaches();
-  return response.json();
+  return payload;
 }
 
 function findMatchedWrestlingSeason(seasons, item) {
@@ -3343,16 +3816,21 @@ function findMatchedWrestlingEpisode(episodes, item) {
 }
 
 function mergeMetadataOverride(itemId, override) {
+  const items = metadataOverrides?.items ?? {};
+  const existing = items[itemId] ?? {};
+  // Mutate the long-lived item map at one key instead of cloning the complete
+  // metadata catalogue for every Fix Match acknowledgement.
+  items[itemId] = {
+    ...existing,
+    ...(override ?? {}),
+    ...(override?.metadata && typeof override.metadata === "object"
+      ? { metadata: { ...(existing.metadata ?? {}), ...override.metadata } }
+      : {}),
+  };
   metadataOverrides = {
     ...(metadataOverrides ?? { version: 1 }),
     updatedAt: new Date().toISOString(),
-    items: {
-      ...(metadataOverrides?.items ?? {}),
-      [itemId]: {
-        ...(metadataOverrides?.items?.[itemId] ?? {}),
-        ...(override ?? {}),
-      },
-    },
+    items,
   };
 }
 
@@ -3434,7 +3912,8 @@ function getIdentityOverrideIds(itemId) {
     .filter(([, override]) => {
       const identity = override?.identity;
       if (!identity?.title || normalizeTitleForMatch(identity.title) !== titleKey) return false;
-      if (identity.mediaType && raw.mediaType && identity.mediaType !== raw.mediaType) return false;
+      const providerMediaType = override.metadata?.mediaType ?? override.match?.mediaType ?? identity.mediaType;
+      if (providerMediaType && raw.mediaType && providerMediaType !== raw.mediaType) return false;
       if (identity.year && raw.year && String(identity.year) !== String(raw.year)) return false;
       return true;
     })
@@ -3506,13 +3985,21 @@ function applyMetadataOverrideToDetails(item, details = {}) {
   return next;
 }
 function getMetadataMenuItem() {
-  const resolved = getTitleItem(state.metadataMenu?.itemId) ?? getTitleItem(state.metadataOverlay?.itemId);
+  const resolved = getMetadataWorkflowItem(state.metadataMenu?.itemId ?? state.metadataOverlay?.itemId);
   if (!resolved || !state.metadataMenu?.displayTitle) return resolved;
   const wantedTitle = normalizeTitleForMatch(state.metadataMenu.displayTitle);
   const wantedYear = Number(state.metadataMenu.displayYear);
   const selectedItem = [...getMovieLibraryItems(), ...getTvLibraryItems(), ...Object.values(movieDetailIndex), ...Object.values(tvDetailIndex)]
     .find((item) => normalizeTitleForMatch(item.title) === wantedTitle && (!wantedYear || Number(item.year ?? item.startYear) === wantedYear));
   return selectedItem ?? { ...resolved, title: state.metadataMenu.displayTitle, year: state.metadataMenu.displayYear || resolved.year };
+}
+
+function getMetadataWorkflowItem(itemId) {
+  if (!itemId) return null;
+  return getTitleItem(itemId)
+    ?? (state.metadataOverlay?.itemId === itemId ? state.metadataOverlay.itemSnapshot : null)
+    ?? (state.metadataMenu?.itemId === itemId ? state.metadataMenu.itemSnapshot : null)
+    ?? null;
 }
 
 function renderMetadataContextMenu() {
@@ -3526,6 +4013,11 @@ function renderMetadataContextMenu() {
   const selectedForMerge = state.mergeSelection.has(item.id);
   const isWrestling = item.mediaType === "wrestling" || Boolean(item.promotionId && (item.recordType === "event" || item.recordType === "episode"));
   const actions = [
+    ["fix-match", "Fix Match..."],
+    ...(isWrestling ? [["twdb-match", "TWDB Match..."]] : []),
+    ["edit-metadata", "Edit Metadata..."],
+    ["refresh", "Refresh Metadata"],
+    ["analyze", "Analyze"],
     ["select-merge", selectedForMerge ? "Unselect from Merge as…" : "Select for Merge as…"],
     ...(state.mergeSelection.size >= 2 ? [["merge-items", `Merge ${state.mergeSelection.size} Items as…`]] : []),
     ...(state.mergeSelection.size ? [["cancel-merge", "Cancel Merge"]] : []),
@@ -3534,11 +4026,6 @@ function renderMetadataContextMenu() {
     ["add-to", "Add to..."],
     ...(state.metadataMenu?.currentRental ? [["remove-current-rental", "Remove from Current Rentals"]] : []),
     ["watched", "Mark as Watched"],
-    ["refresh", "Refresh Metadata"],
-    ["analyze", "Analyze"],
-    ...(isWrestling ? [["twdb-match", "TWDB Match..."]] : []),
-    ["fix-match", "Fix Match..."],
-    ["edit-metadata", "Edit Metadata..."],
     ["unmatch", "Unmatch"],
     ["optimize", "Optimize..."],
     ["save", "Save File"],
@@ -3566,8 +4053,10 @@ function getMetadataMenuTrigger(target) {
 
 function openMetadataContextMenu(trigger, clientX, clientY) {
   if (!trigger?.dataset.metadataId) return false;
+  const itemSnapshot = getTitleItem(trigger.dataset.metadataId);
   state.metadataMenu = {
     itemId: trigger.dataset.metadataId,
+    itemSnapshot,
     displayTitle: trigger.dataset.metadataTitle,
     displayYear: trigger.dataset.metadataYear,
     currentRental: trigger.dataset.currentRental === "true",
@@ -3586,8 +4075,9 @@ function bindMetadataContextAccess() {
     const host = trigger.closest(".media-card, .library-card, .continue-card, .episode-card, .event-row, .poster-menu-frame, [data-tv-episode-id]");
     if (host) hosts.add(host);
   });
+  document.querySelectorAll(".media-card[data-title-id], .library-card[data-title-id], .continue-card[data-title-id], .episode-card[data-title-id], .poster-menu-frame[data-title-id]").forEach((host) => hosts.add(host));
   hosts.forEach((host) => {
-    const trigger = getMetadataMenuTrigger(host);
+    const trigger = getMetadataMenuTrigger(host) ?? (host.dataset.titleId ? { dataset: { metadataId: host.dataset.titleId, metadataTitle: host.dataset.title, metadataYear: host.dataset.year } } : null);
     if (!trigger) return;
     host.addEventListener("contextmenu", (event) => {
       event.preventDefault();
@@ -3620,8 +4110,15 @@ function bindMetadataContextAccess() {
 }
 
 function renderMetadataOverlayPanel() {
-  const item = getTitleItem(state.metadataOverlay.itemId);
-  if (!item) return "";
+  const item = getMetadataWorkflowItem(state.metadataOverlay.itemId);
+  if (!item) return `
+    <div class="metadata-match-overlay" data-action="close-metadata-overlay">
+      <section class="metadata-match-panel" role="dialog" aria-modal="true" aria-label="Metadata item unavailable" data-metadata-panel>
+        <button class="metadata-overlay-close" type="button" data-action="close-metadata-overlay" aria-label="Close">X</button>
+        <h2>Metadata item unavailable</h2>
+        <p>The selected object could not be resolved after its menu opened. Item ID: ${escapeHtml(state.metadataOverlay.itemId ?? "unknown")}</p>
+      </section>
+    </div>`;
   const type = state.metadataOverlay.type;
   const title = {
     "fix-match": "Fix Match",
@@ -3632,6 +4129,7 @@ function renderMetadataOverlayPanel() {
     info: "File Info",
     delete: "Delete From Server",
     "merge-items": "Merge As",
+    "merge-progress": "Building Franchise",
     analyze: "Analyze",
     optimize: "Optimize",
     access: "Modify Access",
@@ -3644,7 +4142,7 @@ function renderMetadataOverlayPanel() {
   return `
     <div class="metadata-match-overlay" data-action="close-metadata-overlay">
       <section class="metadata-match-panel ${["batcave-metadata", "edit-metadata"].includes(type) ? "batcave-metadata-master" : ""}" role="dialog" aria-modal="true" aria-label="${escapeHtml(title)}" data-metadata-panel>
-        <button class="metadata-overlay-close" type="button" data-action="close-metadata-overlay" aria-label="Close">X</button>
+        ${type === "merge-progress" ? "" : `<button class="metadata-overlay-close" type="button" data-action="close-metadata-overlay" aria-label="Close">X</button>`}
         <h2>${escapeHtml(title)}</h2>
         <p class="metadata-overlay-location">${escapeHtml(getMetadataLocationLine(item))}</p>
         ${renderMetadataOverlayBody(type, item)}
@@ -3662,6 +4160,7 @@ function renderMetadataOverlayBody(type, item) {
   if (type === "info") return renderFileInfoShell(item);
   if (type === "delete") return `<p>This removes the title from Tobytube only. It will not delete the file from disk.</p><button class="danger-button" type="button" data-action="metadata-command" data-command="delete-confirm" data-metadata-id="${escapeHtml(item.id)}">Remove from server</button>`;
   if (type === "merge-items") return renderMergeItemsShell();
+  if (type === "merge-progress") return renderMergeProgressShell();
   if (type === "add-to") return renderAddToShell(item);
   if (type === "analyze") return renderAnalyzeShell(item);
   if (type === "optimize") return renderOptimizeShell(item);
@@ -3816,7 +4315,7 @@ function getInferredCollectionAllocations(item) {
         allocations.push({
           id: `${slugify(group.title)}/${collection.id}/${entry.sectionSlug}`,
           pathIds: [slugify(group.title), collection.id, entry.sectionSlug],
-          pathLabels: [group.title, collection.title, entry.section || "Unsorted"],
+          pathLabels: [group.title, collection.title, libraryDisplayLabel(entry.section)],
           rootId: slugify(group.title),
           collectionId: collection.id,
           sectionId: entry.sectionSlug,
@@ -3891,8 +4390,9 @@ function makeAllocatorNode(id, label, color, children = []) {
 
 function getCollectionSectionNodes(collection, color) {
   if (collection.id === "criterion" && criterionCollectionIndex) {
-    const byId = new Map((criterionCollectionIndex.subCollections ?? []).map((entry) => [entry.id, entry]));
-    const groups = (criterionCollectionIndex.collectionGroups ?? []).map((group) => makeAllocatorNode(
+    const criterionData = getCriterionCollectionData({ includeEmpty: true });
+    const byId = new Map((criterionData.subCollections ?? []).map((entry) => [entry.id, entry]));
+    const groups = (criterionData.collectionGroups ?? []).map((group) => makeAllocatorNode(
       group.id,
       group.title,
       color,
@@ -3901,7 +4401,14 @@ function getCollectionSectionNodes(collection, color) {
     return [makeAllocatorNode("collections", "Collections", color, groups)];
   }
   const page = getCuratedCollectionPage(collection.id);
-  const sections = page?.sections ?? collection.carousels ?? [];
+  const definition = curatedCollectionPages.find((entry) => entry.id === collection.id);
+  const sectionMap = new Map();
+  [...(definition?.sections ?? []), ...(collection.carousels ?? []), ...(page?.sections ?? [])].forEach((section) => {
+    const id = canonicalCollectionSectionId(collection.id, section.id ?? section.title);
+    const existing = sectionMap.get(id);
+    sectionMap.set(id, { ...existing, ...section, id });
+  });
+  const sections = [...sectionMap.values()];
   return sections.map((section) => makeAllocatorNode(section.id, section.title, color, getNestedAllocatorNodes(section, color)));
 }
 
@@ -3911,11 +4418,15 @@ function getNestedAllocatorNodes(source, color) {
 }
 
 function getBatcaveCollectionAllocatorTree() {
-  return getGroupedCollections().map((group) => {
+  const cacheKey = getMetadataCacheKey();
+  if (getBatcaveCollectionAllocatorTree.cache?.key === cacheKey) return getBatcaveCollectionAllocatorTree.cache.tree;
+  const tree = getGroupedCollections().map((group) => {
     const color = BATCAVE_COLLECTION_COLORS[group.title] ?? "#d8b35d";
     const collections = group.collections.map((collection) => makeAllocatorNode(collection.id, collection.title, color, getCollectionSectionNodes(collection, color)));
     return makeAllocatorNode(group.title, group.title, color, collections);
   });
+  getBatcaveCollectionAllocatorTree.cache = { key: cacheKey, tree };
+  return tree;
 }
 
 function getAllocatorNodeAtPath(tree, path, depth) {
@@ -3953,6 +4464,22 @@ function renderBatcaveCollectionAllocator(draft) {
       <div class="batcave-master-section-head"><h3>Collections</h3><small>Choose a path; terminal choices are added automatically.</small></div>
       <div class="batcave-allocator-scroll">${columns.join("")}</div>
     </section>`;
+}
+
+function renderCollectionTemplateCreator(item) {
+  return `
+    <details class="batcave-master-section batcave-master-tagger" data-metadata-tagger="collection-template" ${state.metadataOverlay.collectionTemplateOpen ? "open" : ""}>
+      <summary class="batcave-master-section-head"><h3>Create subcollection</h3><small>Franchise / Boxed Set / Channel</small></summary>
+      <p class="muted">Creates a reusable collection shell and adds this object as its first live member.</p>
+      <div class="batcave-master-fields">
+        <label><span>Template</span><select data-collection-template-type><option value="aisle-franchise">Aisle Franchise</option><option value="criterion-boxed-set">Criterion Boxed Set</option><option value="criterion-channel">Criterion Channel</option></select></label>
+        <label class="wide"><span>Name</span><input data-collection-template-title value="${escapeHtml(item.title ?? "")}" placeholder="Collection name"></label>
+        <label class="full"><span>Description</span><textarea data-collection-template-summary placeholder="Collection description"></textarea></label>
+        <label class="wide"><span>Poster / button artwork</span><input data-collection-template-poster placeholder="Asset path or URL"></label>
+        <label class="wide"><span>Banner artwork</span><input data-collection-template-backdrop placeholder="Asset path or URL"></label>
+      </div>
+      <button type="button" data-action="metadata-command" data-command="create-collection-template" data-metadata-id="${escapeHtml(item.id)}">Create and add this object</button>
+    </details>`;
 }
 
 function renderBatcaveTvGuideTagger(draft) {
@@ -3996,6 +4523,7 @@ function renderBatcaveMetadataMaster(item) {
         ${draft.allocations.length ? `<div class="batcave-allocation-tags">${draft.allocations.map((allocation, index) => `<button type="button" data-remove-allocation="${index}" style="--allocation-color:${escapeHtml(allocation.color ?? "#d8b35d")}" title="Remove allocation">${escapeHtml((allocation.pathLabels ?? []).join(" / "))}<span>×</span></button>`).join("")}</div>` : `<p class="muted">No collection paths assigned.</p>`}
         ${renderBatcaveCollectionAllocator(draft)}
       </details>
+      ${renderCollectionTemplateCreator(item)}
       ${renderBatcaveTvGuideTagger(draft)}
       ${renderBatcaveFranchiseEditor(draft, item)}
       <section class="batcave-master-section batcave-master-artwork">
@@ -4187,6 +4715,7 @@ function renderFixMatchShell(item) {
     </div>
     <div class="metadata-match-actions">
       <button type="button" data-action="metadata-command" data-command="match-search" data-metadata-id="${escapeHtml(item.id)}">Search</button>
+      <button type="button" data-action="metadata-command" data-command="edit-metadata" data-metadata-id="${escapeHtml(item.id)}">Collections &amp; Templates</button>
     </div>
     <div class="metadata-match-results">
       ${error ? `<p class="metadata-match-error">${escapeHtml(error)}</p>` : ""}
@@ -4209,7 +4738,7 @@ function renderTwdbMatchShell(item) {
     <div class="metadata-match-search two-column-form">
       <label>Title<input type="text" value="${escapeHtml(query.title ?? item.title)}" data-match-title></label>
       <label>Source<select data-match-agent>
-        ${["TWDB", "TMDB", "TVDB"].map((agent) => `<option ${agent === query.agent ? "selected" : ""}>${agent}</option>`).join("")}
+        ${["TWDB", "TMDB"].map((agent) => `<option ${agent === query.agent ? "selected" : ""}>${agent}</option>`).join("")}
       </select></label>
       <label>Year<input type="text" value="${escapeHtml(query.year ?? year ?? "")}" data-match-year></label>
       <input type="hidden" value="English" data-match-language>
@@ -4312,6 +4841,38 @@ function renderMergeItemsShell() {
     <button type="button" data-action="metadata-command" data-command="cancel-merge" data-metadata-id="${escapeHtml(selected[0].id)}">Cancel Merge</button>
   `;
 }
+
+function renderMergeProgressShell() {
+  const progress = Math.max(0, Math.min(100, Number(state.metadataOverlay?.progress) || 0));
+  const label = state.metadataOverlay?.progressLabel ?? "Preparing selected titles…";
+  const memberCount = Number(state.metadataOverlay?.memberCount) || state.mergeSelection.size;
+  return `
+    <div class="merge-progress-shell" aria-live="polite" aria-busy="true">
+      <p><strong data-merge-progress-label>${escapeHtml(label)}</strong></p>
+      <div class="merge-progress-track" role="progressbar" aria-label="Building franchise" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${progress}" data-merge-progress>
+        <i style="width:${progress}%" data-merge-progress-fill></i>
+      </div>
+      <p class="merge-progress-copy"><span>${memberCount} selected object${memberCount === 1 ? "" : "s"}</span><b data-merge-progress-value>${progress}%</b></p>
+      <small>Keep this window open. Tobytube is saving the franchise pool and its membership links.</small>
+    </div>`;
+}
+
+function updateMergeProgress(progress, progressLabel) {
+  const value = Math.max(0, Math.min(100, Math.round(Number(progress) || 0)));
+  state.metadataOverlay = { ...state.metadataOverlay, progress: value, progressLabel };
+  const progressElement = document.querySelector("[data-merge-progress]");
+  const fill = document.querySelector("[data-merge-progress-fill]");
+  const label = document.querySelector("[data-merge-progress-label]");
+  const copy = document.querySelector("[data-merge-progress-value]");
+  progressElement?.setAttribute("aria-valuenow", String(value));
+  if (fill) fill.style.width = `${value}%`;
+  if (label) label.textContent = progressLabel;
+  if (copy) copy.textContent = `${value}%`;
+}
+
+function waitForUiPaint() {
+  return new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+}
 function renderFileInfoShell(item) {
   const record = getMetadataRecordForItem(item);
   const files = record?.files ?? record?.versions?.flatMap((version) => version.files ?? []) ?? [];
@@ -4335,7 +4896,14 @@ function inferFranchiseTitle(items) {
   if (!titles.length) return "Untitled Franchise";
   let prefix = titles[0];
   titles.slice(1).forEach((title) => {
-    while (prefix && !normalizeTitleForMatch(title).startsWith(normalizeTitleForMatch(prefix))) prefix = prefix.replace(/\s+\S+$/, "");
+    const normalizedTitle = normalizeTitleForMatch(title);
+    while (prefix && !normalizedTitle.startsWith(normalizeTitleForMatch(prefix))) {
+      const shorter = prefix.replace(/\s+\S+$/, "");
+      // A one-word prefix cannot be shortened by the expression above. The
+      // old loop consequently never terminated for mixed-name franchises such
+      // as Lone Wolf and Cub + Shogun Assassin.
+      prefix = shorter === prefix ? "" : shorter;
+    }
   });
   return prefix || titles[0];
 }
@@ -4376,36 +4944,43 @@ async function handleMetadataCommand(command, itemId, data = {}) {
   if (command === "select-merge") {
     toggleMergeSelection(itemId);
     state.metadataMenu = null;
-    render();
+    // Selecting a merge member changes only the stoplight highlight. Rebuilding
+    // an 11,000-file page after every click made larger selections appear to
+    // freeze even though no catalogue data had changed.
+    refreshMergeSelectionUi();
     return;
   }
   if (command === "cancel-merge") {
     state.mergeSelection = new Set();
     state.metadataMenu = null;
     state.metadataOverlay = null;
-    render();
+    refreshMergeSelectionUi();
+    mountMetadataOverlayPanel();
     return;
   }
   if (command === "merge-items") {
     state.metadataOverlay = { type: "merge-items", itemId, mergeMode: "choose" };
     state.metadataMenu = null;
-    render();
+    mountMetadataOverlayPanel();
     return;
   }
   if (command === "choose-merge-mode") {
     state.metadataOverlay = { ...state.metadataOverlay, type: "merge-items", itemId, mergeMode: data.mergeMode ?? "choose" };
-    render();
+    mountMetadataOverlayPanel();
     return;
   }
   if (command === "merge-as") {
     const selectedIds = [...state.mergeSelection];
-    createMergedItemGroup(itemId, selectedIds);
     const mergeType = data.mergeMode === "single-series" ? "single-series" : "single-film";
-    await persistMetadataOverridesBatch(Object.fromEntries(selectedIds.map((selectedId) => [selectedId, {
-      metadata: { ...getItemMetadataOverride(selectedId), mergedIntoId: itemId, mergeType },
-    }]))).catch(() => null);
-    state.metadataOverlay = { type: "status", itemId, message: mergeType === "single-series" ? "Series records merged. Refresh Metadata can now hydrate the combined show." : "Film versions merged. Alternate files now appear in the Version selector." };
     state.metadataMenu = null;
+    state.metadataOverlay = { type: "merge-progress", itemId, progress: 15, progressLabel: `Linking ${selectedIds.length} versions…`, memberCount: selectedIds.length };
+    mountMetadataOverlayPanel();
+    await waitForUiPaint();
+    await persistMetadataOverridesBatch(Object.fromEntries(selectedIds.map((selectedId) => [selectedId, {
+      metadata: { mergedIntoId: itemId, mergeType },
+    }])));
+    state.mergeSelection = new Set();
+    state.metadataOverlay = { type: "status", itemId, message: mergeType === "single-series" ? "Series records merged. Refresh Metadata can now hydrate the combined show." : "Film versions merged. Alternate files now appear in the Version selector." };
     render();
     return;
   }
@@ -4416,23 +4991,67 @@ async function handleMetadataCommand(command, itemId, data = {}) {
     const backdropUrl = document.querySelector("[data-new-franchise-backdrop]")?.value?.trim() || "";
     const memberIds = [...state.mergeSelection].filter((id) => ["movie", "tv"].includes(getTitleItem(id)?.mediaType));
     const franchiseId = `franchise-${slugify(title)}-${Date.now().toString(36)}`;
+    state.metadataMenu = null;
+    state.metadataOverlay = { type: "merge-progress", itemId: memberIds[0] ?? itemId, progress: 8, progressLabel: "Preparing franchise record…", memberCount: memberIds.length, franchiseTitle: title };
+    mountMetadataOverlayPanel();
+    await waitForUiPaint();
+    updateMergeProgress(28, `Linking ${memberIds.length} selected objects…`);
     const overrides = {
       [franchiseId]: {
-        metadata: { recordType: "franchise", title, summary, posterUrl, backdropUrl, memberIds, mixtapeKeys: [], createdAt: new Date().toISOString() },
+        metadata: { recordType: "franchise", templateType: "aisle-franchise", title, summary, posterUrl, backdropUrl, memberIds, mixtapeKeys: [], createdAt: new Date().toISOString() },
         identity: { title, mediaType: "franchise" },
       },
     };
     memberIds.forEach((memberId) => {
       const existing = getItemMetadataOverride(memberId);
-      overrides[memberId] = { metadata: { ...existing, franchiseIds: [...new Set([...(existing.franchiseIds ?? []), franchiseId])] } };
+      overrides[memberId] = { metadata: { franchiseIds: [...new Set([...(existing.franchiseIds ?? []), franchiseId])] } };
     });
-    await persistMetadataOverridesBatch(overrides);
-    state.mergeSelection = new Set();
-    state.metadataMenu = null;
-    state.metadataOverlay = null;
-    state.selectedCollectionId = null;
-    state.selectedTitleId = memberIds[0] ?? franchiseId;
-    showMetadataToast("success", `${title} pipeline created`);
+    try {
+      updateMergeProgress(52, "Saving the franchise pool to Tobytube…");
+      await persistMetadataOverridesBatch(overrides);
+      updateMergeProgress(88, "Refreshing franchise membership…");
+      await waitForUiPaint();
+      state.mergeSelection = new Set();
+      state.metadataOverlay = null;
+      state.selectedCollectionId = null;
+      state.selectedTitleId = memberIds[0] ?? franchiseId;
+      showMetadataToast("success", `${title} pipeline created`);
+      render();
+    } catch (error) {
+      state.metadataOverlay = { type: "status", itemId: memberIds[0] ?? itemId, message: `Franchise save failed: ${error.message}. Your selected objects remain selected so you can retry.` };
+      showMetadataToast("error", "Franchise save failed");
+      render();
+    }
+    return;
+  }
+  if (command === "create-collection-template") {
+    const item = getMetadataWorkflowItem(itemId);
+    const templateType = document.querySelector("[data-collection-template-type]")?.value ?? "aisle-franchise";
+    const title = document.querySelector("[data-collection-template-title]")?.value?.trim() || `${item?.title ?? "Untitled"} Collection`;
+    const summary = document.querySelector("[data-collection-template-summary]")?.value?.trim() || `${title} collection.`;
+    const posterUrl = document.querySelector("[data-collection-template-poster]")?.value?.trim() || "";
+    const backdropUrl = document.querySelector("[data-collection-template-backdrop]")?.value?.trim() || "";
+    const createdAt = new Date().toISOString();
+    if (templateType === "aisle-franchise") {
+      const franchiseId = `franchise-${slugify(title)}-${Date.now().toString(36)}`;
+      const existing = getItemMetadataOverride(itemId);
+      await persistMetadataOverridesBatch({
+        [franchiseId]: {
+          metadata: { recordType: "franchise", templateType, title, summary, posterUrl, backdropUrl, memberIds: [itemId], mixtapeKeys: [], createdAt },
+          identity: { title, mediaType: "franchise" },
+        },
+        [itemId]: { metadata: { franchiseIds: [...new Set([...(existing.franchiseIds ?? []), franchiseId])] } },
+      });
+    } else {
+      const subcollectionId = `criterion-user-${slugify(title)}-${Date.now().toString(36)}`;
+      await persistMetadataOverride(subcollectionId, {
+        metadata: { recordType: "criterion-subcollection", templateType, title, summary, posterUrl, buttonImage: posterUrl, backdropUrl, itemIds: [itemId], createdAt },
+        identity: { title, mediaType: "collection" },
+      });
+    }
+    state.batcaveMetadataDraft = buildBatcaveMetadataDraft(item);
+    state.metadataOverlay = { ...state.metadataOverlay, collectionTemplateOpen: true, notice: `${title} created and this object was added.` };
+    showMetadataToast("success", "Subcollection created");
     render();
     return;
   }
@@ -4496,6 +5115,10 @@ async function handleMetadataCommand(command, itemId, data = {}) {
   } else if (command === "refresh") {
     try {
       const item = getTitleItem(itemId);
+      if (!item) throw new Error("This object is no longer present in the live library");
+      // Reproject inferred folder and pre-tag assignments onto the live object,
+      // exactly as opening the metadata editor and saving its current values does.
+      await persistMetadataOverride(itemId, buildRefreshMetadataOverride(item));
       if (item?.mediaType === "tv") {
         const tvUrl = new URL("./api/metadata/refresh-tv", window.location.href);
         tvUrl.searchParams.set("showId", item.id);
@@ -4503,13 +5126,14 @@ async function handleMetadataCommand(command, itemId, data = {}) {
       }
       await fetch("./api/metadata/rescan", { method: "POST" });
       invalidateMediaCaches();
-      state.metadataOverlay = { type: "status", itemId, message: item?.mediaType === "tv" ? "TV metadata refresh queued." : "Metadata refresh queued." };
+      state.metadataOverlay = { type: "status", itemId, message: item?.mediaType === "tv" ? "TV metadata refreshed; library scan queued." : "Metadata refreshed; library scan queued." };
     } catch (error) {
       state.metadataOverlay = { type: "status", itemId, message: `Metadata refresh could not start: ${error.message}` };
     }
   } else if (command === "delete-confirm") {
-    const item = getTitleItem(itemId);
-    const deleted = { deletedAt: new Date().toISOString(), title: item?.title ?? itemId, mediaType: item?.mediaType ?? "unknown" };
+    const item = getMetadataWorkflowItem(itemId);
+    const deletedPaths = getItemMediaFiles(item).map((file) => file.path).filter(Boolean);
+    const deleted = { deletedAt: new Date().toISOString(), title: item?.title ?? itemId, mediaType: item?.mediaType ?? "unknown", paths: deletedPaths };
     await persistMetadataOverride(itemId, {
       deleted,
       identity: { title: item?.title ?? itemId, year: item?.year ?? item?.startYear ?? "", mediaType: item?.mediaType ?? "unknown" },
@@ -4579,12 +5203,14 @@ async function handleMetadataCommand(command, itemId, data = {}) {
     };
     const overlayType = ["twdb-match", "batcave-metadata"].includes(state.metadataOverlay?.type) ? state.metadataOverlay.type : "fix-match";
     state.metadataOverlay = { ...state.metadataOverlay, type: overlayType, itemId, queryItemId: itemId, query, results: [], loading: true, searched: false };
-    render();
+    mountMetadataOverlayPanel();
     const batchContext = {
       batchItemIds: state.metadataOverlay?.batchItemIds,
       seriesName: state.metadataOverlay?.seriesName,
     };
     state.metadataOverlay = { ...(await searchMetadataMatches(itemId, query)), type: overlayType, queryItemId: itemId, ...batchContext };
+    mountMetadataOverlayPanel();
+    return;
   } else if (command === "apply-match") {
     try {
       const provider = data.provider ?? "current";
@@ -4601,8 +5227,18 @@ async function handleMetadataCommand(command, itemId, data = {}) {
         backdropUrl: data.matchBackdropUrl ?? "",
         score: data.matchScore ?? "",
       };
-      writeSelectedMatch(itemId, selectedMatch);
-      const targetMediaType = item?.mediaType === "episode" ? "episode" : selectedMatch.mediaType;
+      const wrestlingArtworkOnly = item?.mediaType === "wrestling" && provider === "TMDB";
+      if (!wrestlingArtworkOnly) writeSelectedMatch(itemId, selectedMatch);
+      const targetMediaType = item?.mediaType === "wrestling" ? "wrestling" : item?.mediaType === "episode" ? "episode" : selectedMatch.mediaType;
+      state.metadataOverlay = {
+        ...state.metadataOverlay,
+        type: state.metadataOverlay?.type ?? "fix-match",
+        itemId,
+        loading: true,
+        notice: targetMediaType === "tv" ? "Loading programme, season, and episode metadata…" : "Loading matched metadata…",
+      };
+      mountMetadataOverlayPanel();
+      await waitForUiPaint();
       const response = await fetch("./api/metadata/hydrate-match", {
         method: "POST",
         headers: { "content-type": "application/json" },
@@ -4614,6 +5250,7 @@ async function handleMetadataCommand(command, itemId, data = {}) {
           showId: item?.showId,
           seasonNumber: item?.seasonNumber,
           episodeNumber: item?.episodeNumber,
+          seasonNumbers: targetMediaType === "tv" ? getAvailableTvSeasons(item).map((season) => season.seasonNumber) : [],
           identity: {
             title: item?.title ?? itemId,
             year: item?.year ?? item?.startYear ?? "",
@@ -4628,7 +5265,8 @@ async function handleMetadataCommand(command, itemId, data = {}) {
         ? await response.json()
         : { error: (await response.text()).trim() || `Server returned ${response.status}` };
       if (!response.ok) throw new Error(payload.error ?? `Metadata hydration failed: ${response.status}`);
-      mergeMetadataOverride(itemId, payload.override ?? { match: selectedMatch, metadata: payload.metadata });
+      const responseOverride = payload.override ?? (wrestlingArtworkOnly ? { artworkMatch: selectedMatch } : { match: selectedMatch });
+      mergeMetadataOverride(itemId, { ...responseOverride, ...(payload.metadata ? { metadata: payload.metadata } : {}) });
       const batchItemIds = [...new Set(state.metadataOverlay?.batchItemIds ?? [])].filter(Boolean);
       if (batchItemIds.length && targetMediaType === "tv") {
         const batchOverrides = Object.fromEntries(batchItemIds.map((batchItemId) => {
@@ -4659,16 +5297,11 @@ async function handleMetadataCommand(command, itemId, data = {}) {
       if (targetMediaType === "movie") movieDetailIndex[itemId] = { ...(movieDetailIndex[itemId] ?? {}), ...(payload.metadata ?? {}) };
       invalidateMediaCaches();
       showMetadataToast("success", "Match saved");
-      const overlayType = ["twdb-match", "batcave-metadata"].includes(state.metadataOverlay?.type) ? state.metadataOverlay.type : "fix-match";
-      state.metadataOverlay = {
-        ...(["fix-match", "twdb-match", "batcave-metadata"].includes(state.metadataOverlay?.type) ? state.metadataOverlay : {}),
-        type: overlayType,
-        itemId,
-        queryItemId: itemId,
-        notice: provider === "current" ? "Current match retained." : `Applied ${provider} metadata and refreshed this item.`,
-        batchItemIds: state.metadataOverlay?.batchItemIds,
-        seriesName: state.metadataOverlay?.seriesName,
-      };
+      state.metadataOverlay = null;
+      state.batcaveMetadataDraft = null;
+      mountMetadataOverlayPanel();
+      preservePageScrollForNextRender();
+      requestAnimationFrame(() => render());
     } catch (error) {
       showMetadataToast("error", "Match failed");
       const overlayType = ["twdb-match", "batcave-metadata"].includes(state.metadataOverlay?.type) ? state.metadataOverlay.type : "fix-match";
@@ -4678,6 +5311,7 @@ async function handleMetadataCommand(command, itemId, data = {}) {
         itemId,
         queryItemId: itemId,
         notice: `Match failed: ${error.message}`,
+        loading: false,
       };
     }
   } else if (command === "save-metadata-edit") {
@@ -4729,13 +5363,14 @@ async function handleMetadataCommand(command, itemId, data = {}) {
     }
   } else {
     const overlayType = command === "edit-metadata" ? "batcave-metadata" : command;
-    const item = getTitleItem(itemId);
+    const item = getMetadataWorkflowItem(itemId);
     if (overlayType === "batcave-metadata") {
       if (item) state.batcaveMetadataDraft = buildBatcaveMetadataDraft(item);
     }
     state.metadataOverlay = {
       type: overlayType,
       itemId,
+      itemSnapshot: item,
       ...(overlayType === "batcave-metadata" ? { allocatorPath: [] } : {}),
       ...(overlayType === "fix-match" ? {
         queryItemId: itemId,
@@ -4753,11 +5388,15 @@ async function handleMetadataCommand(command, itemId, data = {}) {
     };
   }
   state.metadataMenu = null;
+  if (state.metadataOverlay?.type === "fix-match") {
+    mountMetadataOverlayPanel();
+    return;
+  }
   render();
 }
 
 async function searchMetadataMatches(itemId, submittedQuery = null) {
-  const item = getTitleItem(itemId);
+  const item = getMetadataWorkflowItem(itemId);
   const title = submittedQuery?.title ?? document.querySelector("[data-match-title]")?.value?.trim() ?? item?.showTitle ?? item?.title ?? "";
   const year = submittedQuery?.year ?? document.querySelector("[data-match-year]")?.value?.trim() ?? item?.year ?? item?.startYear ?? "";
   const agent = submittedQuery?.agent ?? document.querySelector("[data-match-agent]")?.value ?? "TMDB";
@@ -4772,7 +5411,7 @@ async function searchMetadataMatches(itemId, submittedQuery = null) {
     if (year) url.searchParams.set("year", year);
     url.searchParams.set("language", language);
     url.searchParams.set("agent", agent);
-    url.searchParams.set("mediaType", state.metadataOverlay?.batchItemIds?.length || item?.mediaType === "tv" || item?.mediaType === "episode" ? "tv" : "movie");
+    url.searchParams.set("mediaType", item?.mediaType === "wrestling" ? "wrestling" : state.metadataOverlay?.batchItemIds?.length || item?.mediaType === "tv" || item?.mediaType === "episode" ? "tv" : "movie");
     const response = await fetch(`${url.pathname}${url.search}`, { cache: "no-store" });
     const contentType = response.headers.get("content-type") ?? "";
     const payload = contentType.includes("application/json")
@@ -4793,6 +5432,7 @@ function renderBatcave() {
     ["media", "Media"],
     ["wrestling", "Wrestling"],
     ["collections", "Collections"],
+    ["users", "Users"],
     ["scanner", "Scanner"],
   ];
   return `
@@ -4811,10 +5451,89 @@ function renderBatcave() {
       ${state.batcaveView === "media" ? renderBatcaveMedia(scannedMovies, unmatched) : ""}
       ${state.batcaveView === "wrestling" ? renderBatcaveWrestling() : ""}
       ${state.batcaveView === "collections" ? renderBatcaveCollectionEditors() : ""}
+      ${state.batcaveView === "users" ? renderBatcaveUsers() : ""}
       ${state.batcaveView === "scanner" ? renderBatcaveScanner(unmatched) : ""}
       ${state.batcaveView === "overview" ? renderBatcaveOverview(stats, scannedMovies, unmatched) : ""}
     </div>
   `;
+}
+
+function parseBatcaveUserList(value) {
+  return String(value ?? "").split(/\r?\n|,/).map((entry) => entry.trim()).filter(Boolean);
+}
+
+function formatBatcaveTime(seconds) {
+  const totalMinutes = Math.floor((Number(seconds) || 0) / 60);
+  if (totalMinutes < 60) return `${totalMinutes} min`;
+  return `${Math.floor(totalMinutes / 60)}h ${totalMinutes % 60}m`;
+}
+
+function renderBatcaveUsers() {
+  if (state.batcaveUsersLoading) return `<section class="batcave-panel"><h2>Users</h2><p class="muted">Loading account controls…</p></section>`;
+  const users = state.batcaveUsers?.users ?? [];
+  const selected = state.batcaveSelectedUserId === "__new" ? null : users.find((user) => user.id === state.batcaveSelectedUserId) ?? users[0] ?? null;
+  const localHistory = readLocalJson("tobytube.playHistory", []);
+  const localFavourites = readLocalJson("tobytube.favourites", []);
+  const localSeconds = getStoredResumeEntries().reduce((sum, entry) => sum + (Number(entry.seconds) || 0), 0);
+  return `
+    <section class="batcave-grid batcave-user-metrics">
+      ${renderBatcaveMetric("Accounts", users.length)}
+      ${renderBatcaveMetric("Enabled", users.filter((user) => user.enabled !== false).length)}
+      ${renderBatcaveMetric("Viewing Records", users.reduce((sum, user) => sum + (user.viewing?.records?.length ?? 0), 0) + localHistory.length)}
+      ${renderBatcaveMetric("Control-centre Time", formatBatcaveTime(localSeconds))}
+    </section>
+    <section class="batcave-panel">
+      <div class="batcave-panel-head"><div><h2>Users</h2><p class="muted">Profiles, permissions, and viewing analytics for streaming clients.</p></div><button class="play-button compact" type="button" data-batcave-new-user>New User</button></div>
+      <div class="batcave-users-layout">
+        <aside class="batcave-user-list">
+          ${users.map((user) => `<button type="button" data-batcave-user="${escapeHtml(user.id)}" class="${selected?.id === user.id ? "active" : ""}"><b>${escapeHtml(user.displayName)}</b><small>${escapeHtml(user.role)} · ${user.enabled === false ? "disabled" : "enabled"}</small></button>`).join("") || `<p class="muted">No streaming accounts yet.</p>`}
+        </aside>
+        ${renderBatcaveUserEditor(selected)}
+      </div>
+    </section>
+    <section class="batcave-panel">
+      <div class="batcave-panel-head"><div><h2>Control-centre Viewing</h2><p class="muted">Existing local records will become the owner profile's history when account authentication is enabled.</p></div><span class="muted">${localFavourites.length} favourites</span></div>
+      <div class="batcave-viewing-log">${localHistory.slice(0, 30).map((entry) => `<article><b>${escapeHtml(entry.title ?? entry.itemId)}</b><span>${escapeHtml(entry.mediaType ?? "media")} · ${escapeHtml(new Date(entry.watchedAt).toLocaleString())}</span></article>`).join("") || `<p class="muted">No local viewing records yet.</p>`}</div>
+    </section>`;
+}
+
+function renderBatcaveUserEditor(user) {
+  const draft = user ?? { id: "", displayName: "", role: "viewer", enabled: true, accessMode: "all-except-blocked", allowedCollections: [], blockedRatings: [], blockedItemIds: [], blockedFranchiseIds: [], blockedPathRules: [], notes: "", viewing: { records: [], favourites: [], totalSeconds: 0 } };
+  return `<form class="batcave-user-editor" data-batcave-user-form data-user-id="${escapeHtml(draft.id)}">
+    <h3>${user ? "Account Controls" : "Create Account"}</h3>
+    <div class="batcave-form-grid">
+      <label><span>Display name</span><input name="displayName" value="${escapeHtml(draft.displayName)}" required></label>
+      <label><span>Role</span><select name="role"><option value="viewer" ${draft.role !== "admin" ? "selected" : ""}>Viewer</option><option value="admin" ${draft.role === "admin" ? "selected" : ""}>Administrator</option></select></label>
+      <label><span>Account state</span><select name="enabled"><option value="true" ${draft.enabled !== false ? "selected" : ""}>Enabled</option><option value="false" ${draft.enabled === false ? "selected" : ""}>Disabled</option></select></label>
+      <label><span>Library policy</span><select name="accessMode"><option value="all-except-blocked" ${draft.accessMode !== "collections-only" ? "selected" : ""}>Everything except blocked</option><option value="collections-only" ${draft.accessMode === "collections-only" ? "selected" : ""}>Approved collections only</option></select></label>
+      <label class="wide"><span>Allowed collections (one per line)</span><textarea name="allowedCollections">${escapeHtml((draft.allowedCollections ?? []).join("\n"))}</textarea></label>
+      <label><span>Blocked ratings</span><textarea name="blockedRatings" placeholder="NC-17\nTV-MA">${escapeHtml((draft.blockedRatings ?? []).join("\n"))}</textarea></label>
+      <label><span>Blocked folders/path rules</span><textarea name="blockedPathRules" placeholder="X:\\ or folder label">${escapeHtml((draft.blockedPathRules ?? []).join("\n"))}</textarea></label>
+      <label><span>Blocked films/object IDs</span><textarea name="blockedItemIds">${escapeHtml((draft.blockedItemIds ?? []).join("\n"))}</textarea></label>
+      <label><span>Blocked franchises</span><textarea name="blockedFranchiseIds">${escapeHtml((draft.blockedFranchiseIds ?? []).join("\n"))}</textarea></label>
+      <label class="wide"><span>Notes</span><textarea name="notes">${escapeHtml(draft.notes ?? "")}</textarea></label>
+    </div>
+    <div class="batcave-user-summary"><span>${draft.viewing?.records?.length ?? 0} plays</span><span>${draft.viewing?.favourites?.length ?? 0} favourites</span><span>${formatBatcaveTime(draft.viewing?.totalSeconds)}</span><span>Last active: ${draft.lastActiveAt ? escapeHtml(new Date(draft.lastActiveAt).toLocaleString()) : "Never"}</span></div>
+    <div class="batcave-master-actions"><button type="submit">Save User</button></div>
+  </form>`;
+}
+
+async function loadBatcaveUsers() {
+  if (state.batcaveUsersLoading) return;
+  state.batcaveUsersLoading = true;
+  render();
+  try {
+    const response = await fetch("./api/users", { cache: "no-store" });
+    if (!response.ok) throw new Error(`Users could not be loaded (${response.status})`);
+    state.batcaveUsers = await response.json();
+    state.batcaveSelectedUserId ??= state.batcaveUsers.users?.[0]?.id ?? null;
+  } catch (error) {
+    state.metadataToast = error.message;
+    state.batcaveUsers = { version: 1, users: [] };
+  } finally {
+    state.batcaveUsersLoading = false;
+    render();
+  }
 }
 
 function renderBatcaveOverview(stats, scannedMovies, unmatched) {
@@ -5235,10 +5954,10 @@ function renderHomePage() {
   const resumeItems = getResumeLibraryItems();
   const currentRentals = dedupeShelfItems([
     ...getSessionTvRentals(),
-    ...resumeItems.filter((item) => item.resumeEntry?.kind !== "tv"),
+    ...resumeItems,
   ]);
   const mixedWatchlist = getMixtapeItems();
-  const mixedRecent = prioritizeItems(sortByDate([...movieItems, ...tvItems, ...getHomeWrestlingItems()]), ["curated-the-neverending-story-1984", "bobs-burgers"]);
+  const mixedRecent = sortByDate([...movieItems, ...tvItems, ...getHomeWrestlingItems()]);
 
   return `
     <div class="home-exhibit">
@@ -5257,7 +5976,7 @@ function renderHomePage() {
       )}
       ${renderPosterShelf(
         "New Releases",
-        mixedRecent.slice(0, 10),
+        mixedRecent.slice(0, 20),
         "item",
         renderMixedCard,
         null,
@@ -5306,23 +6025,18 @@ function renderHomePage() {
 
 function getHomeAisleCollections() {
   const aisleIds = ["action", "comedy", "documentary", "drama", "fantasy", "horror", "romance", "sci-fi", "sports", "western"];
+  const collectionMap = new Map(getCollectionNavigationCards().map((collection) => [collection.id, collection]));
   return aisleIds
-    .map((id) => {
-      const collection = getCuratedCollectionPage(id);
-      const saved = collectionOverrides.collections?.[id];
-      if (!collection || saved?.deleted) return null;
-      return { ...getCuratedCollectionCard(collection), ...(saved ?? {}) };
-    })
+    .map((id) => collectionMap.get(id) ?? null)
     .filter(Boolean)
     .sort((a, b) => a.title.localeCompare(b.title));
 }
 
 function getHomeRecentCollections() {
-  const aisleIds = new Set(getGroupedCollections().find((group) => group.title === "Aisles")?.collections.map((collection) => collection.id) ?? []);
-  return getVisibleCollections()
+  const aisleIds = new Set(["action", "comedy", "documentary", "drama", "fantasy", "horror", "romance", "sci-fi", "sports", "western"]);
+  return getCollectionNavigationCards()
     .filter((collection) => !aisleIds.has(collection.id))
-    .map((collection) => ({ ...collection, latestAddedAt: getCollectionLatestAddedAt(collection) }))
-    .sort((a, b) => String(b.latestAddedAt ?? "").localeCompare(String(a.latestAddedAt ?? "")) || a.title.localeCompare(b.title))
+    .sort((a, b) => String(b.updatedAt ?? b.latestAddedAt ?? "").localeCompare(String(a.updatedAt ?? a.latestAddedAt ?? "")) || a.title.localeCompare(b.title))
     .slice(0, 10);
 }
 
@@ -5348,8 +6062,8 @@ function renderHomeLandingHero() {
 function renderHomeMascotButtons() {
   const buttons = [
     ["hirry", "Hirry", "./assets/banners/home-hirry.png"],
-    ["rub", "Rub", "./assets/banners/home-rub.png"],
     ["tobe", "Tobe", "./assets/banners/home-tobe.png"],
+    ["rub", "Rub", "./assets/banners/home-rub.png"],
   ];
   return `
     <div class="home-mascot-grid" aria-label="Featured moods">
@@ -5463,7 +6177,7 @@ function renderMoviesHome() {
       <div class="shelf-stack movie-shelves">
         ${renderPosterShelf(
           "New Releases",
-          sortByDate(filtered).slice(0, 10),
+          sortByDate(filtered).slice(0, 20),
           "movie",
           renderLibraryCard,
           null,
@@ -5606,8 +6320,15 @@ function renderMovieCollectionsPage() {
 function renderTvHome() {
   const tvItems = getTvLibraryItems();
   const filtered = filterLibraryItems(tvItems);
+  const tvCollections = getTvCollections();
   const resumeItems = getResumeLibraryItems("tv");
-  const currentRentals = getSessionTvRentals();
+  const sessionRentals = getSessionTvRentals();
+  const currentRentals = [...resumeItems, ...sessionRentals]
+    .filter((item, index, items) => {
+      const canonicalId = tvCanonicalIdByAlias.get(item.id) ?? item.id;
+      return items.findIndex((candidate) => (tvCanonicalIdByAlias.get(candidate.id) ?? candidate.id) === canonicalId) === index;
+    })
+    .sort((a, b) => String(b.resumeEntry?.updatedAt ?? b.lastPlayedAt ?? "").localeCompare(String(a.resumeEntry?.updatedAt ?? a.lastPlayedAt ?? "")));
 
   if (state.subView === "guide") return renderTvGuidePage();
   if (state.subView === "library") return renderAlphabeticalLibraryPage("TV Library", filtered, renderTvCard);
@@ -5631,22 +6352,22 @@ function renderTvHome() {
         )}
         ${renderPosterShelf(
           "New Releases",
-          sortByDate(filtered).slice(0, 10),
+          sortByDate(filtered).slice(0, 20),
           "show",
           renderTvCard,
           null,
           renderSeeAllSubViewCard("recent"),
           { subview: "recent" },
         )}
-        ${renderPosterShelf(
+        ${tvCollections.length ? renderPosterShelf(
           "Collections",
-          getTvCollections().slice(0, 10),
+          tvCollections.slice(0, 10),
           "collection",
           renderCollectionShelfCard,
           null,
           renderSeeAllSubViewCard("collections"),
           { subview: "collections" },
-        )}
+        ) : ""}
         ${renderPosterShelf(
           "Mixtape",
           getTvPlaylistItems().slice(0, 10),
@@ -5785,28 +6506,36 @@ function renderTvGuideBlock(entry, channel) {
 }
 
 function buildTvGuideChannels() {
-  return tvGuideChannels.map((channel, channelIndex) => ({
-    ...channel,
-    entries: buildTvGuideEntries(channel, channelIndex),
-  }));
+  return tvGuideChannels
+    .map((channel, channelIndex) => ({
+      ...channel,
+      entries: buildTvGuideEntries(channel, channelIndex),
+    }))
+    .filter((channel) => channel.entries.length > 0);
 }
 
 function buildTvGuideEntries(channel, channelIndex) {
+  const liveShows = getTvLibraryItems().filter(hasPlayableMediaFiles);
+  const liveMovies = getMovieLibraryItems().filter(hasPlayableMediaFiles);
   const assigned = getTvGuideAssignedItems(channel).map((item, index) => item.mediaType === "movie"
     ? tvGuideMovieEntry(item, channel, index)
     : tvGuideShowEntry(item.title, channel, index, item));
   let programmed = [];
-  if (channel.mode === "recent") programmed = sortByDate(getAllTvTitleItems()).slice(0, 6).map((show, index) => tvGuideShowEntry(show.title, channel, index));
-  else if (channel.mode === "movies") programmed = movies.slice(0, 6).map((movie, index) => tvGuideMovieEntry(movie, channel, index));
-  else if (channel.mode === "collections") programmed = getTvCollections().slice(0, 6).map((collection, index) => tvGuideCollectionEntry(collection, channel, index));
-  else if (channel.mode === "library") programmed = [{ id: "tv-guide-library", title: "Full TV Library", subtitle: `${getAllTvTitleItems().length} shows`, span: 4, summary: "Every TV show presently known to Tobytube.", collectionId: null, targetId: null, artUrl: "./assets/banners/tv-guide-hero.png", relatedCollections: [] }];
-  else if (channel.mode === "random-shows") programmed = seededPick(getAllTvTitleItems(), 5, channelIndex).map((show, index) => tvGuideShowEntry(show.title, channel, index));
+  if (channel.mode === "recent") programmed = sortByDate(liveShows).slice(0, 6).map((show, index) => tvGuideShowEntry(show.title, channel, index, show));
+  else if (channel.mode === "movies") programmed = liveMovies.slice(0, 6).map((movie, index) => tvGuideMovieEntry(movie, channel, index));
+  else if (channel.mode === "collections") {
+    const collectionIds = new Set(getTvCollections().flatMap((collection) => collection.itemIds ?? []));
+    programmed = liveShows.filter((show) => collectionIds.has(show.id)).slice(0, 6).map((show, index) => tvGuideShowEntry(show.title, channel, index, show));
+  } else if (channel.mode === "library") programmed = seededPick(liveShows, 6, channelIndex).map((show, index) => tvGuideShowEntry(show.title, channel, index, show));
+  else if (channel.mode === "random-shows") programmed = seededPick(liveShows, 5, channelIndex).map((show, index) => tvGuideShowEntry(show.title, channel, index, show));
   else programmed = (channel.shows ?? []).map((title, index) => tvGuideShowEntry(title, channel, index));
-  return [...assigned, ...programmed].filter((entry, index, all) => all.findIndex((candidate) => (candidate.targetId && candidate.targetId === entry.targetId) || (!candidate.targetId && normalizeTitleForMatch(candidate.title) === normalizeTitleForMatch(entry.title))) === index);
+  return [...assigned, ...programmed]
+    .filter(Boolean)
+    .filter((entry, index, all) => all.findIndex((candidate) => candidate.targetId === entry.targetId) === index);
 }
 
 function getTvGuideAssignedItems(channel) {
-  return [...getAllTvTitleItems(), ...getMovieLibraryItems()].filter((item) => {
+  return [...getTvLibraryItems(), ...getMovieLibraryItems()].filter(hasPlayableMediaFiles).filter((item) => {
     const overrideChannels = getItemMetadataOverride(item.id).tvGuideChannelIds ?? [];
     return overrideChannels.includes(channel.number) || getFolderTvGuideChannelIds(item).includes(channel.number);
   });
@@ -5814,6 +6543,7 @@ function getTvGuideAssignedItems(channel) {
 
 function tvGuideShowEntry(title, channel, index = 0, knownShow = null) {
   const show = knownShow ?? findTvGuideShow(title);
+  if (!show || !hasPlayableMediaFiles(show)) return null;
   const details = show ? getTvDetails(show) : null;
   const seasons = details?.seasons ?? [];
   const episodeCount = countTvGuideEpisodes(details);
@@ -5881,7 +6611,7 @@ function findTvGuideShow(title) {
     .replace(/\bclassic\b/g, "")
     .replace(/\b2005 present\b/g, "")
     .trim();
-  return getAllTvTitleItems().find((show) => normalizeTitleForMatch(show.title) === normalized || normalizeTitleForMatch(show.title).includes(normalized));
+  return getTvLibraryItems().filter(hasPlayableMediaFiles).find((show) => normalizeTitleForMatch(show.title) === normalized || normalizeTitleForMatch(show.title).includes(normalized));
 }
 
 function normalizeTitleForMatch(value = "") {
@@ -6103,7 +6833,7 @@ function renderCriterionCollectionPage() {
   const data = getCriterionCollectionData();
   if (!data?.collection) return `<div class="empty">The Criterion Collection is still loading.</div>`;
   if (state.selectedCriterionEclipseId) return renderCriterionEclipseSetPage(state.selectedCriterionEclipseId);
-  if (state.selectedCriterionSubCollectionId) return renderCriterionSubCollectionPage(state.selectedCriterionSubCollectionId);
+  if (state.selectedCriterionSubCollectionId) return renderCriterionSubCollectionPage(state.selectedCriterionSubCollectionId, data);
 
   const view = state.selectedCriterionView ?? "home";
   if (view === "archive") return renderCriterionArchivePage(data);
@@ -6112,17 +6842,18 @@ function renderCriterionCollectionPage() {
   return renderCriterionLandingPage(data);
 }
 
-function getCriterionCollectionData() {
+function getCriterionCollectionData(options = {}) {
   const data = criterionCollectionIndex;
   if (!data?.collection) return data;
+  const cacheKey = `${getMetadataCacheKey()}:${options.includeEmpty ? "all" : "visible"}`;
+  if (getCriterionCollectionData.cache?.has(cacheKey)) return getCriterionCollectionData.cache.get(cacheKey);
   const generated = getGeneratedCriterionSubCollections();
-  if (!generated.subCollections.length) return data;
   const subCollectionMap = new Map(
     (data.subCollections ?? []).map((collection) => [
       collection.id,
       {
         ...collection,
-        buttonImage: collection.buttonImage ?? getCriterionBoxedSetButtonImage(collection.title),
+        buttonImage: getCriterionSubCollectionButtonImage(collection) ?? collection.buttonImage,
       },
     ]),
   );
@@ -6136,6 +6867,8 @@ function getCriterionCollectionData() {
       subCollectionMap.set(existingId, {
         ...existing,
         itemIds: [...new Set([...(existing.itemIds ?? []), ...(collection.itemIds ?? [])])],
+        items: mergeCriterionSubCollectionItems(existing.items, collection.items),
+        sections: mergeCriterionSubCollectionSections(existing.sections, collection.sections),
         buttonImage: existing.buttonImage ?? collection.buttonImage ?? null,
         curatedSource: existing.curatedSource ?? collection.curatedSource ?? null,
       });
@@ -6153,11 +6886,46 @@ function getCriterionCollectionData() {
     group.collectionIds.forEach((id) => ids.add(generatedCollectionIdAliases.get(id) ?? id));
     groupMap.set(group.id, { ...existing, title: existing.title ?? group.title, collectionIds: [...ids] });
   });
-  return {
+  const mergedSubCollections = [...subCollectionMap.values()];
+  const visibleSubCollections = state.libraryMode === "media" && !options.includeEmpty
+    ? mergedSubCollections.filter((collection) => getCriterionLiveSubCollectionItems(collection).length > 0)
+    : mergedSubCollections;
+  const visibleIds = new Set(visibleSubCollections.map((collection) => collection.id));
+  const filterLiveSets = state.libraryMode === "media" && !options.includeEmpty;
+  const getVisibleSets = (sets) => filterLiveSets
+    ? (sets ?? []).map(hydrateCriterionLiveSet).filter((set) => set.films.length > 0)
+    : (sets ?? []);
+  const result = {
     ...data,
-    subCollections: [...subCollectionMap.values()],
-    collectionGroups: [...groupMap.values()],
+    subCollections: visibleSubCollections,
+    eclipseSets: getVisibleSets(data.eclipseSets),
+    worldCinemaProjectSets: getVisibleSets(data.worldCinemaProjectSets),
+    collectionGroups: [...groupMap.values()]
+      .map((group) => ({ ...group, collectionIds: (group.collectionIds ?? []).filter((id) => visibleIds.has(id)) }))
+      .filter((group) => group.collectionIds.length),
   };
+  if (!getCriterionCollectionData.cache) getCriterionCollectionData.cache = new Map();
+  getCriterionCollectionData.cache.set(cacheKey, result);
+  return result;
+}
+
+function mergeCriterionSubCollectionItems(left = [], right = []) {
+  return [...new Map([...left, ...right].map((item) => [`${slugify(item.title)}-${item.year ?? "tba"}`, item])).values()];
+}
+
+function mergeCriterionSubCollectionSections(left = [], right = []) {
+  const sections = new Map();
+  [...left, ...right].forEach((section) => {
+    const existing = sections.get(section.id);
+    sections.set(section.id, existing
+      ? {
+          ...existing,
+          itemIds: [...new Set([...(existing.itemIds ?? []), ...(section.itemIds ?? [])])],
+          items: mergeCriterionSubCollectionItems(existing.items, section.items),
+        }
+      : { ...section, itemIds: [...(section.itemIds ?? [])], items: [...(section.items ?? [])] });
+  });
+  return [...sections.values()];
 }
 
 function getGeneratedCriterionSubCollections() {
@@ -6170,12 +6938,47 @@ function getGeneratedCriterionSubCollections() {
   const subCollections = [];
   const groups = [];
   bucketSpecs.forEach(([bucket, groupId, groupTitle, posterA, posterB]) => {
-    const bucketCollections = curatedManifestIndex?.criterion?.[bucket] ?? [];
-    const mapped = bucketCollections.map((collection) => ({
-      id: collection.id,
-      title: collection.title,
+    const noirOnlyTitles = new Set(["noir by gaslight", "noir and the blacklist"]);
+    const movementOnlyTitles = new Set(["french new wave", "italian neorealism"]);
+    const channelCollections = curatedManifestIndex?.criterion?.officialChannelCollections ?? [];
+    const noirCarouselTitles = new Set([
+      ...(curatedManifestIndex?.criterion?.noir ?? []).map((collection) => slugify(collection.title).replace(/-/g, " ")),
+      ...noirOnlyTitles,
+    ]);
+    let bucketCollections = curatedManifestIndex?.criterion?.[bucket] ?? [];
+    if (bucket === "noir") {
+      bucketCollections = [
+        ...bucketCollections,
+        ...channelCollections.filter((collection) => noirOnlyTitles.has(slugify(collection.title).replace(/-/g, " "))),
+      ];
+    }
+    if (bucket === "officialChannelCollections") {
+      bucketCollections = bucketCollections.filter((collection) => {
+        const normalizedTitle = slugify(collection.title).replace(/-/g, " ");
+        return !noirCarouselTitles.has(normalizedTitle) && !movementOnlyTitles.has(normalizedTitle);
+      });
+    }
+    const mapped = bucketCollections.filter((collection) => !isCriterionParserDebris(collection.title)).map((collection) => {
+      const title = bucket === "directorShowcase"
+        ? getCriterionDirectorTitle(collection.title)
+        : canonicalCriterionCollectionTitle(collection.title);
+      const id = bucket === "directorShowcase"
+        ? `criterion-director-showcase-${slugify(title)}`
+        : bucket === "boxedSets" && slugify(title) === "abbas-kiarostami-s-koker-trilogy"
+          ? `criterion-boxed-sets-${slugify(title)}`
+          : collection.id;
+      return {
+      id,
+      title,
       description: `${collection.items?.length ?? 0} curated title${(collection.items?.length ?? 0) === 1 ? "" : "s"} from ${groupTitle}.`,
       itemIds: (collection.items ?? []).map((item) => item.id),
+      items: collection.items ?? [],
+      sections: (collection.sections ?? []).map((section) => ({
+        id: section.id,
+        title: section.title,
+        itemIds: (section.items ?? []).map((item) => item.id),
+        items: section.items ?? [],
+      })),
       posterA,
       posterB,
       category: groupTitle,
@@ -6184,13 +6987,165 @@ function getGeneratedCriterionSubCollections() {
           ? getCriterionNoirButtonImage(collection.title)
           : bucket === "boxedSets"
             ? getCriterionBoxedSetButtonImage(collection.title)
-            : null,
+            : bucket === "directorShowcase"
+              ? getCriterionDirectorShowcaseButtonImage(title)
+            : bucket === "officialChannelCollections"
+              ? getCriterionChannelCollectionButtonImage(collection.title)
+              : null,
       curatedSource: collection.source ?? null,
-    }));
+    };
+    });
     subCollections.push(...mapped);
     groups.push({ id: groupId, title: groupTitle, collectionIds: mapped.map((collection) => collection.id) });
   });
-  return { subCollections, groups };
+  const folderGenerated = getCriterionFolderSubCollections();
+  const userGenerated = getUserCriterionSubCollections();
+  const collectionMap = new Map(subCollections.map((collection) => [collection.id, collection]));
+  [...folderGenerated.subCollections, ...userGenerated].forEach((collection) => {
+    const existing = collectionMap.get(collection.id);
+    collectionMap.set(collection.id, existing
+      ? {
+          ...existing,
+          ...collection,
+          itemIds: [...new Set([...(existing.itemIds ?? []), ...(collection.itemIds ?? [])])],
+          items: mergeCriterionSubCollectionItems(existing.items, collection.items),
+          sections: mergeCriterionSubCollectionSections(existing.sections, collection.sections),
+          buttonImage: collection.buttonImage ?? existing.buttonImage ?? null,
+        }
+      : collection);
+  });
+  const groupMap = new Map(groups.map((group) => [group.id, { ...group, collectionIds: [...group.collectionIds] }]));
+  [...folderGenerated.groups, ...criterionGroupsForUserSubCollections(userGenerated)].forEach((group) => {
+    const existing = groupMap.get(group.id) ?? { id: group.id, title: group.title, collectionIds: [] };
+    groupMap.set(group.id, { ...existing, collectionIds: [...new Set([...(existing.collectionIds ?? []), ...(group.collectionIds ?? [])])] });
+  });
+  return { subCollections: [...collectionMap.values()], groups: [...groupMap.values()] };
+}
+
+function getCriterionDirectorTitle(title) {
+  return String(title ?? "").replace(/\s*\(.*\)\s*$/, "").trim();
+}
+
+function canonicalCriterionCollectionTitle(title) {
+  const aliases = {
+    "before-trilogy": "The Before Trilogy",
+    "the-before-trilogy": "The Before Trilogy",
+    "six-moral-tales": "Eric Rohmer's Six Moral Tales",
+    "eric-rohmer-s-six-moral-tales": "Eric Rohmer's Six Moral Tales",
+    "europe-trilogy": "Lars von Trier's Europa Trilogy",
+    "europa-trilogy": "Lars von Trier's Europa Trilogy",
+    "lars-von-trier-s-europe-trilogy": "Lars von Trier's Europa Trilogy",
+    "lars-von-trier-s-europa-trilogy": "Lars von Trier's Europa Trilogy",
+    "koker-trilogy": "Abbas Kiarostami's Koker Trilogy",
+    "abbas-kiarostami-s-koker-trilogy": "Abbas Kiarostami's Koker Trilogy",
+  };
+  return aliases[slugify(title)] ?? title;
+}
+
+function isCriterionParserDebris(title) {
+  return [
+    "the criterion collection changed over time but commonly included",
+    "screenwriting creative collaborations featured",
+  ].includes(slugify(title).replace(/-/g, " "));
+}
+
+function getCriterionFolderSubCollections() {
+  const cacheKey = getMetadataCacheKey();
+  if (getCriterionFolderSubCollections.cache?.key === cacheKey) return getCriterionFolderSubCollections.cache.value;
+  const collectionMap = new Map();
+  const movieById = new Map();
+  getMovieLibraryItems().forEach((item) => {
+    movieById.set(item.id, item);
+    (item.duplicateItemIds ?? []).forEach((id) => movieById.set(id, item));
+  });
+  const addFile = (file, item) => {
+    const info = getCriterionFolderPathInfo(file?.path);
+    if (!info || !item) return;
+    const existing = collectionMap.get(info.id) ?? {
+      id: info.id,
+      title: info.title,
+      description: `Live titles from ${info.title}.`,
+      category: info.category,
+      templateType: info.templateType,
+      itemIds: [],
+      posterA: "#171410",
+      posterB: info.templateType === "criterion-channel" ? "#b47ad4" : "#c5a46a",
+      buttonImage: getCriterionSubCollectionButtonImage(info),
+      folderDriven: true,
+    };
+    existing.itemIds = [...new Set([...existing.itemIds, item.id])];
+    collectionMap.set(info.id, existing);
+  };
+  (generatedMetadata.records ?? []).forEach((record) => {
+    if (record.mediaType !== "movie") return;
+    (record.files ?? []).forEach((file) => addFile(file, movieById.get(record.id) ?? scannedMovieFromRecord(record, file)));
+  });
+  (generatedMetadata.unmatchedFiles ?? []).forEach((file) => {
+    if (file.parsed?.mediaType !== "movie" || isLikelyBonusFeature(file)) return;
+    addFile(file, scannedMovieFromFile(file));
+  });
+  const subCollections = [...collectionMap.values()];
+  const groupMap = new Map();
+  subCollections.forEach((collection) => {
+    const spec = criterionCategorySpec(collection.category);
+    const group = groupMap.get(spec.groupId) ?? { id: spec.groupId, title: spec.category, collectionIds: [] };
+    group.collectionIds.push(collection.id);
+    groupMap.set(spec.groupId, group);
+  });
+  const value = { subCollections, groups: [...groupMap.values()] };
+  getCriterionFolderSubCollections.cache = { key: cacheKey, value };
+  return value;
+}
+
+function getCriterionFolderPathInfo(filePath) {
+  const parts = String(filePath ?? "").split(/[\\/]+/).filter(Boolean);
+  const criterionIndex = parts.findIndex((part) => slugify(part) === "criterion");
+  if (criterionIndex < 0 || slugify(parts[criterionIndex + 1] ?? "") !== "collections") return null;
+  let rawCategory = parts[criterionIndex + 2] ?? "";
+  let title = parts[criterionIndex + 3] ?? "";
+  if (!title) return null;
+  if (["noir-by-gaslight", "noir-and-the-blacklist", "november-noir", "noirvember", "noirvember-essentials"].includes(slugify(title))) {
+    rawCategory = "Noir Collections";
+  }
+  const rawCategorySlug = slugify(rawCategory);
+  if (
+    ["martin-scorcese-s-world-cinema-project", "martin-scorsese-s-world-cinema-project"].includes(rawCategorySlug)
+    && /^world-cinema-project-no-\d+$/.test(slugify(title))
+  ) {
+    return null;
+  }
+  if (/essential\s+fellini/i.test(title)) {
+    title = "Federico Fellini";
+    rawCategory = "Director Showcase";
+  }
+  title = canonicalCriterionCollectionTitle(title);
+  const spec = criterionCategorySpec(rawCategory);
+  return {
+    id: `criterion-${spec.groupId}-${slugify(title)}`,
+    title,
+    category: spec.category,
+    templateType: spec.templateType,
+  };
+}
+
+function criterionCategorySpec(rawCategory = "") {
+  const normalized = slugify(rawCategory);
+  if (normalized.includes("director")) return { groupId: "director-showcase", category: "Director Showcase", templateType: "criterion-boxed-set" };
+  if (normalized.includes("channel")) return { groupId: "criterion-channel", category: "Criterion Channel Collections", templateType: "criterion-channel" };
+  if (normalized.includes("noir")) return { groupId: "noir", category: "Noir Collections", templateType: "criterion-channel" };
+  if (normalized.includes("movement")) return { groupId: "movements", category: "Movements", templateType: "criterion-channel" };
+  return { groupId: "boxed-sets", category: "Boxed Sets", templateType: "criterion-boxed-set" };
+}
+
+function criterionGroupsForUserSubCollections(collections) {
+  const byGroup = new Map();
+  collections.forEach((collection) => {
+    const spec = criterionCategorySpec(collection.category);
+    const group = byGroup.get(spec.groupId) ?? { id: spec.groupId, title: spec.category, collectionIds: [] };
+    group.collectionIds.push(collection.id);
+    byGroup.set(spec.groupId, group);
+  });
+  return [...byGroup.values()];
 }
 
 function getCriterionNoirButtonImage(title) {
@@ -6206,7 +7161,11 @@ function getCriterionNoirButtonImage(title) {
     "japanese noir": "japanese-noir-button-png.png",
     "neo noir": "neo-noir-png.png",
     "noir westerns": "noir-westens-button-png.png",
-    "noirvember essentials": "noirvember-essentials-png.png",
+    "noir by gaslight": "noir-by-gaslight-button-v2-display.webp",
+    "noir and the blacklist": "noir-and-the-blacklist-button-v2-display.webp",
+    noirvember: "november-noir-button-v4-display.jpg",
+    "november noir": "november-noir-button-v4-display.jpg",
+    "noirvember essentials": "november-noir-button-v4-display.jpg",
     "nordic noir": "nordic-noir-png.png",
     "political noir": "political-noir-button-png.png",
     "queer noir": "queer-noir-button-png.png",
@@ -6216,20 +7175,122 @@ function getCriterionNoirButtonImage(title) {
   return buttonMap[key] ? `./assets/collections/criterion/noir-buttons/${buttonMap[key]}` : null;
 }
 
+function getCriterionSubCollectionButtonImage(collection) {
+  if (slugify(collection.category).includes("director")) return getCriterionDirectorShowcaseButtonImage(collection.title);
+  if (slugify(collection.category).includes("noir")) return getCriterionNoirButtonImage(collection.title);
+  const templateType = collection.templateType ?? criterionCategorySpec(collection.category).templateType;
+  return templateType === "criterion-channel"
+    ? getCriterionChannelCollectionButtonImage(collection.title)
+    : getCriterionBoxedSetButtonImage(collection.title);
+}
+
+function getCriterionDirectorShowcaseButtonImage(title) {
+  const buttonMap = {
+    "agnes varda": "agnes-varda-square-button-display.webp",
+    "akira kurosawa": "akira-kurosawa-square-button-display.webp",
+    "alfred hitchcock": "alfred-hitchcock-square-button-display.webp",
+    "andrei tarkovsky": "andrei-tarkovsky-square-button-display.webp",
+    "chantal akerman": "chantal-akerman-square-button-display.webp",
+    "david cronenberg": "david-cronenberg-square-button-display.webp",
+    "david lynch": "david-lynch-square-button-display.webp",
+    "federico fellini": "federico-fellini-square-button-display.webp",
+    "hiroshi inagaki": "hiroshi-inagaki-square-button-display.webp",
+    "john cassavetes": "john-cassavetes-square-button-display.webp",
+    "hiroshi teshigahara": "hiroshi-teshigahara-square-button-display.webp",
+    "ingmar bergman": "ingmar-bergman-square-button-display.webp",
+    "jean luc godard": "jean-luc-godard-square-button-display.webp",
+    "kathryn bigelow": "kathryn-bigelow-square-button-display.webp",
+    "krzysztof kieslowski": "krzysztof-kieslowski-square-button-display.webp",
+    "krzysztof kie lowski": "krzysztof-kieslowski-square-button-display.webp",
+    "wong kar wai": "wong-kar-wai-square-button-display.webp",
+    "jane campion": "jane-campion-square-button-display.webp",
+    "kelly reichardt": "kelly-reichardt-square-button-display.webp",
+    "deepa mehta": "deepa-mehta-square-button-display.webp",
+    "eric rohmer": "eric-rohmer-square-button-display.webp",
+    "lana lilly wachowski": "lana-lilly-wachowski-square-button-display.webp",
+    "larisa shepitko": "larisa-shepitko-square-button-display.webp",
+    "mikio naruse": "mikio-naruse-square-button-display.webp",
+    "roberto rossellini": "roberto-rossellini-square-button-display.webp",
+    "terry gilliam": "terry-gilliam-square-button-display.webp",
+    "wes anderson": "wes-anderson-square-button-display.webp",
+    "wim wenders": "wim-wenders-square-button-display.webp",
+    "yasujiro ozu": "yasujiro-ozu-square-button-display.webp",
+  };
+  const key = slugify(title).replace(/-/g, " ");
+  return buttonMap[key] ? `./assets/collections/criterion/director-showcase/${buttonMap[key]}` : null;
+}
+
+function getCriterionChannelCollectionButtonImage(title) {
+  const buttonMap = {
+    "70s sci fi": "70s-sci-fi-button-display.webp",
+    "afrofuturism": "afrofuturism-button-display.webp",
+    "american independents": "american-independents-button-display.webp",
+    "art house horror": "art-house-horror-button-display.webp",
+    "cat movies": "cat-movies-button-display.webp",
+    "french poetic realism": "french-poetic-realism-button-display.webp",
+    giallo: "giallo-button-display-v1.jpg",
+    "german expressionism": "german-expressionism-button-display.webp",
+    "indie america": "indie-america-button-display.webp",
+    "independent women": "independent-women-button-display.webp",
+    "kenji misumi s sword trilogy": "kenji-misumi-sword-trilogy-button-display.webp",
+    "lgbtq favorites": "lgbtq-favorites-button-display.webp",
+    "mikio naruse collection": "mikio-naruse-collection-button-display.webp",
+    "mosfilm collection": "mosfilm-collection-button-display.webp",
+    "new hollywood": "new-hollywood-button-display.webp",
+    "new american cinema": "new-american-cinema-button-display.webp",
+    "postwar japanese cinema": "postwar-japanese-cinema-button-display.webp",
+    "postapocalyptic sci fi": "postapocalyptic-sci-fi-button-display.webp",
+    "shadows and nightmares": "shadows-and-nightmares-button-display.webp",
+    "soviet cinema": "soviet-cinema-button-display.webp",
+    "starring bob hoskins": "starring-bob-hoskins-button-display.webp",
+    "synth soundtracks": "synth-soundtracks-button-display.webp",
+    "vhs forever": "vhs-forever-button-display.webp",
+    "weimar cinema": "weimar-cinema-button-display.webp",
+    noirvember: "november-noir-button-display.webp",
+    "november noir": "november-noir-button-display.webp",
+  };
+  const key = slugify(title).replace(/-/g, " ");
+  return buttonMap[key] ? `./assets/collections/criterion/channel-collections/${buttonMap[key]}` : null;
+}
+
 function getCriterionBoxedSetButtonImage(title) {
   const buttonMap = {
     "the before trilogy": "before-trilogy-button.png",
     "before trilogy": "before-trilogy-button.png",
+    "antonioni s alienation trilogy": "antonioni-alienation-trilogy-button-display.webp",
+    "alienation trilogy": "antonioni-alienation-trilogy-button-display.webp",
     "ak 100 the works of akira kurosawa": "ak-100-button.png",
     "gregg araki s teen apocalypse trilogy": "gregg-araki-teen-apocalypse-button.png",
     "gregg araki s teen apocalypse": "gregg-araki-teen-apocalypse-button.png",
+    "lars von trier s europe trilogy": "lars-von-trier-europe-trilogy-button-display.webp",
+    "lars von trier s europa trilogy": "lars-von-trier-europe-trilogy-button-display.webp",
+    "europe trilogy": "lars-von-trier-europe-trilogy-button-display.webp",
+    "europa trilogy": "lars-von-trier-europe-trilogy-button-display.webp",
+    "lars von trier s depression trilogy": "lars-von-trier-depression-trilogy-button-display.webp",
+    "depression trilogy": "lars-von-trier-depression-trilogy-button-display.webp",
+    "roberto rossellini s war trilogy": "roberto-rossellini-war-trilogy-button-display.webp",
+    "rossellini s war trilogy": "roberto-rossellini-war-trilogy-button-display.webp",
+    "eric rohmer s six moral tales": "eric-rohmer-six-moral-tales-button-display.webp",
+    "six moral tales": "eric-rohmer-six-moral-tales-button-display.webp",
+    "eric rohmer s comedies et proverbs": "eric-rohmer-comedies-et-proverbes-button-display.webp",
+    "eric rohmer s comedies et proverbes": "eric-rohmer-comedies-et-proverbes-button-display.webp",
+    "comedies et proverbs": "eric-rohmer-comedies-et-proverbes-button-display.webp",
+    "comedies et proverbes": "eric-rohmer-comedies-et-proverbes-button-display.webp",
     "lone wolf and cub": "lone-wolf-and-cub-button.png",
+    "koker trilogy": "koker-trilogy-button-v2.jpg",
+    "abbas kiarostami s koker trilogy": "koker-trilogy-button-v2.jpg",
     "the apu trilogy": "apu-trilogy-button.png",
     "apu trilogy": "apu-trilogy-button.png",
     zatoichi: "zatoichi-button.png",
     cc40: "cc40-button.png",
     "bergman cinema": "bergman-cinema-button.png",
     "ingmar bergman s cinema": "bergman-cinema-button.png",
+    "eric rohmer s tales of the four seasons": "eric-rohmer-tales-of-the-four-seasons-button.png",
+    "john singleton s hood trilogy": "john-singleton-hood-trilogy-button-display.webp",
+    "samurai trilogy": "hiroshi-inagaki-samurai-trilogy-button-display.webp",
+    "hiroshi inagaki s samurai trilogy": "hiroshi-inagaki-samurai-trilogy-button-display.webp",
+    "bruce lee his greatest hits": "bruce-lee-greatest-hits-button-display.webp",
+    "martin scorsese s world cinema project": "../world-cinema-project-button-v2-display.webp",
   };
   const key = slugify(title).replace(/-/g, " ");
   return buttonMap[key] ? `./assets/collections/criterion/boxed-sets/${buttonMap[key]}` : null;
@@ -6264,7 +7325,7 @@ function renderCriterionHero(image, title, subtitle, options = {}) {
         options.showTitle
           ? `<div class="criterion-hero-title">
               <h1>${escapeHtml(title)}</h1>
-              <p>${escapeHtml(subtitle)}</p>
+              ${subtitle ? `<p>${escapeHtml(subtitle)}</p>` : ""}
             </div>`
           : ""
       }
@@ -6425,14 +7486,10 @@ function renderCriterionEclipseShelf(sets) {
 
 function renderCriterionSubCollectionCard(collection) {
   const artwork = collection.buttonImage
-    ? `<img class="criterion-subcollection-image" src="${escapeHtml(collection.buttonImage)}" alt="" loading="lazy" />`
+    ? `<img class="criterion-subcollection-image" src="${escapeHtml(collection.buttonImage)}" alt="" loading="lazy" decoding="async" fetchpriority="low" />`
     : `<div class="collection-pile">${collection.itemIds.map(getCriterionDetailItem).filter(Boolean).slice(0, 4).map((item) => renderPosterBlock(item, "mini-poster")).join("")}</div>`;
-  const canonicalId = getCanonicalCriterionProfileId(collection.id);
-  const dataAttribute = canonicalId
-    ? `data-collection-id="${escapeHtml(canonicalId)}"`
-    : `data-criterion-subcollection-id="${escapeHtml(collection.id)}"`;
   return `
-    <article class="collection-card criterion-subcollection-card" style="--poster-a:${collection.posterA};--poster-b:${collection.posterB}" ${dataAttribute} tabindex="0">
+    <article class="collection-card criterion-subcollection-card" style="--poster-a:${collection.posterA};--poster-b:${collection.posterB}" data-criterion-subcollection-id="${escapeHtml(collection.id)}" tabindex="0">
       ${artwork}
       <div class="card-body">
         <div class="card-title">${escapeHtml(collection.title)}</div>
@@ -6444,58 +7501,245 @@ function renderCriterionSubCollectionCard(collection) {
 
 function renderCriterionSubCollectionShelfCard(collection) {
   const artwork = collection.buttonImage
-    ? `<img class="criterion-subcollection-image" src="${escapeHtml(collection.buttonImage)}" alt="" loading="lazy" />`
+    ? `<img class="criterion-subcollection-image" src="${escapeHtml(collection.buttonImage)}" alt="" loading="lazy" decoding="async" fetchpriority="low" />`
     : `<div class="collection-shelf-art">${collection.itemIds.map(getCriterionDetailItem).filter(Boolean).slice(0, 3).map((item) => renderPosterBlock(item, "mini-poster")).join("")}</div>`;
-  const canonicalId = getCanonicalCriterionProfileId(collection.id);
-  const dataAttribute = canonicalId
-    ? `data-collection-id="${escapeHtml(canonicalId)}"`
-    : `data-criterion-subcollection-id="${escapeHtml(collection.id)}"`;
   return `
-    <article class="collection-shelf-card criterion-subcollection-card" style="--poster-a:${collection.posterA};--poster-b:${collection.posterB}" aria-label="${escapeHtml(collection.title)}" ${dataAttribute} tabindex="0">
+    <article class="collection-shelf-card criterion-subcollection-card" style="--poster-a:${collection.posterA};--poster-b:${collection.posterB}" aria-label="${escapeHtml(collection.title)}" data-criterion-subcollection-id="${escapeHtml(collection.id)}" tabindex="0">
       ${artwork}
     </article>
   `;
 }
 
-function getCanonicalCriterionProfileId(collectionId) {
-  return {
-    "criterion-cronenberg": "david-cronenberg",
-    "criterion-wes-anderson": "wes-anderson",
-  }[collectionId] ?? null;
-}
-
-function renderCriterionSubCollectionPage(collectionId) {
-  const data = getCriterionCollectionData();
+function renderCriterionSubCollectionPage(collectionId, criterionData = null) {
+  const data = criterionData ?? getCriterionCollectionData();
   const collection = data?.subCollections?.find((item) => item.id === collectionId);
   if (!collection) return `<div class="empty">Criterion collection metadata is not available yet.</div>`;
-  const itemMap = new Map(collection.itemIds.map(getCriterionDetailItem).filter(Boolean).map((item) => [item.id, item]));
-  getAllocatedCollectionEntries({ id: "criterion" }, { id: collectionId, title: collection.title }).forEach(({ item }) => itemMap.set(item.id, item));
-  const items = [...itemMap.values()];
+  const items = getCriterionLiveSubCollectionItems(collection);
   const sets = (collection.setIds ?? [])
     .map((id) => getCriterionSetById(id))
     .filter(Boolean);
+  const curatedSections = (collection.sections ?? [])
+    .map((section) => ({ ...section, liveItems: getCriterionLiveItems(section.items, section.itemIds) }))
+    .filter((section) => section.liveItems.length);
+  const isDirectorShowcase = slugify(collection.category).includes("director");
+  const sections = isDirectorShowcase
+    ? getCriterionDirectorShowcaseSections(collection, items, curatedSections)
+    : curatedSections;
   return `
     <div class="criterion-page criterion-subcollection-page">
-      ${renderCriterionHero(getCriterionCollectionHero(collection, data), collection.title, collection.description, { showTitle: true })}
+      ${renderCriterionHero(getCriterionCollectionHero(collection, data), collection.title, "", { showTitle: true })}
       ${
         sets.length
           ? `<div class="library-grid criterion-wall">${sets.map(renderCriterionEclipseCard).join("")}</div>`
-          : `<div class="library-grid criterion-wall">${items.map(renderLibraryCard).join("")}</div>`
+          : sections.length
+            ? isDirectorShowcase
+              ? `<div class="criterion-director-filmography">${sections.map(renderCriterionPosterWallSection).join("")}</div>`
+              : `<div class="shelf-stack criterion-director-filmography">${sections.map((section) => renderPosterShelf(section.title, section.liveItems, "movie", renderLibraryCard)).join("")}</div>`
+            : `<div class="library-grid criterion-wall">${items.map(renderLibraryCard).join("")}</div>`
       }
     </div>
   `;
 }
 
+const CRITERION_DIRECTOR_SECTION_ORDER = ["Feature Films", "Shorts", "Television & Documentaries", "As Performer", "Produced Works", "Written Works"];
+
+function renderCriterionPosterWallSection(section) {
+  return `<section class="criterion-poster-wall-section">
+    <div class="lane-head"><h2>${escapeHtml(section.title)}</h2><span class="muted">${section.liveItems.length} title${section.liveItems.length === 1 ? "" : "s"}</span></div>
+    <div class="library-grid criterion-wall">${section.liveItems.map(renderLibraryCard).join("")}</div>
+  </section>`;
+}
+
+function getCriterionDirectorShowcaseSections(collection, liveItems, curatedSections = []) {
+  const personName = getCriterionDirectorTitle(collection.title);
+  const standard = new Map(CRITERION_DIRECTOR_SECTION_ORDER.map((title) => [title, new Map()]));
+  const custom = [];
+  const add = (title, items) => (items ?? []).forEach((item) => item?.id && standard.get(title)?.set(item.id, item));
+  liveItems.forEach((item) => {
+    const credits = getCriterionMovieCredits(item);
+    const directed = creditNamesInclude(credits.directors, personName);
+    const genreText = [...(credits.genres ?? []), item.genre].filter(Boolean).join(" ");
+    const isShort = (Number(credits.runtime) > 0 && Number(credits.runtime) <= 40) || /\bshorts?\b/i.test(genreText);
+    const isDocumentary = /documentary/i.test(genreText);
+    if (directed && isShort) add("Shorts", [item]);
+    else if (directed && isDocumentary) add("Television & Documentaries", [item]);
+    else if (directed) add("Feature Films", [item]);
+    if (creditNamesInclude(credits.performers, personName)) add("As Performer", [item]);
+    if (creditNamesInclude(credits.producers, personName)) add("Produced Works", [item]);
+    if (creditNamesInclude(credits.writers, personName)) add("Written Works", [item]);
+  });
+  curatedSections.forEach((section) => {
+    const standardTitle = getStandardDirectorSectionTitle(section.title);
+    if (standardTitle) add(standardTitle, section.liveItems);
+    else custom.push(section);
+  });
+  const sections = CRITERION_DIRECTOR_SECTION_ORDER.map((title) => ({
+    title,
+    liveItems: [...standard.get(title).values()].sort(sortCollectionItemsForDisplay),
+  }));
+  return [sections[0], ...custom, ...sections.slice(1)].filter((section) => section.liveItems.length);
+}
+
+function getStandardDirectorSectionTitle(title = "") {
+  const key = slugify(title).replace(/-/g, " ");
+  if (["feature films", "features", "directed films", "directed features", "feature length films", "narrative films", "narrative feature films"].includes(key)) return "Feature Films";
+  if (["shorts", "short films"].includes(key)) return "Shorts";
+  if (["television", "documentaries", "television documentaries", "television documentary series work"].includes(key)) return "Television & Documentaries";
+  if (["as performer", "acting", "acting credits"].includes(key)) return "As Performer";
+  if (["produced works", "producing credits", "production credits"].includes(key)) return "Produced Works";
+  if (["written works", "screenwriting credits", "writing credits"].includes(key)) return "Written Works";
+  return null;
+}
+
+function creditNamesInclude(names, personName) {
+  const key = normalizeTitleForMatch(personName);
+  return (names ?? []).some((name) => normalizeTitleForMatch(name) === key);
+}
+
+function getCriterionMovieCredits(item) {
+  const cacheKey = getMetadataCacheKey();
+  if (getCriterionMovieCredits.cache?.key !== cacheKey) {
+    const byId = new Map();
+    const byIdentity = new Map();
+    [...Object.values(movieDetailIndex), ...Object.values(mcuDetailIndex), ...Object.values(criterionDetailIndex)].forEach((details) => {
+      if (!details?.title) return;
+      if (details.id) byId.set(details.id, details);
+      const year = details.year ?? String(details.releaseDate ?? "").slice(0, 4);
+      byIdentity.set(`${normalizeTitleForMatch(details.title)}:${year}`, details);
+    });
+    getCriterionMovieCredits.cache = { key: cacheKey, byId, byIdentity };
+  }
+  const year = item.year ?? item.startYear ?? "";
+  const indexed = getCriterionMovieCredits.cache.byId.get(item.id)
+    ?? getCriterionMovieCredits.cache.byIdentity.get(`${normalizeTitleForMatch(getDisplayTitle(item))}:${year}`)
+    ?? item;
+  const override = getItemMetadataOverride(item.id);
+  const crew = override.crew ?? indexed.crew ?? [];
+  return {
+    directors: [...new Set([override.director, indexed.director, item.director, ...crew.filter((credit) => credit.job === "Director").map((credit) => credit.name)].filter(Boolean))],
+    performers: (override.cast ?? indexed.cast ?? item.cast ?? []).map((credit) => credit.name).filter(Boolean),
+    producers: [...(override.producers ?? indexed.producers ?? []), ...crew.filter((credit) => /Production/i.test(credit.department) || /Producer/i.test(credit.job)).map((credit) => credit.name)].filter(Boolean),
+    writers: [...(override.writers ?? indexed.writers ?? []), ...crew.filter((credit) => /Writing/i.test(credit.department) || /Writer|Screenplay|Story/i.test(credit.job)).map((credit) => credit.name)].filter(Boolean),
+    genres: override.genres ?? indexed.genres ?? item.genres ?? [],
+    runtime: override.runtime ?? indexed.runtime ?? item.runtime ?? null,
+  };
+}
+
+function getCriterionLiveItems(items = [], itemIds = []) {
+  const itemMap = new Map();
+  const sources = items.length ? items : itemIds.map(getCriterionDetailItem).filter(Boolean);
+  sources.forEach((source) => {
+    if (!source) return;
+    const item = getCuratedHydratedItem(source);
+    if (!item || !getItemMediaFiles(item).some((file) => file?.path)) return;
+    itemMap.set(item.id, item);
+  });
+  return [...itemMap.values()].sort(sortCollectionItemsForDisplay);
+}
+
 function getCriterionCollectionHero(collection, data) {
-  if (collection.heroImage) return collection.heroImage;
   const category = slugify(collection.category ?? "");
-  if (category === "director-showcase") return "./assets/collections/criterion/director-showcase-hero.png";
-  if (category === "criterion-channel-collections") return "./assets/collections/criterion/criterion-channel-collections-hero.png";
+  if (category === "boxed-sets") return "./assets/collections/criterion/boxed-sets-banner-1920x540-v2.jpg?v=20260909";
+  if (category === "director-showcase") return "./assets/collections/criterion/director-showcase-banner-1920x540-v2.jpg?v=20260909";
+  if (category === "criterion-channel-collections") return "./assets/collections/criterion/criterion-channel-collections-banner-1920x540-v2.jpg?v=20260909";
+  if (category === "noir-collections") return "./assets/collections/criterion/noir-collections-banner-1920x540-v2.jpg?v=20260909";
+  if (category === "movements") return "./assets/collections/criterion/movements-banner-1920x540-v2.jpg?v=20260909";
+  if (collection.heroImage) return collection.heroImage;
   return data.collection.collectionsHero;
 }
 
 function getCriterionDetailItem(id) {
-  return criterionDetailIndex[id] ?? movieDetailIndex[id] ?? null;
+  const cacheKey = getMetadataCacheKey();
+  if (getCriterionDetailItem.cache?.key !== cacheKey) {
+    const items = new Map();
+    getMovieLibraryItems().forEach((item) => {
+      items.set(item.id, item);
+      (item.duplicateItemIds ?? []).forEach((aliasId) => items.set(aliasId, item));
+    });
+    getCriterionDetailItem.cache = { key: cacheKey, items };
+  }
+  return getCriterionDetailItem.cache.items.get(id) ?? criterionDetailIndex[id] ?? movieDetailIndex[id] ?? null;
+}
+
+function getCriterionLiveMovieForSource(source) {
+  const cacheKey = getMetadataCacheKey();
+  if (getCriterionLiveMovieForSource.cache?.key !== cacheKey) {
+    const byId = new Map();
+    const byTitleYear = new Map();
+    const byTitle = new Map();
+    getMovieLibraryItems().forEach((item) => {
+      byId.set(item.id, item);
+      (item.duplicateItemIds ?? []).forEach((aliasId) => byId.set(aliasId, item));
+      const titleKey = normalizeTitleForMatch(getDisplayTitle(item));
+      const year = String(item.year ?? item.startYear ?? "");
+      if (titleKey) {
+        byTitle.set(titleKey, item);
+        if (year) byTitleYear.set(`${titleKey}:${year}`, item);
+      }
+    });
+    getCriterionLiveMovieForSource.cache = { key: cacheKey, byId, byTitleYear, byTitle };
+  }
+  const index = getCriterionLiveMovieForSource.cache;
+  const candidate = typeof source === "string" ? getCriterionDetailItem(source) : source;
+  const directId = typeof source === "string" ? source : candidate?.id;
+  if (directId && index.byId.has(directId)) return index.byId.get(directId);
+  if (!candidate?.title) return null;
+  const titleKey = normalizeTitleForMatch(candidate.title);
+  const year = String(candidate.year ?? candidate.startYear ?? "");
+  return year ? (index.byTitleYear.get(`${titleKey}:${year}`) ?? null) : (index.byTitle.get(titleKey) ?? null);
+}
+
+function getCriterionLiveSubCollectionItems(collection) {
+  const cacheKey = `${getMetadataCacheKey()}:${collection.id}:${collection.itemIds?.length ?? 0}:${collection.items?.length ?? 0}`;
+  if (getCriterionLiveSubCollectionItems.cache?.has(cacheKey)) return getCriterionLiveSubCollectionItems.cache.get(cacheKey);
+  const itemMap = new Map();
+  const addLiveItem = (source) => {
+    if (!source) return;
+    const item = getCriterionLiveMovieForSource(source);
+    if (!item || !getItemMediaFiles(item).some((file) => file?.path)) return;
+    itemMap.set(item.id, item);
+  };
+  const curatedItems = [...new Map([
+    ...(collection.items ?? []),
+    ...(collection.itemIds ?? []).map(getCriterionDetailItem).filter(Boolean),
+  ].map((item) => [item.id, item])).values()];
+  curatedItems.forEach(addLiveItem);
+  if (slugify(collection.category).includes("director")) {
+    const personName = getCriterionDirectorTitle(collection.title);
+    getMovieLibraryItems()
+      .filter((item) => {
+        const credits = getCriterionMovieCredits(item);
+        return [credits.directors, credits.performers, credits.producers, credits.writers]
+          .some((names) => creditNamesInclude(names, personName));
+      })
+      .forEach(addLiveItem);
+  }
+  getAllocatedCollectionEntries({ id: "criterion", title: "Criterion" }, { id: collection.id, title: collection.title })
+    .forEach(({ item }) => addLiveItem(item));
+  (collection.setIds ?? []).map(getCriterionSetById).filter(Boolean).forEach((set) => {
+    (set.films ?? set.items ?? []).forEach((film) => addLiveItem(typeof film === "string" ? getCriterionDetailItem(film) : film));
+  });
+  const items = [...itemMap.values()].sort(sortCollectionItemsForDisplay);
+  if (!getCriterionLiveSubCollectionItems.cache) getCriterionLiveSubCollectionItems.cache = new Map();
+  getCriterionLiveSubCollectionItems.cache.set(cacheKey, items);
+  return items;
+}
+
+function getCriterionLiveSetFilms(set) {
+  const itemMap = new Map();
+  const addLiveItem = (source) => {
+    const item = getCriterionLiveMovieForSource(source);
+    if (!item || !getItemMediaFiles(item).some((file) => file?.path)) return;
+    itemMap.set(item.id, item);
+  };
+  (set?.films ?? set?.items ?? []).forEach(addLiveItem);
+  getAllocatedCollectionEntries({ id: "criterion", title: "Criterion" }, { id: set.id, title: set.title })
+    .forEach(({ item }) => addLiveItem(item));
+  return [...itemMap.values()].sort(sortCollectionItemsForDisplay);
+}
+
+function hydrateCriterionLiveSet(set) {
+  return { ...set, films: getCriterionLiveSetFilms(set) };
 }
 
 function renderCriterionEclipseCard(set) {
@@ -6512,7 +7756,6 @@ function renderCriterionEclipseCard(set) {
 }
 
 function renderCriterionEclipseSetPage(setId) {
-  const data = criterionCollectionIndex;
   const set = getCriterionSetById(setId);
   if (!set) return `<div class="empty">Criterion set metadata is not available yet.</div>`;
   const label = set.seriesLabel ?? "Eclipse";
@@ -6533,9 +7776,12 @@ function renderCriterionEclipseSetPage(setId) {
   `;
 }
 
-function getCriterionSetById(setId) {
+function getCriterionSetById(setId, options = {}) {
   const data = criterionCollectionIndex;
-  return [...(data?.eclipseSets ?? []), ...(data?.worldCinemaProjectSets ?? [])].find((item) => item.id === setId) ?? null;
+  const set = [...(data?.eclipseSets ?? []), ...(data?.worldCinemaProjectSets ?? [])].find((item) => item.id === setId) ?? null;
+  if (!set || options.includeEmpty || state.libraryMode !== "media") return set;
+  const liveSet = hydrateCriterionLiveSet(set);
+  return liveSet.films.length ? liveSet : null;
 }
 
 function renderCriterionEclipseSetSynopsis(set) {
@@ -6562,6 +7808,107 @@ function renderCriterionEclipseFilmCard(item) {
 
 function renderCriterionEclipseFilmMeta(item) {
   return [item.year, item.country !== "Criterion" ? item.country : null, item.runtime, item.language !== "Unknown" ? item.language : null].filter(Boolean).join(" / ") || item.genre;
+}
+
+const HOLIDAY_CHAOS_THEATRE_SECTION_IDS = [
+  "hirrys-favs",
+  "classics",
+  "ill-be-home-for-christmas",
+  "holiday-horror",
+  "miracles-and-fairy-tales",
+];
+
+function renderHolidayChaosCollectionPage() {
+  const collection = getCuratedCollectionPage("holiday-chaos");
+  const view = ["theatre", "hallmark", "lifetime"].includes(state.selectedHolidayChaosView)
+    ? state.selectedHolidayChaosView
+    : "theatre";
+  const sections = view === "theatre"
+    ? getHolidayChaosTheatreSections(collection)
+    : getHolidayChaosCompanyYearSections(collection, view);
+  const emptyMessage = view === "theatre"
+    ? "Holiday Theatre is ready for its first selections."
+    : `No ${view === "hallmark" ? "Hallmark" : "Lifetime"} films have been identified in the live library yet.`;
+
+  return `
+    <div class="curated-page curated-page-holiday-chaos holiday-chaos-page holiday-chaos-view-${escapeHtml(view)}">
+      <section class="curated-hero holiday-chaos-hero" style="--poster-a:${collection.posterA};--poster-b:${collection.posterB}">
+        <button class="neon-back-button curated-back" type="button" data-action="back-page" aria-label="Back" title="Back">&larr;</button>
+        <img src="${escapeHtml(collection.heroImage)}" alt="" loading="eager" />
+      </section>
+      <nav class="holiday-chaos-nav" aria-label="Holiday Chaos pages">
+        ${[
+          ["theatre", "Holiday Theatre"],
+          ["hallmark", "Hallmark"],
+          ["lifetime", "Lifetime"],
+        ].map(([id, label]) => `<button type="button" data-holiday-chaos-view="${id}"${view === id ? ' class="active" aria-current="page"' : ""}>${label}</button>`).join("")}
+      </nav>
+      <div class="shelf-stack curated-shelves holiday-chaos-shelves">
+        ${sections.length
+          ? sections.map((section) => renderCuratedShelf(section.title, section.items ?? [], section.id)).join("")
+          : `<div class="empty holiday-chaos-empty">${escapeHtml(emptyMessage)}</div>`}
+      </div>
+    </div>
+  `;
+}
+
+function getHolidayChaosTheatreSections(collection) {
+  const sectionMap = new Map(getRenderableCollectionSections(collection).map((section) => [section.id, section]));
+  return HOLIDAY_CHAOS_THEATRE_SECTION_IDS.map((id) => sectionMap.get(id)).filter(Boolean).map((section) => ({
+    ...section,
+    items: state.libraryMode === "media" ? getLiveCollectionSectionItems(collection, section) : section.items ?? [],
+  }));
+}
+
+function getHolidayChaosCompanyYearSections(collection, companyId) {
+  const section = getRenderableCollectionSections(collection).find((entry) => entry.id === companyId)
+    ?? { id: companyId, title: companyId, items: [] };
+  const explicitlyFiled = state.libraryMode === "media"
+    ? getLiveCollectionSectionItems(collection, section)
+    : section.items ?? [];
+  const discovered = getMovieLibraryItems().filter((item) => holidayChaosItemMatchesCompany(item, companyId));
+  const byYear = dedupeShelfItems([...explicitlyFiled, ...discovered]).reduce((groups, item) => {
+    const year = getHolidayChaosItemYear(item);
+    groups[year] = groups[year] ?? [];
+    groups[year].push(item);
+    return groups;
+  }, {});
+  return Object.entries(byYear)
+    .sort(([left], [right]) => Number(right) - Number(left))
+    .map(([year, items]) => ({ id: `${companyId}-${year}`, title: year === "0" ? "Year Pending" : year, items }));
+}
+
+function holidayChaosItemMatchesCompany(item, companyId) {
+  if (item?.mediaType !== "movie") return false;
+  const details = getTitleDetails(item);
+  const record = getMetadataRecordForItem(item);
+  const values = [
+    item.studio,
+    item.network,
+    item.distributor,
+    details.studio,
+    details.network,
+    details.distributor,
+    details.productionCompanies,
+    record?.studio,
+    record?.network,
+    record?.metadata?.studio,
+    record?.metadata?.network,
+    record?.metadata?.productionCompanies,
+    ...(item.files ?? []),
+    ...(record?.files ?? []),
+  ].flatMap((value) => {
+    if (typeof value === "string") return [value];
+    if (value?.path) return [value.path];
+    return searchValueNames(value);
+  });
+  const identity = values.join(" ").toLowerCase();
+  return companyId === "hallmark" ? /\bhallmark\b/.test(identity) : /\blifetime\b/.test(identity);
+}
+
+function getHolidayChaosItemYear(item) {
+  const details = getTitleDetails(item);
+  return Number(item.year ?? String(details.releaseDate ?? "").match(/^\d{4}/)?.[0]) || 0;
 }
 
 function renderCuratedCollectionPage(collection) {
@@ -6604,7 +7951,7 @@ function renderCuratedCollectionPage(collection) {
         ${renderCuratedJumpBar(collection)}
       </section>
       <div class="shelf-stack curated-shelves">
-        ${renderCuratedShelf(collection.continueTitle ?? (isAisleCollection(collection.id) ? "Current Rentals" : "Continue Watching"), continueItems, "continue")}
+        ${continueItems.length ? renderCuratedShelf(collection.continueTitle ?? (isAisleCollection(collection.id) ? "Current Rentals" : "Continue Watching"), continueItems, "continue") : ""}
         ${visibleSections.map((section) => renderCuratedShelf(section.title, section.items, section.id)).join("")}
       </div>
     </div>
@@ -6616,6 +7963,10 @@ function renderCompactAisleCollectionPage(collection, visibleSections, continueI
   if (state.selectedCuratedShelfId === "new-arrivals") {
     return renderCuratedFullShelfPage(collection, "New Arrivals", newArrivals);
   }
+  if (state.selectedCuratedShelfId) {
+    const selectedSection = visibleSections.find((section) => section.id === state.selectedCuratedShelfId);
+    if (selectedSection) return renderCuratedFullShelfPage(collection, selectedSection.title, selectedSection.items ?? []);
+  }
   const navigationCollection = {
     ...collection,
     sections: visibleSections,
@@ -6625,37 +7976,180 @@ function renderCompactAisleCollectionPage(collection, visibleSections, continueI
     <div class="curated-page curated-page-${escapeHtml(collection.id)} curated-page-aisle-compact curated-page-${escapeHtml(layout)}-compact curated-page-${escapeHtml(collection.id)}-compact">
       <section class="curated-hero" style="--poster-a:${collection.posterA};--poster-b:${collection.posterB}">
         <button class="neon-back-button curated-back" type="button" data-action="back-page" aria-label="Back" title="Back">&larr;</button>
-        <img src="${escapeHtml(collection.heroImage)}" alt="" loading="eager" />
+        <img src="${escapeHtml(collection.heroImage)}" alt="" loading="eager"${collection.heroFallbackImage ? ` onerror="this.onerror=null;this.src='${escapeHtml(collection.heroFallbackImage)}'"` : ""} />
       </section>
       <div class="curated-jump-shell">
         ${renderCuratedJumpBar(navigationCollection)}
       </div>
+      ${collection.id === "animation" ? renderAnimationRandomizerControl() : ""}
       <div class="shelf-stack curated-shelves">
-        ${renderCuratedShelf(collection.continueTitle ?? "Current Rentals", continueItems, "continue")}
+        ${continueItems.length ? renderCuratedShelf(collection.continueTitle ?? "Current Rentals", continueItems, "continue") : ""}
         ${renderCuratedShelf("New Arrivals", newArrivals.slice(0, 15), "new-arrivals", {
           total: newArrivals.length,
           viewAll: newArrivals.length > 0,
         })}
-        ${visibleSections.map((section) => renderCuratedShelf(section.title, section.items, section.id)).join("")}
+        ${visibleSections.map((section) => {
+          const items = section.items ?? [];
+          return renderCuratedShelf(section.title, items.slice(0, 15), section.id, {
+            total: items.length,
+            viewAll: items.length > 15,
+          });
+        }).join("")}
       </div>
     </div>
   `;
 }
 
+const ANIMATION_RANDOMIZER_MOVIES_KEY = "tobytube.animation-randomizer.movies";
+
+function readAnimationRandomizerMoviesEnabled() {
+  try {
+    return localStorage.getItem(ANIMATION_RANDOMIZER_MOVIES_KEY) === "on";
+  } catch {
+    return false;
+  }
+}
+
+function writeAnimationRandomizerMoviesEnabled(enabled) {
+  try {
+    localStorage.setItem(ANIMATION_RANDOMIZER_MOVIES_KEY, enabled ? "on" : "off");
+  } catch {}
+}
+
+function renderAnimationRandomizerControl() {
+  const moviesEnabled = readAnimationRandomizerMoviesEnabled();
+  return `
+    <section class="animation-randomizer-control" aria-label="Animation randomizer">
+      <button class="animation-randomizer-start" type="button" data-action="start-animation-randomizer" aria-label="Start continuous Animation randomizer" title="Play random Animation episodes until you exit">
+        <span class="animation-randomizer-start-label">Play</span>
+      </button>
+      <label class="animation-randomizer-movies" title="When enabled, play one movie after every 10 TV episodes">
+        <input type="checkbox" data-animation-randomizer-movies${moviesEnabled ? " checked" : ""} />
+        <span class="animation-randomizer-switch" aria-hidden="true"></span>
+        <b>Movies</b>
+      </label>
+    </section>
+  `;
+}
+
+function getAnimationRandomizerPool() {
+  const collection = getCuratedCollectionPage("animation");
+  if (!collection) return { tv: [], movies: [] };
+  const items = dedupeShelfItems(
+    getRenderableCollectionSections(collection)
+      .flatMap((section) => getLiveCollectionSectionItems(collection, section)),
+  );
+  const tv = items
+    .filter((item) => item?.mediaType === "tv")
+    .flatMap((item) => {
+      const show = getTvTitleItem(item.id) ?? getCuratedLiveItem(item, "tv");
+      if (!show) return [];
+      const details = getTvDetails(show);
+      return getAvailableTvSeasons(show).flatMap((season) =>
+        (season.episodes ?? []).map((episode) => ({
+          key: `tv:${episode.id}`,
+          kind: "tv",
+          located: { show, details, season, episode },
+        })),
+      );
+    });
+  const movies = items
+    .filter((item) => item?.mediaType === "movie" && hasPlayableMediaFiles(item))
+    .map((item) => ({ key: `movie:${item.id}`, kind: "movie", item }));
+  return {
+    tv: [...new Map(tv.map((entry) => [entry.key, entry])).values()],
+    movies: [...new Map(movies.map((entry) => [entry.key, entry])).values()],
+  };
+}
+
+function startAnimationRandomizer() {
+  state.animationRandomizer = {
+    active: true,
+    moviesEnabled: readAnimationRandomizerMoviesEnabled(),
+    tvEpisodesSinceMovie: 0,
+    recentKeys: [],
+    history: [],
+    historyIndex: -1,
+  };
+  state.playbackOriginCollectionId = "animation";
+  if (!playNextAnimationRandomizerItem()) {
+    stopAnimationRandomizer();
+    showMetadataToast("error", "No playable animated TV episodes were found.");
+    render();
+  }
+}
+
+function stopAnimationRandomizer() {
+  state.animationRandomizer = null;
+}
+
+function playNextAnimationRandomizerItem() {
+  const session = state.animationRandomizer;
+  if (!session?.active) return false;
+  const forwardSelection = moveAnimationRandomHistory(session, 1);
+  if (forwardSelection) return playAnimationRandomizerSelection(forwardSelection);
+
+  const pool = getAnimationRandomizerPool();
+  const kind = getNextAnimationMediaKind(session, { tvCount: pool.tv.length, movieCount: pool.movies.length });
+  if (!kind) return false;
+  const selected = selectAnimationRandomCandidate(pool[kind], session.recentKeys);
+  if (!selected) return false;
+  session.recentKeys = [...session.recentKeys, selected.key].slice(-24);
+  if (kind === "movie") session.tvEpisodesSinceMovie = 0;
+  else session.tvEpisodesSinceMovie += 1;
+
+  appendAnimationRandomHistory(session, selected);
+  return playAnimationRandomizerSelection(selected);
+}
+
+function playPreviousAnimationRandomizerItem() {
+  const session = state.animationRandomizer;
+  if (!session?.active) return false;
+  const previousSelection = moveAnimationRandomHistory(session, -1);
+  return previousSelection ? playAnimationRandomizerSelection(previousSelection) : false;
+}
+
+function playAnimationRandomizerSelection(selected) {
+  stopTeebeeShuffle();
+  if (selected.kind === "tv") {
+    const { show, season, episode } = selected.located;
+    state.section = "tv";
+    state.subView = "home";
+    state.selectedTitleId = show.id;
+    state.selectedTvSeason = { showId: show.id, seasonNumber: season.seasonNumber };
+    state.selectedTvEpisodeId = episode.id;
+    state.selectedCollectionId = null;
+    state.selectedPersonId = null;
+    state.player = {
+      ...buildTvPlaybackPayload(selected.located),
+      animationRandomizer: true,
+      nextEpisodeId: null,
+      previousEpisodeId: null,
+      originLabel: "Animation Randomizer",
+    };
+  } else {
+    state.section = "movies";
+    state.subView = "home";
+    state.selectedTitleId = selected.item.id;
+    state.selectedTvSeason = null;
+    state.selectedTvEpisodeId = null;
+    state.selectedCollectionId = null;
+    state.selectedPersonId = null;
+    state.player = {
+      ...buildPlaybackPayload(selected.item),
+      animationRandomizer: true,
+      originLabel: "Animation Randomizer",
+    };
+  }
+  render();
+  return true;
+}
+
 function getCollectionNewArrivals(sections) {
-  const libraryMovies = getMovieLibraryItems();
   return dedupeShelfItems(
     sections
       .flatMap((section) => section.items ?? [])
-      .map((item) => {
-        const itemTitle = slugify(item.title);
-        const itemYear = item.year ? Number(item.year) : null;
-        return (
-          libraryMovies.find((record) => record.id === item.id) ??
-          libraryMovies.find((record) => movieRecordMatches(record, itemTitle, itemYear)) ??
-          null
-        );
-      })
+      .map((item) => getCuratedLiveItem(item, "movies"))
       .filter((item) => item?.mediaType === "movie" && item.addedAt),
   ).sort((a, b) => {
     const dateCompare = String(b.addedAt ?? "").localeCompare(String(a.addedAt ?? ""));
@@ -6683,7 +8177,7 @@ function renderCuratedFullShelfPage(collection, title, items) {
 }
 
 function isAisleCollection(collectionId) {
-  return new Set(["action", "animation", "arrowverse", "comedy", "cult-films", "dc-animation", "documentary", "drama", "endless-anime-odyssey", "exploitation", "fantasy", "horror", "romance", "saturday-morning-marathon", "sci-fi", "sports", "western", "2010s"]).has(collectionId);
+  return new Set(["action", "animation", "comedy", "cult-films", "dc", "documentary", "drama", "endless-anime-odyssey", "exploitation", "fantasy", "horror", "kaiju", "romance", "saturday-morning-marathon", "sci-fi", "sports", "star-trek", "star-wars", "universal-monsters", "western"]).has(collectionId);
 }
 
 function isCompactVaultCollection(collectionId) {
@@ -6750,29 +8244,182 @@ function renderCinemaOfIndiaLanguagePage(collection, languageId) {
   const [, title, nativeName, seed] = language;
   const sections = [
     curatedSection("Essentials", [curatedItem(seed, null, "movie", `${title} Cinema`)]),
-    curatedSection("Box Office Smash", [curatedItem(seed, null, "movie", "Box Office")]),
-    curatedSection("Modern Cinema", [curatedItem(seed, null, "movie", "Modern Cinema")]),
-    curatedSection("Classics", [curatedItem(seed, null, "movie", "Classics")]),
-    curatedSection("Directors' Hits", [curatedItem(seed, null, "movie", "Directors")]),
-    curatedSection("Golden Age", [curatedItem(seed, null, "movie", "Golden Age")]),
-    curatedSection("Crime", [curatedItem(seed, null, "movie", "Crime")]),
-    curatedSection("Romance", [curatedItem(seed, null, "movie", "Romance")]),
     curatedSection("Action", [curatedItem(seed, null, "movie", "Action")]),
+    curatedSection("Comedy", [curatedItem(seed, null, "movie", "Comedy")]),
+    curatedSection("Documentary", [curatedItem(seed, null, "movie", "Documentary")]),
+    curatedSection("Drama", [curatedItem(seed, null, "movie", "Drama")]),
+    curatedSection("Fantasy / Mythology", [curatedItem(seed, null, "movie", "Fantasy")], { id: "fantasy-mythology" }),
+    curatedSection("Classics", [curatedItem(seed, null, "movie", "Classics")]),
+    curatedSection("Horror", [curatedItem(seed, null, "movie", "Horror")]),
     curatedSection("Musicals", [curatedItem(seed, null, "movie", "Musical")]),
+    curatedSection("Romance", [curatedItem(seed, null, "movie", "Romance")]),
+    curatedSection("Sci-Fi", [curatedItem(seed, null, "movie", "Sci-Fi")]),
+    curatedSection("Sports", [curatedItem(seed, null, "movie", "Sports")]),
+  ];
+  const menuRows = [
+    ["essentials", "action", "comedy", "documentary", "drama", "fantasy-mythology"],
+    ["classics", "horror", "musicals", "romance", "sci-fi", "sports"],
   ];
   return `
     <div class="curated-page curated-page-cinema-of-india-language cinema-india-page">
       <section class="curated-hero cinema-india-language-template" style="--poster-a:#130c07;--poster-b:#f3a44b">
         <button class="neon-back-button curated-back" type="button" data-action="india-languages" aria-label="Back" title="Back">&larr;</button>
-        <img src="./assets/collections/cinema-of-india/language-template-hero.png" alt="" loading="eager" />
-        <div class="cinema-india-language-title">
-          <span>${escapeHtml(title)}</span>
-          <small>${escapeHtml(nativeName)}</small>
+        <div class="cinema-india-language-art">
+          <img src="./assets/collections/cinema-of-india/language-page-template-v3.webp" alt="" loading="eager" />
+          <div class="cinema-india-language-title">
+            <span>${escapeHtml(title)}</span>
+            <small>${escapeHtml(nativeName)}</small>
+          </div>
         </div>
-        ${renderCuratedJumpBar({ title: `${title} Cinema`, sections, menuRows: buildCuratedMenuRows(sections.map((section) => section.id), 5) })}
+        ${renderCuratedJumpBar({ title: `${title} Cinema`, sections, menuRows })}
       </section>
       <div class="shelf-stack curated-shelves">
         ${sections.map((section) => renderCuratedShelf(section.title, section.items, section.id)).join("")}
+      </div>
+    </div>
+  `;
+}
+
+function renderCinemaOfJapanCollectionPage() {
+  const collection = getCuratedCollectionPage("cinema-of-japan") ?? buildCinemaOfJapanCollection();
+  if (state.selectedJapanView && state.selectedJapanView !== "home") {
+    const page = collection.japanPages?.find((item) => item.id === state.selectedJapanView);
+    if (page) return renderCinemaOfJapanSubPage(collection, page);
+  }
+  return renderCinemaOfJapanLandingPage(collection);
+}
+
+function renderCinemaOfJapanNavigation(pages, activeId = null, compact = false) {
+  return `
+    <nav class="cinema-japan-nav${compact ? " compact" : ""}" aria-label="Cinema of Japan sections">
+      ${pages.map((page) => `
+        <button type="button" class="${page.id === activeId ? "active" : ""}" data-japan-view="${escapeHtml(page.id)}">
+          <span>${escapeHtml(page.title)}</span>
+          <small>${escapeHtml(page.subtitle)}</small>
+        </button>
+      `).join("")}
+    </nav>
+  `;
+}
+
+function renderCinemaOfJapanLandingPage(collection) {
+  const pages = collection.japanPages ?? [];
+  return `
+    <div class="curated-page curated-page-cinema-of-japan cinema-japan-page">
+      <section class="curated-hero cinema-japan-landing" style="--poster-a:${collection.posterA};--poster-b:${collection.posterB}">
+        <button class="neon-back-button curated-back" type="button" data-action="back-page" aria-label="Back" title="Back">&larr;</button>
+        <img src="${escapeHtml(collection.heroImage)}" alt="" loading="eager" />
+        <header class="cinema-japan-title"><small>日本映画</small><h1>Cinema of Japan</h1></header>
+        ${renderCinemaOfJapanNavigation(pages)}
+      </section>
+    </div>
+  `;
+}
+
+function getCinemaOfJapanPageItems(collection, page) {
+  const liveCuratedItems = (page.sections ?? []).flatMap((section) => section.items ?? []).map(getCuratedHydratedItem)
+    .filter((item) => state.libraryMode !== "media" || getItemMediaFiles(item).some((file) => file?.path));
+  const allocatedItems = getAllocatedCollectionEntries(collection, page).map((entry) => entry.item);
+  const folderItems = getFolderCollectionEntries(collection, page).map((entry) => entry.item);
+  return dedupeShelfItems([...liveCuratedItems, ...allocatedItems, ...folderItems]).sort(sortCollectionItemsForDisplay);
+}
+
+function getCinemaOfJapanGenreSourceItems(collection) {
+  const folderItems = getFolderCollectionEntries(collection).map((entry) => entry.item);
+  const allocatedItems = getAllocatedCollectionEntries(collection).map((entry) => entry.item);
+  const japaneseLibraryItems = getMovieLibraryItems().filter((item) => {
+    const record = getMetadataRecordForItem(item);
+    const countryText = JSON.stringify([
+      item.country,
+      item.countries,
+      item.productionCountries,
+      record?.country,
+      record?.countries,
+      record?.productionCountries,
+      record?.provider?.country,
+      record?.provider?.countries,
+      record?.provider?.productionCountries,
+    ]);
+    return /\bjapan(?:ese)?\b/i.test(countryText);
+  });
+  return dedupeShelfItems([...folderItems, ...allocatedItems, ...japaneseLibraryItems]);
+}
+
+function cinemaOfJapanItemMatchesGenre(item, genre) {
+  const record = getMetadataRecordForItem(item);
+  const genreText = JSON.stringify([
+    item.genre,
+    item.genres,
+    item.tags,
+    record?.genre,
+    record?.genres,
+    record?.tags,
+    record?.provider?.genre,
+    record?.provider?.genres,
+    record?.provider?.keywords,
+    ...(item.files ?? []).map((file) => file?.path),
+  ]).toLowerCase();
+  return (genre.matchTerms ?? [genre.title]).some((term) => genreText.includes(String(term).toLowerCase()));
+}
+
+function getCinemaOfJapanGenreSections(collection, page) {
+  const sourceItems = getCinemaOfJapanGenreSourceItems(collection);
+  return (page.sections ?? []).map((section) => {
+    const seededItems = (section.items ?? []).map(getCuratedHydratedItem)
+      .filter((item) => state.libraryMode !== "media" || hasPlayableMediaFiles(item));
+    const allocatedItems = getAllocatedCollectionEntries(collection, section).map((entry) => entry.item);
+    const folderItems = getFolderCollectionEntries(collection, section).map((entry) => entry.item);
+    const matchedItems = sourceItems.filter((item) => cinemaOfJapanItemMatchesGenre(item, section));
+    return {
+      ...section,
+      items: dedupeShelfItems([...seededItems, ...allocatedItems, ...folderItems, ...matchedItems]).sort(sortCollectionItemsForDisplay),
+    };
+  });
+}
+
+function renderCinemaOfJapanGenreNavigation(sections) {
+  return `
+    <nav class="cinema-japan-genre-nav" aria-label="Japanese cinema genres">
+      ${sections.map((section) => `
+        <button type="button" data-curated-jump="${escapeHtml(section.id)}">
+          <span>${escapeHtml(section.title)}</span>
+          ${section.subtitle ? `<small>${escapeHtml(section.subtitle)}</small>` : ""}
+        </button>
+      `).join("")}
+    </nav>
+  `;
+}
+
+function renderCinemaOfJapanGenresPage(collection, page) {
+  const sections = getCinemaOfJapanGenreSections(collection, page);
+  return `
+    <div class="curated-page curated-page-cinema-of-japan cinema-japan-page cinema-japan-subpage cinema-japan-genres">
+      <section class="curated-hero cinema-japan-subpage-hero cinema-japan-genres-hero" style="--japan-accent:${escapeHtml(page.accent)}">
+        <button class="neon-back-button curated-back" type="button" data-action="japan-home" aria-label="Back" title="Back">&larr;</button>
+        <img src="${escapeHtml(page.heroImage)}" alt="" loading="eager" />
+        <header class="cinema-japan-subpage-title"><small>${escapeHtml(page.japaneseTitle)}</small><h1>${escapeHtml(page.title)}</h1><span>${escapeHtml(page.subtitle)}</span></header>
+        ${renderCinemaOfJapanGenreNavigation(sections)}
+      </section>
+      <div class="shelf-stack curated-shelves">
+        ${sections.map((section) => renderCuratedShelf(section.subtitle ? `${section.title} — ${section.subtitle}` : section.title, section.items, section.id)).join("")}
+      </div>
+    </div>
+  `;
+}
+
+function renderCinemaOfJapanSubPage(collection, page) {
+  if (page.id === "genres") return renderCinemaOfJapanGenresPage(collection, page);
+  const items = getCinemaOfJapanPageItems(collection, page);
+  return `
+    <div class="curated-page curated-page-cinema-of-japan cinema-japan-page cinema-japan-subpage cinema-japan-${escapeHtml(page.id)}">
+      <section class="curated-hero cinema-japan-subpage-hero" style="--japan-accent:${escapeHtml(page.accent)}">
+        <button class="neon-back-button curated-back" type="button" data-action="japan-home" aria-label="Back" title="Back">&larr;</button>
+        <img src="${escapeHtml(page.heroImage)}" alt="" loading="eager" />
+        <header class="cinema-japan-subpage-title"><small>${escapeHtml(page.japaneseTitle)}</small><h1>${escapeHtml(page.title)}</h1><span>${escapeHtml(page.subtitle)}</span></header>
+        ${renderCinemaOfJapanNavigation(collection.japanPages ?? [], page.id, true)}
+      </section>
+      <div class="shelf-stack curated-shelves">
+        ${renderCuratedShelf(`${page.title} (${page.subtitle})`, items, page.id)}
       </div>
     </div>
   `;
@@ -6885,7 +8532,7 @@ function renderCuratedPlaceholderCard(item) {
   if (hydrated.id !== item.id) return renderLibraryCard(hydrated);
   if (item.mediaType === "tv") return renderTvCard(item);
 
-  const metaParts = [item.year, item.mediaType === "tv" ? "TV" : null, item.genre].filter(Boolean);
+  const metaParts = [item.shortCount != null ? `${item.shortCount} shorts` : item.year, item.mediaType === "tv" ? "TV" : null, item.genre].filter(Boolean);
   return `
     <article class="media-card library-card curated-placeholder-card ${escapeHtml(item.mediaType)}" data-title-id="${escapeHtml(item.id)}" tabindex="0">
       ${renderPosterBlockWithMenu(item)}
@@ -6895,6 +8542,47 @@ function renderCuratedPlaceholderCard(item) {
       </div>
     </article>
   `;
+}
+
+function getCuratedLibraryLookup() {
+  const cacheKey = getMetadataCacheKey();
+  if (getCuratedLibraryLookup.cache?.key === cacheKey) return getCuratedLibraryLookup.cache.value;
+  const buildLookup = (items) => {
+    const byId = new Map();
+    const byIdentity = new Map();
+    const byTitle = new Map();
+    items.forEach((item) => {
+      byId.set(item.id, item);
+      (item.duplicateItemIds ?? []).forEach((id) => byId.set(id, item));
+      const title = slugify(getDisplayTitle(item) || item.title);
+      const year = Number(getItemMetadataOverride(item.id).year ?? item.year ?? item.startYear) || "";
+      if (title) {
+        if (!byTitle.has(title)) byTitle.set(title, item);
+        if (!byIdentity.has(`${title}|${year}`)) byIdentity.set(`${title}|${year}`, item);
+      }
+    });
+    return { byId, byIdentity, byTitle };
+  };
+  const value = {
+    movies: buildLookup(getMovieLibraryItems()),
+    tv: buildLookup(getTvLibraryItems()),
+  };
+  getCuratedLibraryLookup.cache = { key: cacheKey, value };
+  return value;
+}
+
+function getCuratedLiveItem(item, mediaType) {
+  const lookup = getCuratedLibraryLookup()[mediaType];
+  const title = slugify(getDisplayTitle(item) || item.title);
+  const year = Number(getItemMetadataOverride(item.id).year ?? item.year ?? item.startYear) || "";
+  const byId = lookup.byId.get(item.id);
+  if (byId) return byId;
+  const exact = lookup.byIdentity.get(`${title}|${year}`);
+  if (exact) return exact;
+  const titleMatch = lookup.byTitle.get(title);
+  if (!titleMatch || !year) return titleMatch ?? null;
+  const titleMatchYear = Number(getItemMetadataOverride(titleMatch.id).year ?? titleMatch.year ?? titleMatch.startYear) || "";
+  return titleMatchYear ? null : titleMatch;
 }
 
 function getCuratedHydratedItem(item) {
@@ -6921,11 +8609,7 @@ function getCuratedHydratedItem(item) {
     curatedHydrationIndex = { version: indexVersion, moviesByIdentity, moviesByTitle, tvByIdentity, tvByTitle };
   }
   if (item.mediaType === "tv") {
-    const liveTv = getTvLibraryItems().find((candidate) => {
-      const candidateTitle = slugify(getDisplayTitle(candidate) || candidate.title);
-      const candidateYear = Number(getItemMetadataOverride(candidate.id).year ?? candidate.year ?? candidate.startYear) || null;
-      return candidate.id === item.id || (candidateTitle === itemTitle && (!itemYear || !candidateYear || candidateYear === itemYear));
-    });
+    const liveTv = getCuratedLiveItem(item, "tv");
     if (liveTv) return liveTv;
     const hydrated = (
       tvDetailIndex[item.id] ??
@@ -6936,11 +8620,7 @@ function getCuratedHydratedItem(item) {
     return hydrated === item ? item : { ...item, ...hydrated, id: hydrated.id ?? item.id };
   }
   if (item.mediaType !== "movie") return item;
-  const liveMovie = getMovieLibraryItems().find((candidate) => {
-    const candidateTitle = slugify(getDisplayTitle(candidate) || candidate.title);
-    const candidateYear = Number(getItemMetadataOverride(candidate.id).year ?? candidate.year) || null;
-    return candidate.id === item.id || (candidateTitle === itemTitle && (!itemYear || !candidateYear || candidateYear === itemYear));
-  });
+  const liveMovie = getCuratedLiveItem(item, "movies");
   if (liveMovie) return liveMovie;
   const hydrated = (
     movieDetailIndex[item.id] ??
@@ -7191,9 +8871,9 @@ function renderMcuEpisodeCard(episode) {
   `;
 }
 
-function getVisibleCollections() {
+function getCollectionNavigationCards() {
   const cacheKey = `${getMetadataCacheKey()}:${collectionOverrides.updatedAt ?? "no-collection-overrides"}`;
-  if (getVisibleCollections.cache?.key === cacheKey) return getVisibleCollections.cache.items;
+  if (getCollectionNavigationCards.cache?.key === cacheKey) return getCollectionNavigationCards.cache.items;
   const mcu = {
     id: "mcu",
     title: "Marvel Cinematic Library",
@@ -7212,12 +8892,32 @@ function getVisibleCollections() {
     posterB: "#c5a46a",
     buttonImage: "./assets/collections/criterion/criterion-button.png",
   };
-  const byId = new Map([mcu, criterion, ...curatedCollectionPages.map(getCuratedCollectionCard)].map((collection) => [collection.id, collection]));
+  const cards = curatedCollectionPages.map((collection) => ({
+    id: collection.id,
+    title: collection.title,
+    description: collection.description,
+    itemIds: [...new Set([
+      ...(collection.itemIds ?? []),
+      ...(collection.sections ?? []).flatMap((section) => (section.items ?? []).map((item) => item.id)),
+    ])],
+    posterA: collection.posterA,
+    posterB: collection.posterB,
+    buttonImage: collection.buttonImage ?? collection.heroImage ?? null,
+  }));
+  const byId = new Map([mcu, criterion, ...cards].map((collection) => [collection.id, collection]));
   Object.values(collectionOverrides.collections ?? {}).forEach((collection) => {
     if (collection.deleted) byId.delete(collection.id);
     else byId.set(collection.id, { ...(byId.get(collection.id) ?? {}), ...collection });
   });
-  const items = [...byId.values()].filter(collectionHasVisibleMedia);
+  const items = [...byId.values()];
+  getCollectionNavigationCards.cache = { key: cacheKey, items };
+  return items;
+}
+
+function getVisibleCollections() {
+  const cacheKey = `${getMetadataCacheKey()}:${collectionOverrides.updatedAt ?? "no-collection-overrides"}`;
+  if (getVisibleCollections.cache?.key === cacheKey) return getVisibleCollections.cache.items;
+  const items = getCollectionNavigationCards().filter(collectionHasVisibleMedia);
   getVisibleCollections.cache = { key: cacheKey, items };
   return items;
 }
@@ -7231,7 +8931,7 @@ function getGroupedCollections() {
   const genreCollectionIds = ["action", "comedy", "documentary", "drama", "fantasy", "horror", "romance", "sci-fi", "sports", "western"];
   const groups = [
     { title: "Vaults", ids: ["a24", "criterion", "defa", "disney", "hammer", "hbo"] },
-    { title: "Sagas", ids: ["arrowverse", "james-bond", "dc-animation", "mcu", "kaiju", "star-trek", "star-wars", "universal-monsters"] },
+    { title: "Sagas", ids: ["james-bond", "dc", "mcu", "kaiju", "star-trek", "star-wars", "universal-monsters"] },
     {
       title: "Aisles",
       ids: [
@@ -7247,8 +8947,8 @@ function getGroupedCollections() {
         "western",
       ],
     },
-    { title: "Boxed Sets", ids: ["animation", "black-excellence", "cult-films", "endless-anime-odyssey", "exploitation", "plan-9-from-the-b-movie-aisle"] },
-    { title: "Worlds", ids: ["cinema-of-india"] },
+    { title: "Boxed Sets", ids: ["animation", "black-excellence", "cult-films", "endless-anime-odyssey", "exploitation", "holiday-chaos", "plan-9-from-the-b-movie-aisle"] },
+    { title: "Worlds", ids: ["cinema-of-india", "cinema-of-japan"] },
     { title: "Profiles", ids: ["david-cronenberg", "george-formby", "martin-scorseses-world-cinema-project", "tom-hanks", "wes-anderson"] },
   ];
   const collectionMap = new Map(getVisibleCollections().map((collection) => [collection.id, collection]));
@@ -7299,15 +8999,28 @@ function renderCollectionGroup(title, collections) {
 }
 
 function getCuratedCollectionPage(id) {
+  id = ({ "dc-animation": "dc", arrowverse: "dc" })[id] ?? id;
   const collection = curatedCollectionPages.find((collection) => collection.id === id);
   const override = collectionOverrides.collections?.[id];
   if (override?.deleted) return null;
   if (override) {
     const base = collection ? withoutFixedCollectionNewArrivals(mergeCuratedManifestCollection(collection)) : {};
+    const mergedOverride = Object.fromEntries(
+      Object.entries(override).filter(([key, value]) => !(["heroImage", "heroFallbackImage"].includes(key) && !String(value ?? "").trim()))
+    );
+    const overrideSections = (override.carousels ?? []).map((carousel, index) => ({ id: canonicalCollectionSectionId(id, carousel.title || `carousel-${index + 1}`), title: carousel.title, button: carousel.button, items: (carousel.itemIds ?? []).map((itemId) => getCollectionItem(itemId) ?? getTitleItem(itemId)).filter(Boolean) }));
+    if (id === "animation") {
+      const animationShorts = getAnimationShortCollections();
+      if (animationShorts.length) {
+        const shortsSection = overrideSections.find((section) => section.id === "shorts");
+        if (shortsSection) shortsSection.items = animationShorts;
+        else overrideSections.push({ id: "shorts", title: "Shorts", items: animationShorts });
+      }
+    }
     return {
       ...base,
-      ...override,
-      sections: (override.carousels ?? []).map((carousel, index) => ({ id: slugify(carousel.title || `carousel-${index + 1}`), title: carousel.title, button: carousel.button, items: (carousel.itemIds ?? []).map((itemId) => getCollectionItem(itemId) ?? getTitleItem(itemId)).filter(Boolean) })),
+      ...mergedOverride,
+      sections: overrideSections,
     };
   }
   return collection ? withoutFixedCollectionNewArrivals(mergeCuratedManifestCollection(collection)) : null;
@@ -7315,17 +9028,31 @@ function getCuratedCollectionPage(id) {
 
 function mergeCuratedManifestCollection(collection) {
   const generated = curatedManifestIndex?.collections?.[collection.id];
-  if (!generated?.sections?.length) return collection;
+  const animationShorts = getAnimationShortCollections();
+  if (!generated?.sections?.length) {
+    if (collection.id !== "animation" || !animationShorts.length) return collection;
+    return { ...collection, sections: (collection.sections ?? []).map((section) => section.id === "shorts" ? { ...section, items: animationShorts } : section) };
+  }
+  if (["david-cronenberg", "wes-anderson"].includes(collection.id)) {
+    return mergeDirectorProfileManifestCollection(collection, generated);
+  }
 
   const localSectionById = new Map(collection.sections.map((section) => [section.id, section]));
   const generatedSections = generated.sections
-    .filter((section) => section.items?.length)
+    .filter((section) => section.items?.length || (collection.id === "animation" && section.id === "shorts" && ((looneyTunesGoldenIndex.volumes?.length ?? 0) || (disneyShortsIndex.collections?.length ?? 0))))
     .map((section) => ({
       id: section.id,
       title: getCuratedSectionDisplayTitle(collection.id, section),
       menuLabel: getGeneratedCuratedMenuLabel(collection.id, section, localSectionById),
-      items: section.items.map((item) => curatedManifestItem(item, section.title)),
+      items: collection.id === "disney" && section.id === "shorts" && disneyShortsIndex.collections?.length
+        ? disneyShortsIndex.collections
+        : collection.id === "animation" && section.id === "shorts"
+          ? getAnimationShortCollections()
+          : section.items.map((item) => curatedManifestItem(item, section.title)),
     }));
+  if (collection.id === "animation" && animationShorts.length && !generatedSections.some((section) => section.id === "shorts")) {
+    generatedSections.push({ id: "shorts", title: "Shorts", items: animationShorts });
+  }
   const sections = generatedSections.filter((section) => section.id !== "new-arrivals");
   const menuRows = getCuratedGeneratedMenuRows(collection, sections);
   const orderedIds = menuRows.flat();
@@ -7342,6 +9069,22 @@ function mergeCuratedManifestCollection(collection) {
   };
 }
 
+function mergeDirectorProfileManifestCollection(collection, generated) {
+  const archiveIndex = collection.sections.findIndex((section) => /archive/i.test(section.title));
+  if (archiveIndex < 0) return collection;
+  const generatedItems = generated.sections.flatMap((section) =>
+    (section.items ?? []).map((item) => curatedManifestItem(item, section.title)),
+  );
+  const archive = collection.sections[archiveIndex];
+  const mergedArchive = {
+    ...archive,
+    items: dedupeShelfItems([...(archive.items ?? []), ...generatedItems]),
+  };
+  const sections = [...collection.sections];
+  sections[archiveIndex] = mergedArchive;
+  return { ...collection, sections };
+}
+
 function withoutFixedCollectionNewArrivals(collection) {
   if (!collection?.sections) return collection;
   const sections = collection.sections.filter((section) => section.id !== "new-arrivals");
@@ -7352,6 +9095,7 @@ function withoutFixedCollectionNewArrivals(collection) {
 }
 
 function getGeneratedCuratedMenuLabel(collectionId, section, localSectionById) {
+  if (collectionId === "disney" && section.id === "animated-classics") return "Animated Classics";
   if (collectionId === "black-excellence") {
     const label = getUpnSectionLabel(section.id);
     if (label) return label === "Television Classics" ? "Television" : label;
@@ -7367,7 +9111,7 @@ function getUpnSectionLabel(sectionId) {
   return {
     cinema: "Cinema",
     "tv-classics": "Television Classics",
-    "umoja-unity-the-prestige-collection": "The Prestige Collection",
+    "umoja-unity-the-prestige-collection": "Drama",
     "kujichagulia-self-determination-stand-up-comedy": "Stand-Up Comedy",
     "ujima-collective-work-and-responsibility-sketches-and-animation": "Sketches & Animation",
     "ujamaa-cooperative-economics-horror-because-it-doesn-t-fit-anywhere-else": "Horror",
@@ -7379,9 +9123,79 @@ function getUpnSectionLabel(sectionId) {
 
 function canonicalCollectionSectionId(collectionId, sectionId) {
   const normalized = slugify(sectionId || "featured");
+  if (collectionId === "star-trek") {
+    return { television: "tv-series", "tv-series": "tv-series" }[normalized] ?? normalized;
+  }
+  if (collectionId === "kaiju") {
+    return {
+      showa: "showa-1954-1975",
+      heisei: "heisei-1984-1995",
+      millennium: "millennium-1999-2004",
+      reiwa: "reiwa-2016-present",
+    }[normalized] ?? normalized;
+  }
+  if (collectionId === "horror") {
+    return {
+      "spoopy-kids-tv": "spooky-kids-tv",
+      "spooky-kids-tv": "spooky-kids-tv",
+    }[normalized] ?? normalized;
+  }
+  if (collectionId === "universal-monsters") {
+    return {
+      "dracula-series": "dracula",
+      "frankenstein-series": "frankenstein",
+      "mummy": "the-mummy",
+      "mummy-series": "the-mummy",
+      "the-mummy-series": "the-mummy",
+      "invisible-man-series": "invisible-man",
+      "the-invisible-man-series": "invisible-man",
+      "wolf-man-series": "wolf-man",
+      "the-wolf-man-series": "wolf-man",
+      "creature-from-the-black-lagoon-series": "creature-from-the-black-lagoon",
+      "dracula-vampire-films": "hammer-dracula-vampires",
+      "hammer-s-dracula-vampires": "hammer-dracula-vampires",
+      "frankenstein-films": "hammer-frankenstein",
+      "hammer-s-frankenstein": "hammer-frankenstein",
+    }[normalized] ?? normalized;
+  }
+  if (collectionId === "action") {
+    return {
+      "cops-crime": "cops-and-crime",
+      "disaster-survival": "disaster-and-survival",
+      "military-war": "military-and-war",
+      "spies-espionage": "spies-and-espionage",
+      "vigilantes-revenge": "vigilantes-and-revenge",
+    }[normalized] ?? normalized;
+  }
+  if (collectionId === "animation") {
+    return {
+      "mtv-and-alternative": "mtv-alternative",
+      "the-toy-shelf-1980-s": "the-toy-shelf-1980s",
+      "the-toy-shelf-1990-s": "the-toy-shelf-1990s",
+    }[normalized] ?? normalized;
+  }
+  if (collectionId === "comedy") {
+    return {
+      black: "black-excellence",
+      "black-excellence": "black-excellence",
+      buddies: "buddy-comedies",
+      "buddy-comedies": "buddy-comedies",
+      dark: "dark-comedy",
+      "dark-comedy": "dark-comedy",
+      musical: "musicals",
+      musicals: "musicals",
+      "road-trip": "road-trips",
+      "road-trips": "road-trips",
+      stoner: "stoner-comedy",
+      "stoner-comedy": "stoner-comedy",
+    }[normalized] ?? normalized;
+  }
   if (collectionId !== "black-excellence") return normalized;
   return {
     television: "tv-classics",
+    "television-classics": "tv-classics",
+    "tv-classics": "tv-classics",
+    drama: "umoja-unity-the-prestige-collection",
     "the-prestige-collection": "umoja-unity-the-prestige-collection",
     "stand-up-comedy": "kujichagulia-self-determination-stand-up-comedy",
     "sketches-and-animation": "ujima-collective-work-and-responsibility-sketches-and-animation",
@@ -7447,7 +9261,7 @@ function getCuratedGeneratedMenuRows(collection, sections) {
   }
   if (collection.id === "comedy") {
     return [
-      ["marx-brothers", "slapstick", "satire", "farce", "parody", "mockumentary"].filter((id) => ids.has(id)),
+      ["marx-brothers", "slapstick", "satire", "farce", "parody", "mockumentary", "musicals"].filter((id) => ids.has(id)),
       ["teen", "family", "buddy-comedies", "odd-couples", "fish-out-of-water", "road-trips"].filter((id) => ids.has(id)),
       ["black-excellence", "dark-comedy", "observational", "stoner-comedy", "indefensible-stupidity"].filter((id) => ids.has(id)),
     ].filter((row) => row.length);
@@ -7468,8 +9282,8 @@ function getCuratedGeneratedMenuRows(collection, sections) {
   }
   if (collection.id === "disney") {
     return [
-      ["animated-classics", "live-action-classics", "renaissance", "post-renaissance", "modern-times"].filter((id) => ids.has(id)),
-      ["pixar", "animated-tv", "muppetmania", "shorts", "blast-from-the-past", "other-animated-films"].filter((id) => ids.has(id)),
+      ["animated-classics", "shorts", "live-action-classics", "renaissance", "post-renaissance", "modern-times"].filter((id) => ids.has(id)),
+      ["pixar", "animated-tv", "muppetmania", "blast-from-the-past", "other-animated-films"].filter((id) => ids.has(id)),
     ].filter((row) => row.length);
   }
   if (collection.id === "endless-anime-odyssey") {
@@ -7521,25 +9335,66 @@ function getCuratedCollectionCard(collection) {
 
 function collectionHasVisibleMedia(collection) {
   if (state.libraryMode !== "media") return true;
+  if (["cinema-of-japan", "holiday-chaos"].includes(collection.id)) return true;
   return getLiveCollectionItemIds(collection).length > 0;
 }
 
 function getRenderableCollectionSections(collection) {
   const baseSections = collection.sections ?? [];
   const byId = new Map(baseSections.map((section) => [section.id, { ...section, items: [...(section.items ?? [])] }]));
+  addDirectorProfileLibraryItems(collection, byId);
   getAllocatedCollectionEntries(collection).forEach((entry) => {
     const sectionId = canonicalCollectionSectionId(collection.id, entry.sectionId);
-    const existing = byId.get(sectionId) ?? { id: sectionId, title: entry.sectionTitle, items: [] };
+    if (isContainerOnlyCollectionSection(collection.id, sectionId)) return;
+    const directorArchive = ["david-cronenberg", "wes-anderson"].includes(collection.id)
+      ? [...byId.values()].find((section) => /archive/i.test(section.title))
+      : null;
+    if (directorArchive) {
+      if (!directorArchive.items.some((item) => item.id === entry.item.id)) directorArchive.items.push(entry.item);
+      return;
+    }
+    const existing = byId.get(sectionId) ?? { id: sectionId, title: libraryDisplayLabel(entry.sectionTitle, "Featured"), items: [] };
     if (!(existing.items ?? []).some((item) => item.id === entry.item.id)) existing.items = [...(existing.items ?? []), entry.item];
     byId.set(sectionId, existing);
   });
   if (state.libraryMode !== "media") return [...byId.values()];
   getFolderCollectionEntries(collection).forEach((entry) => {
+    const directorArchive = ["david-cronenberg", "wes-anderson"].includes(collection.id)
+      ? [...byId.values()].find((section) => /archive/i.test(section.title))
+      : null;
+    if (directorArchive) {
+      if (!directorArchive.items.some((item) => item.id === entry.item.id)) directorArchive.items.push(entry.item);
+      return;
+    }
     const sectionId = canonicalCollectionSectionId(collection.id, entry.sectionSlug);
     if (byId.has(sectionId)) return;
-    byId.set(sectionId, { id: sectionId, title: entry.section || "Unsorted", items: [] });
+    byId.set(sectionId, { id: sectionId, title: libraryDisplayLabel(entry.section), items: [] });
   });
   return [...byId.values()];
+}
+
+function addDirectorProfileLibraryItems(collection, sectionMap) {
+  const directorName = {
+    "david-cronenberg": "david cronenberg",
+    "wes-anderson": "wes anderson",
+  }[collection.id];
+  if (!directorName) return;
+
+  const archiveSection = [...sectionMap.values()].find((section) => /archive/i.test(section.title));
+  if (!archiveSection) return;
+  const existingIds = new Set((archiveSection.items ?? []).map((item) => item.id));
+  getMovieLibraryItems()
+    .filter((item) => {
+      const stored = getMetadataRecordForItem(item);
+      return String(item.director ?? item.details?.director ?? stored?.metadata?.director ?? stored?.director ?? "")
+      .split(/[,;&/]|\band\b/i)
+      .map((name) => slugify(name).replace(/-/g, " "))
+      .includes(directorName);
+    })
+    .forEach((item) => {
+      if (!existingIds.has(item.id)) archiveSection.items.push(item);
+      existingIds.add(item.id);
+    });
 }
 
 function getCollectionPageItemIds(collection) {
@@ -7562,39 +9417,77 @@ function getLiveCollectionItemIds(collection) {
 function getLiveCollectionSectionItems(collection, section) {
   const byId = new Map();
   const explicitItems = section.items ?? [];
-  const isFranchiseOnlySection = explicitItems.length > 0 && explicitItems.every((item) => item.mediaType === "franchise");
+  // Container-only shelves deliberately represent their media through a
+  // higher-level card. Do not append the same folder's individual movies or
+  // shorts beside those cards (notably Disney's character/theme collections).
+  const isContainerOnlySection = isContainerOnlyCollectionSection(collection.id, section.id)
+    || (explicitItems.length > 0 && explicitItems.every((item) =>
+      item.mediaType === "franchise" || item.mediaType === "disney-shorts-collection" || item.mediaType === "looney-tunes-volume",
+    ));
 
   explicitItems.forEach((item) => {
-    if (item.mediaType === "franchise") {
+    if (item.mediaType === "franchise" || item.mediaType === "disney-shorts-collection" || item.mediaType === "looney-tunes-volume") {
       byId.set(item.id, item);
       return;
     }
-    const liveItem = getCollectionItem(item.id, { mediaOnly: true });
+    // Seeded collection entries often predate the scanner-generated live ID.
+    // Resolve them by the same title/year identity used by the metadata editor
+    // so pre-tagged additions populate without requiring a manual Save.
+    const hydratedItem = getCuratedHydratedItem(item);
+    const liveItem = hasPlayableMediaFiles(hydratedItem) ? hydratedItem : getCollectionItem(item.id, { mediaOnly: true });
     if (liveItem) byId.set(liveItem.id, liveItem);
   });
 
-  if (!isFranchiseOnlySection) {
+  if (!isContainerOnlySection) {
     getFolderCollectionEntries(collection, section).forEach((entry) => { if (!byId.has(entry.item.id)) byId.set(entry.item.id, entry.item); });
     getAllocatedCollectionEntries(collection, section).forEach((entry) => { if (!byId.has(entry.item.id)) byId.set(entry.item.id, entry.item); });
   }
 
-  return [...byId.values()].sort(sortCollectionItemsForDisplay);
+  const visibleItems = [...byId.values()].filter((item) => !isItemDeleted(item.id));
+
+  if (collection.id === "animation" && canonicalCollectionSectionId(collection.id, section.id) === "shorts") {
+    const orderedIds = getAnimationShortCollections().map((item) => item.id);
+    const orderedIdSet = new Set(orderedIds);
+    return [
+      ...orderedIds.map((id) => byId.get(id)).filter((item) => item && !isItemDeleted(item.id)),
+      ...visibleItems.filter((item) => !orderedIdSet.has(item.id)),
+    ];
+  }
+
+  return visibleItems.sort(sortCollectionItemsForDisplay);
+}
+
+function isContainerOnlyCollectionSection(collectionId, sectionId) {
+  return (collectionId === "horror" && canonicalCollectionSectionId(collectionId, sectionId) === "killers")
+    || (collectionId === "disney" && canonicalCollectionSectionId(collectionId, sectionId) === "shorts")
+    || (collectionId === "animation" && canonicalCollectionSectionId(collectionId, sectionId) === "shorts");
 }
 
 function getAllocatedCollectionEntries(collection, section = null) {
-  const entries = [];
-  Object.entries(metadataOverrides?.items ?? {}).forEach(([itemId, stored]) => {
-    const allocations = stored?.metadata?.collectionAllocations ?? stored?.collectionAllocations ?? [];
-    allocations.forEach((allocation) => {
-      if (allocation.collectionId !== collection.id) return;
-      const sectionId = canonicalCollectionSectionId(collection.id, allocation.sectionId || "featured");
-      if (section && !collectionMatchKeys(section).has(slugify(sectionId))) return;
-      const item = getTitleItem(itemId);
-      if (!item) return;
-      entries.push({ item, sectionId: slugify(sectionId), sectionTitle: allocation.pathLabels?.at(-1) ?? "Featured" });
+  const cacheKey = `${getMetadataCacheKey()}::${collection.id}`;
+  let entries = getAllocatedCollectionEntries.cache?.get(cacheKey);
+  if (!entries) {
+    entries = [];
+    Object.entries(metadataOverrides?.items ?? {}).forEach(([itemId, stored]) => {
+      const allocations = stored?.metadata?.collectionAllocations ?? stored?.collectionAllocations ?? [];
+      allocations.forEach((allocation) => {
+        const allocationCollectionId = ({ "dc-animation": "dc", arrowverse: "dc" })[allocation.collectionId] ?? allocation.collectionId;
+        if (allocationCollectionId !== collection.id) return;
+        const sectionId = canonicalCollectionSectionId(collection.id, allocation.sectionId || "featured");
+        const item = getTitleItem(itemId);
+        if (!item) return;
+        entries.push({ item, sectionId: slugify(sectionId), sectionTitle: allocation.pathLabels?.at(-1) ?? "Featured" });
+      });
     });
-  });
-  return entries;
+    if (!getAllocatedCollectionEntries.cache || getAllocatedCollectionEntries.cacheKey !== getMetadataCacheKey()) {
+      getAllocatedCollectionEntries.cache = new Map();
+      getAllocatedCollectionEntries.cacheKey = getMetadataCacheKey();
+    }
+    getAllocatedCollectionEntries.cache.set(cacheKey, entries);
+  }
+  if (!section) return entries;
+  const sectionKeys = collectionMatchKeys(section);
+  return entries.filter((entry) => sectionKeys.has(slugify(entry.sectionId)));
 }
 
 function sortCollectionItemsForDisplay(a, b) {
@@ -7605,39 +9498,72 @@ function sortCollectionItemsForDisplay(a, b) {
 }
 
 function getFolderCollectionEntries(collection, section = null) {
-  const collectionKeys = collectionMatchKeys(collection);
-  const sectionKeys = section ? collectionMatchKeys(section) : null;
-  return getGeneratedCollectionFolderEntries().filter((entry) => {
-    if (!collectionKeys.has(entry.collectionSlug)) return false;
+  const metadataKey = getMetadataCacheKey();
+  if (!getFolderCollectionEntries.cache || getFolderCollectionEntries.cacheKey !== metadataKey) {
+    getFolderCollectionEntries.cache = new Map();
+    getFolderCollectionEntries.cacheKey = metadataKey;
+  }
+  let collectionEntries = getFolderCollectionEntries.cache.get(collection.id);
+  if (!collectionEntries) {
+    const collectionKeys = collectionMatchKeys(collection);
+    collectionEntries = getGeneratedCollectionFolderEntries().filter((entry) => collectionKeys.has(entry.collectionSlug));
+    getFolderCollectionEntries.cache.set(collection.id, collectionEntries);
+  }
+  const sectionKeys = section
+    ? new Set([...collectionMatchKeys(section)].map((key) => slugify(canonicalCollectionSectionId(collection.id, key))))
+    : null;
+  return collectionEntries.filter((entry) => {
     if (!sectionKeys) return true;
-    return sectionKeys.has(entry.sectionSlug);
+    return sectionKeys.has(slugify(canonicalCollectionSectionId(collection.id, entry.sectionSlug)));
   });
 }
 
 function collectionMatchKeys(entity) {
-  return new Set([entity?.id, entity?.title, entity?.label, entity?.name].filter(Boolean).map((value) => slugify(String(value))));
+  return new Set([
+    entity?.id,
+    entity?.title,
+    entity?.label,
+    entity?.name,
+    ...(entity?.folderAliases ?? []),
+  ].filter(Boolean).map((value) => slugify(String(value))));
 }
 
 function getGeneratedCollectionFolderEntries() {
-  const cacheKey = [generatedMetadata.generatedAt ?? "pending", generatedMetadata.records?.length ?? 0, generatedMetadata.unmatchedFiles?.length ?? 0].join(":");
+  const cacheKey = getMetadataCacheKey();
   if (getGeneratedCollectionFolderEntries.cache?.key === cacheKey) return getGeneratedCollectionFolderEntries.cache.entries;
+  const liveItemById = new Map();
+  [...getMovieLibraryItems(), ...getTvLibraryItems()].forEach((item) => {
+    liveItemById.set(item.id, item);
+    (item.duplicateItemIds ?? []).forEach((id) => liveItemById.set(id, item));
+  });
   const byItemAndSection = new Map();
+  const addEntry = (item, pathInfo, file) => {
+    const key = item.id + "::" + pathInfo.collectionSlug + "::" + pathInfo.sectionSlug;
+    const existing = byItemAndSection.get(key);
+    const files = [...(existing?.item?.files ?? []), ...(item.files ?? []), file]
+      .filter(Boolean);
+    const dedupedFiles = [...new Map(files.map((entry) => [String(entry.path ?? entry.episodeId ?? ""), entry])).values()];
+    byItemAndSection.set(key, {
+      ...pathInfo,
+      item: { ...(existing?.item ?? {}), ...item, files: dedupedFiles },
+    });
+  };
   (generatedMetadata.records ?? []).forEach((record) => {
     (record.files ?? []).forEach((file) => {
       const pathInfo = getMovieCollectionPathInfo(file?.path);
       if (!pathInfo) return;
-      const item = getGeneratedCollectionRecordItem(record, file, pathInfo);
+      const item = getGeneratedCollectionRecordItem(record, file, pathInfo, liveItemById.get(record.id));
       if (!item) return;
-      byItemAndSection.set(item.id + "::" + pathInfo.collectionSlug + "::" + pathInfo.sectionSlug, { ...pathInfo, item });
+      addEntry(item, pathInfo, file);
     });
   });
   (generatedMetadata.unmatchedFiles ?? []).forEach((file) => {
-    const pathInfo = getMovieCollectionPathInfo(file?.path);
-    if (!pathInfo || isLikelyBonusFeature(file)) return;
-    const item = getCollectionFolderItemFromUnmatchedFile(file, pathInfo);
-    if (!item) return;
-    byItemAndSection.set(item.id + "::" + pathInfo.collectionSlug + "::" + pathInfo.sectionSlug, { ...pathInfo, item });
-  });
+      const pathInfo = getMovieCollectionPathInfo(file?.path);
+      if (!pathInfo || isLikelyBonusFeature(file)) return;
+      const item = getCollectionFolderItemFromUnmatchedFile(file, pathInfo);
+      if (!item) return;
+      addEntry(item, pathInfo, file);
+    });
   const entries = [...byItemAndSection.values()];
   getGeneratedCollectionFolderEntries.cache = { key: cacheKey, entries };
   return entries;
@@ -7650,46 +9576,78 @@ function getCollectionFolderItemFromUnmatchedFile(file, pathInfo) {
   return scannedMovieFromFile(file);
 }
 
-function getTvShowFromCollectionFile(file, pathInfo) {
+function getTvShowFromCollectionFile(file, pathInfo, preferredShow = null) {
   const parsed = file?.parsed ?? {};
   const titleSource = [parsed.title, file?.path].filter(Boolean).join(" ");
   const hasEpisodeNumber = /\bS\d{1,2}\s*E\d{1,3}\b/i.test(titleSource) || /\bSeason\s+\d+\b/i.test(String(file?.path ?? ""));
   const sectionLooksTv = /\btv\b|television|episodes?|series|cartoons?/i.test(pathInfo.section ?? "");
   if (!hasEpisodeNumber && !sectionLooksTv) return null;
-  const showFolder = getCollectionShowFolderName(file?.path);
-  const showTitle = showFolder?.replace(/\s*\((19|20)\d{2}\)\s*$/, "").trim() || cleanEpisodeSeriesTitle(parsed.title);
+  const showFolder = pathInfo.showFolder || getCollectionShowFolderName(file?.path);
+  const showTitle = cleanCollectionShowFolderTitle(showFolder) || cleanEpisodeSeriesTitle(parsed.title);
   if (!showTitle) return null;
-  const normalized = normalizeTitleForMatch(showTitle);
-  const show = getAllTvTitleItems().find((item) => normalizeTitleForMatch(item.title) === normalized);
+  const normalized = normalizeCollectionShowTitle(showTitle);
+  const canonicalScannedId = "scan-tv-" + slugify(showTitle);
+  const show = getAllTvTitleItems()
+    .filter((item) => normalizeCollectionShowTitle(item.title) === normalized)
+    .sort((a, b) => Number(b.id === canonicalScannedId) - Number(a.id === canonicalScannedId)
+      || Number(Boolean(b.tmdbId)) - Number(Boolean(a.tmdbId))
+      || String(a.id).length - String(b.id).length)[0]
+    ?? preferredShow;
   const base = show ?? { id: "scanned-tv-" + slugify(showTitle), mediaType: "tv", title: showTitle, year: String(showFolder ?? file?.path ?? "").match(/\b(19|20)\d{2}\b/)?.[0] ?? parsed.year ?? "Year pending", genre: pathInfo.section || "TV", status: "scanned", posterA: file.art?.colors?.[0] ?? "#202329", posterB: file.art?.colors?.[1] ?? "#d8b35d", posterCode: buildPosterCode(showTitle), addedAt: file.modifiedAt ?? generatedMetadata.generatedAt };
   return { ...base, mediaType: "tv", hasNewEpisodes: true, addedAt: file.modifiedAt ?? base.addedAt };
 }
 
+function cleanCollectionShowFolderTitle(value = "") {
+  return String(value)
+    .replace(/\s*\((?:19|20)\d{2}\)\s*$/i, "")
+    .replace(/\s*\(\s*seasons?\s+\d+(?:\s*[-–]\s*\d+)?\s*\)\s*$/i, "")
+    .replace(/\s+complete(?:\s+tv)?(?:\s+series)?\s*$/i, "")
+    .trim();
+}
+
+function normalizeCollectionShowTitle(title = "") {
+  return normalizeTitleForMatch(title).replace(/^the\s+/, "");
+}
+
 function getCollectionShowFolderName(filePath) {
   const parts = String(filePath ?? "").split(/[\\/]+/).filter(Boolean);
-  const collectionsIndex = parts.findIndex((part, index) => part.toLowerCase() === "collections" && parts[index - 1]?.toLowerCase() === "movies");
-  if (collectionsIndex < 0) return "";
-  return parts[collectionsIndex + 4] ?? "";
+  const hierarchyIndex = getCollectionHierarchyIndex(parts);
+  if (hierarchyIndex < 0) return "";
+  return parts[hierarchyIndex + 4] ?? "";
 }
 
 function cleanEpisodeSeriesTitle(title = "") {
   return String(title).replace(/\bS\d{1,2}\s*E\d{1,3}\b.*$/i, "").replace(/[-_=]+\s*$/, "").trim();
 }
 
-function getGeneratedCollectionRecordItem(record, file, pathInfo) {
-  if (record.mediaType === "movie") return getCollectionItem(record.id, { mediaOnly: true }) ?? scannedMovieFromRecord(record, file);
-  if (record.mediaType === "tv") return getTvLibraryItems().find((item) => item.id === record.id) ?? getTvShowFromCollectionFile(file, pathInfo);
+function getGeneratedCollectionRecordItem(record, file, pathInfo, preferredItem = null) {
+  if (record.mediaType === "movie") return preferredItem ?? scannedMovieFromRecord(record, file);
+  if (record.mediaType === "tv") {
+    const matchedShow = preferredItem ?? getTvTitleItem(record.id);
+    return getTvShowFromCollectionFile(file, pathInfo, matchedShow) ?? matchedShow;
+  }
   return null;
 }
 
 function getMovieCollectionPathInfo(filePath) {
   const parts = String(filePath ?? "").split(/[\\/]+/).filter(Boolean);
-  const collectionsIndex = parts.findIndex((part, index) => part.toLowerCase() === "collections" && parts[index - 1]?.toLowerCase() === "movies");
-  if (collectionsIndex < 0 || !parts[collectionsIndex + 2]) return null;
-  const group = parts[collectionsIndex + 1] ?? "";
-  const collection = parts[collectionsIndex + 2] ?? "";
-  const section = parts[collectionsIndex + 3] ?? "Unsorted";
-  return { group, collection, section, groupSlug: slugify(group), collectionSlug: slugify(collection), sectionSlug: slugify(section) };
+  const hierarchyIndex = getCollectionHierarchyIndex(parts);
+  if (hierarchyIndex < 0 || !parts[hierarchyIndex + 2]) return null;
+  const group = parts[hierarchyIndex + 1] ?? "";
+  // The TV Guide is channel/show/episode, one level shallower than the
+  // collection hierarchy. Treating it as a collection makes the episode
+  // filename look like a show folder and creates one phantom title per file.
+  if (parts[hierarchyIndex]?.toLowerCase() === "tv" && slugify(group) === "tobytube-tv-guide") return null;
+  const collection = parts[hierarchyIndex + 2] ?? "";
+  const section = libraryDisplayLabel(parts[hierarchyIndex + 3]);
+  const showFolder = parts[hierarchyIndex + 4] ?? "";
+  return { group, collection, section, showFolder, groupSlug: slugify(group), collectionSlug: slugify(collection), sectionSlug: slugify(section) };
+}
+
+function getCollectionHierarchyIndex(parts) {
+  const collectionsIndex = parts.findIndex((part) => part.toLowerCase() === "collections");
+  if (collectionsIndex >= 0) return collectionsIndex;
+  return parts.findIndex((part, index) => index <= 1 && part.toLowerCase() === "tv");
 }
 
 function getMovieCollections() {
@@ -7700,10 +9658,9 @@ function getMovieCollections() {
 }
 
 function getTvCollections() {
-  const tvOnlyCollections = mediaCollections.filter((collection) =>
+  return mediaCollections.filter((collection) =>
     collection.itemIds.some((id) => getCollectionItem(id)?.mediaType === "tv"),
   );
-  return [...tvOnlyCollections, ...tvMockCollections];
 }
 
 function getTvPlaylistItems() {
@@ -7755,11 +9712,15 @@ function getScannedMovieItems() {
   const cacheKey = getMetadataCacheKey();
   if (getScannedMovieItems.cache?.key === cacheKey) return getScannedMovieItems.cache.items;
   const records = (generatedMetadata.records ?? [])
-    .filter((record) => record.mediaType === "movie" && record.files?.length && !record.files.every(isLikelyBonusFeature) && !movies.some((movie) => movie.id === record.id))
+    .filter((record) => record.mediaType === "movie"
+      && record.files?.length
+      && !record.files.every(isLikelyBonusFeature)
+      && (!isEpisodeStructuredMovieRecord(record) || isDurableSingleFilmMergeMember(record.id))
+      && !movies.some((movie) => movie.id === record.id))
     .map((record) => scannedMovieFromRecord(record, record.files[0]));
   const claimedPaths = new Set(records.flatMap((item) => item.files ?? []).map((file) => normalizeMediaFilePath(file.path)).filter(Boolean));
   const unmatched = (generatedMetadata.unmatchedFiles ?? [])
-    .filter((file) => file.parsed?.mediaType === "movie" && !isLikelyBonusFeature(file) && !claimedPaths.has(normalizeMediaFilePath(file.path)))
+    .filter((file) => file.parsed?.mediaType === "movie" && !isEpisodeStructuredMediaFile(file) && !isLikelyBonusFeature(file) && !claimedPaths.has(normalizeMediaFilePath(file.path)))
     .map(scannedMovieFromFile);
   const byId = new Map();
   [...records, ...unmatched].forEach((item) => {
@@ -7770,15 +9731,37 @@ function getScannedMovieItems() {
   return items;
 }
 
+function isEpisodeStructuredMediaFile(file) {
+  const parsed = file?.parsed ?? {};
+  if (parsed.season != null && parsed.episode != null) return true;
+  return /(?:^|[. _-])S\d{1,2}E\d{1,3}(?:\b|[. _-])/i.test(String(file?.path ?? ""));
+}
+
+function isEpisodeStructuredMovieRecord(record) {
+  return record?.mediaType === "movie" && (record.files ?? []).some(isEpisodeStructuredMediaFile);
+}
+
+function isDurableSingleFilmMergeMember(itemId) {
+  const metadata = metadataOverrides?.items?.[itemId]?.metadata;
+  return metadata?.mergeType === "single-film" && Boolean(metadata.mergedIntoId);
+}
+
 function normalizeMediaFilePath(filePath) {
   return String(filePath ?? "").replace(/\//g, "\\").toLowerCase();
 }
 
 function movieLibraryIdentity(item) {
   const override = getItemMetadataOverride(item.id);
+  const record = getMetadataRecordForItem(item);
+  const providerId = override.metadata?.tmdbId ?? override.match?.id ?? record?.provider?.tmdbId ?? record?.provider?.providerId ?? (String(record?.provider?.provider ?? "").toLowerCase() === "tmdb" ? record?.provider?.id : null);
+  if (providerId) return `tmdb:${providerId}`;
   const title = override.title ?? override.metadata?.title ?? getDisplayTitle(item) ?? item.title;
   const year = override.year ?? override.metadata?.year ?? item.year ?? "tba";
-  return `${normalizeTitleForMatch(title)}|${year}`;
+  return `${normalizeMovieIdentityTitle(title)}|${year}`;
+}
+
+function normalizeMovieIdentityTitle(value = "") {
+  return normalizeTitleForMatch(String(value).replace(/(?<=[a-z0-9])['’](?=[a-z0-9])/gi, ""));
 }
 
 function movieLibraryItemScore(item) {
@@ -7826,7 +9809,7 @@ function scannedMovieFromRecord(record, file) {
     title: record.title,
     year: record.year ?? file?.parsed?.year ?? "Year pending",
     country: record.country ?? "Scanned",
-    genre: getPrimaryGenreFromRecord(record) ?? "Unsorted",
+    genre: libraryDisplayLabel(getPrimaryGenreFromRecord(record)),
     status: "scanned",
     addedAt: file?.modifiedAt ?? generatedMetadata.generatedAt,
     posterA: record.art?.colors?.[0] ?? "#202329",
@@ -7847,9 +9830,9 @@ function scannedMovieFromFile(file) {
     title,
     year,
     country: "Scanned",
-    genre: "Unsorted",
+    genre: "Library",
     status: "scanned",
-    addedAt: file.modifiedAt ?? generatedMetadata.generatedAt,
+    addedAt: file.libraryUpdatedAt ?? file.addedAt ?? file.modifiedAt ?? generatedMetadata.generatedAt,
     posterA: file.art?.colors?.[0] ?? "#202329",
     posterB: file.art?.colors?.[1] ?? "#d8b35d",
     posterUrl: file.art?.posterUrl ?? file.provider?.posterUrl ?? null,
@@ -7858,18 +9841,23 @@ function scannedMovieFromFile(file) {
   });
 }
 
+function getLatestLibraryActivityFromFiles(files = []) {
+  return files
+    .map((file) => file.libraryUpdatedAt ?? file.addedAt ?? file.modifiedAt)
+    .filter(Boolean)
+    .sort((a, b) => String(b).localeCompare(String(a)))[0] ?? null;
+}
+
 function withPlaybackState(item) {
   const resume = getResumeEntryForItem(item);
   const record = getMetadataRecordForItem(item);
   const files = item.files ?? record?.files ?? [];
-  const latestFile = files
-    .filter((file) => file.modifiedAt)
-    .sort((a, b) => String(b.modifiedAt).localeCompare(String(a.modifiedAt)))[0];
+  const latestActivity = getLatestLibraryActivityFromFiles(files);
   const enriched = files.length
     ? {
         ...item,
         files,
-        addedAt: item.addedAt ?? latestFile?.modifiedAt ?? generatedMetadata.generatedAt,
+        addedAt: latestActivity ?? item.addedAt ?? generatedMetadata.generatedAt,
         status: item.status === "unmatched" ? "scanned" : item.status,
       }
     : item;
@@ -7879,10 +9867,7 @@ function withPlaybackState(item) {
 
 function getLatestTvFileDate(show) {
   const record = metadataIndex[show.id] ?? generatedMetadata.records?.find((item) => item.id === show.id || normalizeTitleForMatch(item.title) === normalizeTitleForMatch(show.title));
-  return (record?.files ?? [])
-    .map((file) => file.modifiedAt)
-    .filter(Boolean)
-    .sort((a, b) => String(b).localeCompare(String(a)))[0] ?? null;
+  return getLatestLibraryActivityFromFiles(record?.files ?? []);
 }
 
 function getResumeLibraryItems(kind = null) {
@@ -7891,7 +9876,12 @@ function getResumeLibraryItems(kind = null) {
     .map((entry) => {
       const located = entry.kind === "tv" ? resolveResumeTvEpisode(entry) : null;
       const item = entry.kind === "tv" ? located?.show : getTitleItem(entry.itemId);
-      return item ? { ...withPlaybackState(item), resumeEntry: entry, resumeLocation: located } : null;
+      // A completed programme can still be actively rewatched; the episode's
+      // saved position, not the programme's lifetime completion state, decides
+      // whether it belongs in Current Rentals.
+      return item && (entry.kind === "tv" || !isItemCompleted(item))
+        ? { ...withPlaybackState(item), resumeEntry: entry, resumeLocation: located }
+        : null;
     })
     .filter(Boolean)
     .sort((a, b) => String(b.resumeEntry?.updatedAt ?? "").localeCompare(String(a.resumeEntry?.updatedAt ?? "")));
@@ -8119,6 +10109,7 @@ function renderTitleScreen(item) {
         </div>
       </section>
       ${renderCastShelf(cast, item)}
+      ${renderInductionCard(details)}
       ${renderMatchCard(details)}
       ${renderContentListing(details)}
     </div>
@@ -8224,7 +10215,9 @@ const HORROR_FRANCHISE_TITLE_META = {
 
 function renderFranchiseTitleScreen(item) {
   const isUserFranchise = item.recordType === "franchise";
-  const rows = isUserFranchise ? ["Movies & Series"] : (item.franchiseCarousels?.length ? item.franchiseCarousels : ["Movies in This Series"]);
+  const rows = isUserFranchise
+    ? (item.templateType === "aisle-franchise" ? ["Movies in This Series", "TV Series and More"] : ["Movies & Series"])
+    : (item.franchiseCarousels?.length ? item.franchiseCarousels : ["Movies in This Series"]);
   const heroStyle = `--poster-a:${item.posterA ?? "#1c1012"};--poster-b:${item.posterB ?? "#d13c2f"}`;
   const sections = rows.map((title) => ({
     id: slugify(`${item.id}-${title}`),
@@ -8258,7 +10251,11 @@ function renderFranchiseTitleScreen(item) {
 
 function getFranchiseCarouselItems(item, carouselTitle) {
   if (item.recordType === "franchise") {
-    return dedupeShelfItems((item.memberIds ?? []).map((id) => getTitleItem(id)).filter((entry) => entry && entry.id !== item.id));
+    const members = dedupeShelfItems((item.memberIds ?? []).map((id) => getTitleItem(id)).filter((entry) => entry && entry.id !== item.id));
+    if (item.templateType !== "aisle-franchise") return members;
+    return slugify(carouselTitle) === "movies-in-this-series"
+      ? members.filter((entry) => entry.mediaType === "movie")
+      : members.filter((entry) => entry.mediaType !== "movie");
   }
   const carouselKey = slugify(carouselTitle);
   const rules = HORROR_FRANCHISE_RULES[item.id];
@@ -8459,7 +10456,7 @@ function renderMovieTitleScreen(item) {
         <main class="toby-movie-main">
           <h1>${escapeHtml(getDisplayTitle(item))}</h1>
           <p class="toby-movie-meta">${escapeHtml(renderMovieHeroMetaLine(item, details))}</p>
-          ${renderMovieRatings(details)}
+          ${renderMovieRatings(details, getMovieRemainingTimeLabel(item, details, resume))}
           <div class="toby-movie-actions">
             <button class="toby-tv-play toby-movie-play" type="button" data-action="play-title" data-title-id="${escapeHtml(item.id)}"><span></span>${playLabel}</button>
             ${resume ? `<button class="toby-tv-secondary" type="button" data-action="play-title" data-start-over="true" data-title-id="${escapeHtml(item.id)}">Play from Start</button>` : ""}
@@ -8483,7 +10480,7 @@ function renderTobyMovieTopbar() {
     <header class="toby-tv-detail-bar toby-movie-detail-bar">
       <div class="toby-tv-brand toby-movie-brand">
         <span>TOBYTUBE</span>
-        <i></i><i></i><i></i><i></i>
+        <div class="toby-tv-brand-bars" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
       </div>
       <div class="toby-tv-detail-icons toby-movie-detail-icons" aria-hidden="true">
         <span>Search</span>
@@ -8499,24 +10496,131 @@ function renderMovieHeroMetaLine(item, details) {
   return [year, ...genres, formatMovieRuntime(details.runtime), details.rating ?? "NR"].filter(Boolean).join(" / ");
 }
 
+const RENTAL_CARD_GENRE_PALETTES = {
+  action: { background: "#2b1510", accent: "#ffb06a", text: "#fff6ed", line: "rgba(255, 176, 106, 0.28)" },
+  comedy: { background: "#30200e", accent: "#ffd58a", text: "#fff9ea", line: "rgba(255, 213, 138, 0.28)" },
+  documentary: { background: "#172126", accent: "#e5edf2", text: "#f6fafc", line: "rgba(229, 237, 242, 0.25)" },
+  drama: { background: "#2c1d0f", accent: "#f2c36f", text: "#fff8eb", line: "rgba(242, 195, 111, 0.27)" },
+  fantasy: { background: "#28163b", accent: "#dfa0ff", text: "#fcf3ff", line: "rgba(223, 160, 255, 0.28)" },
+  horror: { background: "#2b1115", accent: "#ff9187", text: "#fff3f1", line: "rgba(255, 145, 135, 0.27)" },
+  romance: { background: "#35141e", accent: "#ffa2b8", text: "#fff4f7", line: "rgba(255, 162, 184, 0.29)" },
+  "sci-fi": { background: "#082129", accent: "#9af4aa", text: "#f1fff5", line: "rgba(154, 244, 170, 0.27)" },
+  sport: { background: "#142442", accent: "#8fc3ff", text: "#f2f8ff", line: "rgba(143, 195, 255, 0.28)" },
+  western: { background: "#322114", accent: "#edbd7d", text: "#fff7ec", line: "rgba(237, 189, 125, 0.28)" },
+};
+
+function rentalCardGenreKey(value) {
+  const genre = slugify(value ?? "");
+  if (!genre) return null;
+  if (/romantic-comedy|romcom|rom-com/.test(genre)) return "romance";
+  if (/dark-comedy|black-comedy/.test(genre)) return "comedy";
+  if (/documentary|docuseries|true-crime|biograph/.test(genre)) return "documentary";
+  if (/sci-fi|science-fiction|cyberpunk|space-opera|alien/.test(genre)) return "sci-fi";
+  if (/horror|slasher|supernatural|creature-feature/.test(genre)) return "horror";
+  if (/western|oostern|cowboy/.test(genre)) return "western";
+  if (/sport|boxing|wrestling|racing/.test(genre)) return "sport";
+  if (/fantasy|fairy-tale|sword-sorcery|mytholog/.test(genre)) return "fantasy";
+  if (/romance|romantic|erotica/.test(genre)) return "romance";
+  if (/comedy|comic|satire|slapstick/.test(genre)) return "comedy";
+  if (/action|adventure|thriller|crime|martial-arts|war|spy|espionage|disaster|survival|vigilante/.test(genre)) return "action";
+  if (/drama|historical|period|coming-of-age/.test(genre)) return "drama";
+  return null;
+}
+
+function getRentalCardGenreKeys(item, details) {
+  const rawGenres = [item.genre, ...(details.genres ?? [])].filter(Boolean);
+  const normalized = rawGenres.map(rentalCardGenreKey).filter(Boolean);
+  const rawKey = rawGenres.map((genre) => slugify(genre)).join(" ");
+  const hasRomance = normalized.includes("romance") || /romantic|romance|romcom|rom-com/.test(rawKey);
+  const hasComedy = normalized.includes("comedy") || /comedy|comic/.test(rawKey);
+  const primary = hasRomance && hasComedy
+    ? "romance"
+    : normalized[0] ?? "drama";
+  return [primary, ...normalized.filter((genre) => genre !== primary)].filter((genre, index, genres) => genres.indexOf(genre) === index);
+}
+
+function getRentalCardStyle(item, details) {
+  const genreKeys = getRentalCardGenreKeys(item, details);
+  const primary = RENTAL_CARD_GENRE_PALETTES[genreKeys[0]] ?? RENTAL_CARD_GENRE_PALETTES.drama;
+  const secondary = RENTAL_CARD_GENRE_PALETTES[genreKeys[1]] ?? primary;
+  return [
+    `--rental-bg-a:${primary.background}`,
+    `--rental-bg-b:${secondary.background}`,
+    `--rental-accent:${primary.accent}`,
+    `--rental-text:${primary.text}`,
+    `--rental-line:${primary.line}`,
+  ].join(";");
+}
+
+function getRentalCardCollections(item) {
+  const groupIds = {
+    Vaults: new Set(["a24", "criterion", "defa", "disney", "hammer", "hbo"]),
+    Sagas: new Set(["james-bond", "dc", "mcu", "kaiju", "star-trek", "star-wars", "universal-monsters"]),
+    Aisles: new Set(["action", "comedy", "documentary", "drama", "fantasy", "horror", "romance", "sci-fi", "sports", "western"]),
+    "Boxed Sets": new Set(["animation", "black-excellence", "cult-films", "endless-anime-odyssey", "exploitation", "plan-9-from-the-b-movie-aisle"]),
+    Worlds: new Set(["cinema-of-india", "cinema-of-japan"]),
+  };
+  const supportedGroups = new Set(Object.keys(groupIds));
+  const stored = metadataOverrides?.items?.[item.id];
+  const allocatedIds = new Set((stored?.metadata?.collectionAllocations ?? stored?.collectionAllocations ?? [])
+    .map((allocation) => ({ "dc-animation": "dc", arrowverse: "dc" })[allocation.collectionId] ?? allocation.collectionId));
+  const folderSlugs = new Set(getItemMediaFiles(item)
+    .map((file) => getMovieCollectionPathInfo(file?.path)?.collectionSlug)
+    .filter(Boolean));
+  const getGroupTitle = (collection) => {
+    const explicit = collection.collectionType;
+    if (supportedGroups.has(explicit)) return explicit;
+    return Object.entries(groupIds).find(([, ids]) => ids.has(collection.id))?.[0] ?? null;
+  };
+  const matchesCollection = (collection) => {
+    if ((collection.itemIds ?? []).includes(item.id) || allocatedIds.has(collection.id)) return true;
+    const keys = collectionMatchKeys(collection);
+    return [...folderSlugs].some((slug) => keys.has(slug));
+  };
+
+  return getCollectionNavigationCards()
+    .map((collection) => ({ collection, groupTitle: getGroupTitle(collection) }))
+    .filter(({ collection, groupTitle }) => groupTitle && matchesCollection(collection))
+    .map(({ collection, groupTitle }) => ({
+      id: collection.id,
+      title: collection.title,
+      groupTitle,
+      color: BATCAVE_COLLECTION_COLORS[groupTitle] ?? "#d8b35d",
+    }))
+    .filter((collection, index, collections) => collections.findIndex((entry) => entry.id === collection.id) === index);
+}
+
+function getRentalCardCollectionType(groupTitle) {
+  return {
+    Aisles: "Aisle",
+    Vaults: "Vault",
+    Sagas: "Saga",
+    "Boxed Sets": "Boxed Set",
+    Worlds: "World",
+  }[groupTitle] ?? "Collection";
+}
+
 function renderTobyMovieStoreInfo(item, details) {
+  const collections = getRentalCardCollections(item);
+  const collectionLinks = renderRentalCardCollectionLinks(collections);
   const rows = [
-    ["Runtime", formatMovieRuntime(details.runtime)],
-    ["Released", item.year ?? String(details.releaseDate ?? "").match(/\d{4}/)?.[0]],
-    ["Director", details.director],
-    ["Format", details.settings?.format ?? "VHS"],
-  ].filter(([, value]) => Boolean(value));
+    { label: "Runtime", value: formatMovieRuntime(details.runtime) },
+    { label: "Released", value: item.year ?? String(details.releaseDate ?? "").match(/\d{4}/)?.[0] },
+    { label: "Director", value: details.director },
+    { label: "Collections", value: collectionLinks, html: true },
+    { label: "Rented", value: getMovieRentalStatus(item) },
+  ].filter(({ value }) => Boolean(value));
   return `
-    <section class="toby-movie-store-card">
+    <section class="toby-movie-store-card" style="${escapeHtml(getRentalCardStyle(item, details))}">
       <h2>Tobytube</h2>
       <p>Video Store</p>
       <dl>
         ${rows
           .map(
-            ([label, value]) => `
+            ({ label, value, html }) => `
               <div>
                 <dt>${escapeHtml(label)}</dt>
-                <dd>${label === "Director" ? `<button class="toby-store-person-link" type="button" data-person-id="director-${escapeHtml(slugify(value))}" data-person-name="${escapeHtml(value)}">${escapeHtml(value)}</button>` : escapeHtml(value)}</dd>
+                <dd>${label === "Director" ? `<button class="toby-store-person-link" type="button" data-person-id="director-${escapeHtml(slugify(value))}" data-person-name="${escapeHtml(value)}">${escapeHtml(value)}</button>` : html ? value : escapeHtml(value)}</dd>
               </div>
             `,
           )
@@ -8526,13 +10630,117 @@ function renderTobyMovieStoreInfo(item, details) {
   `;
 }
 
+function renderRentalCardCollectionLinks(collections) {
+  return collections.length
+    ? `<span class="toby-store-collection-links">${collections.map((collection) => {
+        const type = getRentalCardCollectionType(collection.groupTitle);
+        return `<button class="toby-store-collection-link" type="button" data-collection-id="${escapeHtml(collection.id)}" style="--collection-color:${escapeHtml(collection.color)}" title="Open ${escapeHtml(collection.title)} ${escapeHtml(type)}" aria-label="Open ${escapeHtml(collection.title)} ${escapeHtml(type)}">${escapeHtml(collection.title)}</button>`;
+      }).join("")}</span>`
+    : `<span class="toby-store-collection-empty">None</span>`;
+}
+
+function getMovieRentalStatus(item) {
+  if (getResumeEntryForItem(item)) return "Rented";
+  const count = getItemRentalCount(item?.id);
+  if (!count) return "No Rentals yet";
+  return `Rented ${count} ${count === 1 ? "time" : "times"}`;
+}
+
+function formatTvRentalStatus(count, inProgress) {
+  if (inProgress) return "Rented";
+  if (!count) return "No Rentals yet";
+  return `Rented ${count} ${count === 1 ? "time" : "times"}`;
+}
+
+function getTvSessionRentalEntry(showId) {
+  const canonicalId = tvCanonicalIdByAlias.get(showId) ?? showId;
+  const entry = readSessionTvRentalState()[canonicalId];
+  return entry && Number(entry.completedCount) >= 2 && entry.nextEpisodeId && !entry.removedAt ? entry : null;
+}
+
+function isTvSeasonRentalInProgress(show, season) {
+  if (getResumeEntryForTvSeason(show.id, season.seasonNumber)) return true;
+  const entry = getTvSessionRentalEntry(show.id);
+  const located = entry?.nextEpisodeId ? findAvailableTvEpisode(entry.nextEpisodeId) : null;
+  return Number(located?.season?.seasonNumber) === Number(season.seasonNumber);
+}
+
+function formatTvSeasonAirdate(season) {
+  const years = [season.airDate, ...(season.episodes ?? []).map((episode) => episode.airDate)]
+    .map((date) => Number(String(date ?? "").slice(0, 4)))
+    .filter(Number.isFinite);
+  if (!years.length) return "Date pending";
+  const first = Math.min(...years);
+  const last = Math.max(...years);
+  return first === last ? String(first) : `${first}-${last}`;
+}
+
+function renderTobyTvRentalCard(show, details, scope, season = null, episode = null) {
+  const seasons = getAvailableTvSeasons(show);
+  const scopedEpisodes = episode ? [episode] : season ? (season.episodes ?? []) : seasons.flatMap((entry) => entry.episodes ?? []);
+  const inProgress = episode
+    ? Boolean(getResumeEntryForEpisode(episode.id))
+    : season
+      ? isTvSeasonRentalInProgress(show, season)
+      : Boolean(getResumeEntryForTvShow(show.id) || getTvSessionRentalEntry(show.id));
+  const rows = scope === "program"
+    ? [
+        { label: "Seasons", value: seasons.length },
+        { label: "Episodes", value: countTvEpisodes(seasons) },
+        { label: "Airdate", value: getTvYearRange(show, details) },
+      ]
+    : scope === "season"
+      ? [
+          { label: "Episodes", value: scopedEpisodes.length },
+          { label: "Airdate", value: formatTvSeasonAirdate(season) },
+        ]
+      : [
+          { label: "Runtime", value: episode?.runtime ? `${episode.runtime} min` : details.averageRuntime ? `${details.averageRuntime} min` : "Runtime pending" },
+          { label: "Released", value: formatEpisodeAirDate(episode) },
+        ];
+  rows.push(
+    { label: "Collections", value: renderRentalCardCollectionLinks(getRentalCardCollections(show)), html: true },
+    { label: "Rented", value: formatTvRentalStatus(getTvScopeRentalCount(scopedEpisodes), inProgress) },
+  );
+  return `
+    <section class="toby-movie-store-card toby-tv-rental-card ${escapeHtml(scope)}" style="${escapeHtml(getRentalCardStyle(show, details))}">
+      <h2>Tobytube</h2>
+      <p>Video Store</p>
+      <dl>${rows.map(({ label, value, html }) => `<div><dt>${escapeHtml(label)}</dt><dd>${html ? value : escapeHtml(value)}</dd></div>`).join("")}</dl>
+    </section>`;
+}
+
+function buildRefreshMetadataOverride(item) {
+  const draft = buildBatcaveMetadataDraft(item);
+  const existing = getItemMetadataOverride(item.id);
+  return {
+    metadata: {
+      ...existing,
+      title: String(draft.title ?? "").trim(),
+      year: String(draft.year ?? "").trim(),
+      genre: String(draft.genre ?? "").trim(),
+      rating: String(draft.rating ?? "").trim(),
+      summary: String(draft.summary ?? "").trim(),
+      collections: draft.allocations.map((allocation) => allocation.pathLabels.join("/")),
+      collectionAllocations: draft.allocations,
+      collectionExclusions: (draft.inferredAllocationIds ?? []).filter((id) => !draft.allocations.some((allocation) => allocation.id === id)),
+      tvGuideChannelIds: draft.savedTvGuideChannelIds ?? [],
+      phase: "metadata-refresh",
+    },
+    identity: {
+      title: item.title ?? item.id,
+      year: item.year ?? item.startYear ?? "",
+      mediaType: item.mediaType ?? "movie",
+    },
+  };
+}
+
 function renderTobyMovieFoundIn(item) {
   const foundIn =
     item.id === "curated-the-neverending-story-1984"
       ? [
           { title: "Childhood Favourites", id: "fantasy", tone: "cult" },
           { title: "Fantasy", id: "fantasy", tone: "saturday" },
-          { title: "1980s", id: "2010s", tone: "decade" },
           { title: "Harry's Picks", id: "tom-hanks", tone: "animation" },
         ]
       : getMovieCollections()
@@ -8593,7 +10801,12 @@ function renderTobyMovieRelatedShelf(items) {
     <section class="toby-movie-panel">
       <div class="toby-tv-section-title">More Like This</div>
       <div class="toby-movie-related-row">
-        ${items.map(renderLibraryCard).join("")}
+        ${items.map((item) => `
+          <div class="recommendation-card">
+            ${renderLibraryCard(item)}
+            ${item.recommendationReasons?.length ? `<small class="recommendation-reason">Because: ${escapeHtml(item.recommendationReasons.join(" / "))}</small>` : ""}
+          </div>
+        `).join("")}
       </div>
     </section>
   `;
@@ -8645,7 +10858,7 @@ function renderMovieMetaLine(item, details) {
   return `${country} / ${release} / ${rating} / ${runtime} / ${[...new Set(genres)].join(", ") || "Genre pending"}`;
 }
 
-function renderMovieRatings(details) {
+function renderMovieRatings(details, remainingTimeLabel = "") {
   const ratings = details.ratings ?? {};
   const tmdb = ratings.tmdb ? Number(ratings.tmdb).toFixed(1) : "-";
   const imdb = ratings.imdb ?? "-";
@@ -8657,8 +10870,28 @@ function renderMovieRatings(details) {
       <span class="tmdb-score"><i>TM<br>DB</i><b>${escapeHtml(tmdb)}</b></span>
       <span><img src="./assets/ratings/rt-critics.png" alt="" loading="lazy" /><b>${escapeHtml(critics)}</b></span>
       <span><img src="./assets/ratings/rt-audience.png" alt="" loading="lazy" /><b>${escapeHtml(audience)}</b></span>
+      ${remainingTimeLabel ? `<span class="movie-time-remaining">${escapeHtml(remainingTimeLabel)}</span>` : ""}
     </div>
   `;
+}
+
+function getMovieRemainingTimeLabel(item, details, resume) {
+  if (!resume) return "";
+  const files = getMovieMediaFiles(item);
+  const multipartFiles = getMultipartMovieFiles(files);
+  const mediaSeconds = multipartFiles.length
+    ? multipartFiles.reduce((total, file) => total + (getMediaDurationSeconds(file) ?? 0), 0)
+    : getMediaDurationSeconds(files[0]);
+  const runtimeMinutes = Number(String(details?.runtime ?? "").match(/\d+(?:\.\d+)?/)?.[0]) || 0;
+  const durationSeconds = mediaSeconds || runtimeMinutes * 60;
+  const remainingSeconds = Math.max(0, durationSeconds - (Number(resume.seconds) || 0));
+  if (!remainingSeconds) return "";
+  const remainingMinutes = Math.max(1, Math.ceil(remainingSeconds / 60));
+  const hours = Math.floor(remainingMinutes / 60);
+  const minutes = remainingMinutes % 60;
+  return hours
+    ? `${hours} hr${hours === 1 ? "" : "s"}${minutes ? ` ${minutes} min` : ""} remaining`
+    : `${remainingMinutes} min remaining`;
 }
 
 function formatVersionFileName(filePath) {
@@ -8702,7 +10935,12 @@ function renderMediaStreamRow(label, mediaKey, kind, selectedValue, options) {
 
 function getMovieMediaFiles(item) {
   const record = getMetadataRecordForItem(item);
-  return record?.files?.length ? record.files : item.files ?? [];
+  // The library projection is the authoritative playable pool. Durable merge
+  // groups and identity/path deduplication can both add files to it, and the
+  // dedupe pass may legitimately replace the object carrying mergedItemIds.
+  // Falling back to the raw scanner record in that case hid every alternate
+  // immediately before rendering the Version selector.
+  return item?.files?.length ? item.files : record?.files ?? [];
 }
 
 function getMultipartMoviePart(file) {
@@ -8792,21 +11030,43 @@ function writeGlobalSubtitlePreference(value, options = []) {
       value: String(value),
       language: selected?.language ?? null,
       label: selected?.label ?? null,
+      externalPath: selected?.externalPath ?? null,
     }));
   } catch {}
 }
 
+function resolveStoredSubtitleSelection(value, options = []) {
+  if (value == null) return null;
+  if (value === "off") return "off";
+  if (String(value).startsWith("external-path:")) {
+    const externalPath = decodeURIComponent(String(value).slice("external-path:".length));
+    const matched = options.find((option) => option.externalPath === externalPath);
+    return matched ? String(matched.index ?? matched.value) : null;
+  }
+  const matched = options.find((option) => String(option.index ?? option.value) === String(value));
+  return matched ? String(matched.index ?? matched.value) : null;
+}
+
+function persistPlayerSubtitleSelection(mediaKey, value, options = []) {
+  const selected = options.find((option) => String(option.index ?? option.value) === String(value));
+  const storedValue = selected?.externalPath ? `external-path:${encodeURIComponent(selected.externalPath)}` : String(value);
+  writeStreamSelection(mediaKey, "subtitles", storedValue);
+  writeGlobalSubtitlePreference(value, options);
+}
+
 function getPreferredSubtitleSelection(mediaKey, options = []) {
   const local = readStreamSelection(mediaKey, "subtitles");
-  if (local !== null) return local;
+  const resolvedLocal = resolveStoredSubtitleSelection(local, options);
+  if (resolvedLocal !== null) return resolvedLocal;
   const preference = readGlobalSubtitlePreference();
   if (!preference?.enabled) return "off";
   const matched = options.find((option) =>
+    (preference.externalPath && option.externalPath === preference.externalPath) ||
     (preference.language && option.language === preference.language) ||
     (preference.label && option.label === preference.label) ||
     String(option.index ?? option.value) === String(preference.value),
   );
-  return String(matched?.index ?? matched?.value ?? preference.value ?? "off");
+  return String(matched?.index ?? matched?.value ?? "off");
 }
 
 function buildPlaybackStreamUrl(player) {
@@ -8863,6 +11123,16 @@ function clearPlayerSubtitleRenderer(video) {
   }
 }
 
+function isActivePlayerVideo(video) {
+  return Boolean(video?.isConnected && document.querySelector(".toby-player-video") === video);
+}
+
+function getPlayerSubtitleTime(video) {
+  const streamTime = Math.max(0, Number(video?.currentTime ?? 0));
+  if (state.player?.transport === "direct") return streamTime;
+  return Math.max(0, Number(state.player?.startSeconds ?? 0) + streamTime);
+}
+
 async function startPlayerSubtitleRenderer(video, trackUrl) {
   clearPlayerSubtitleRenderer(video);
   const overlay = document.querySelector("[data-player-subtitle-overlay]");
@@ -8870,17 +11140,18 @@ async function startPlayerSubtitleRenderer(video, trackUrl) {
   const controller = new AbortController();
   let cues = [];
   const renderCue = () => {
-    const time = Number(video.currentTime ?? 0);
+    if (!isActivePlayerVideo(video)) return;
+    const time = getPlayerSubtitleTime(video);
     const text = cues.filter((cue) => time >= cue.start && time < cue.end).map((cue) => cue.text).join("\n");
     overlay.textContent = text;
     overlay.classList.toggle("visible", Boolean(text));
   };
   video.addEventListener("timeupdate", renderCue);
-  video.addEventListener("seeking", renderCue);
+  video.addEventListener("seeked", renderCue);
   video._tobytubeSubtitleCleanup = () => {
     controller.abort();
     video.removeEventListener("timeupdate", renderCue);
-    video.removeEventListener("seeking", renderCue);
+    video.removeEventListener("seeked", renderCue);
   };
   try {
     const response = await fetch(trackUrl, { signal: controller.signal });
@@ -8943,7 +11214,7 @@ function initialPlaybackTransport(file) {
 }
 
 function getPlayerAbsoluteTime(video) {
-  return Math.max(0, Number(state.player?.segmentOffsetSeconds ?? 0) + Number(state.player?.startSeconds ?? 0) + Number(video?.currentTime ?? 0));
+  return getAbsolutePlaybackTime(state.player, video?.currentTime);
 }
 
 function updatePlayerStartTime(seconds) {
@@ -8961,7 +11232,7 @@ function renderPlayerOverlay(player) {
           <div class="toby-player-screen">
             ${
               source
-                ? `<video class="toby-player-video" data-player-source="${escapeHtml(source)}" data-resume-key="${escapeHtml(player.resumeKey)}" playsinline></video>`
+                ? `<video class="toby-player-video" data-player-source="${escapeHtml(source)}" data-resume-key="${escapeHtml(player.resumeKey)}" preload="auto" playsinline></video>`
                 : `<div class="toby-player-empty">No playable file is matched to this title yet.</div>`
             }
             <div class="toby-player-crt-fx" aria-hidden="true"></div>
@@ -9015,15 +11286,51 @@ function renderPlayerOverlay(player) {
 function launchTitlePlayback(item, options = {}) {
   const target = item ?? getTitleItem(state.selectedTitleId);
   if (!target) return;
-  const payload = buildPlaybackPayload(target);
+  stopTeebeeShuffle();
+  let payload = buildPlaybackPayload(target);
+  payload = applyShortPlaybackContext(target, payload, options);
   if (options.startOver && payload) payload.startSeconds = 0;
   state.player = payload;
   render();
 }
 
-function launchTvEpisodePlayback(episodeId, options = {}) {
-  const located = findAvailableTvEpisode(episodeId);
+function applyShortPlaybackContext(target, payload, options = {}) {
+  const poolKind = target?.mediaType === "disney-short" ? "disney" : target?.mediaType === "looney-tunes-short" ? "looney" : null;
+  if (!payload || !poolKind) return payload;
+  const collection = getShortCollections(poolKind).find((entry) => entry.id === target.collectionId);
+  const mode = options.shortPlaybackMode === SHORT_PLAYBACK_RANDOM_POOL ? SHORT_PLAYBACK_RANDOM_POOL : SHORT_PLAYBACK_SEQUENTIAL;
+  const collectionIds = (collection?.shorts ?? []).map((short) => short.id);
+  const randomShortPoolIds = mode === SHORT_PLAYBACK_RANDOM_POOL
+    ? [...new Set(options.randomShortPoolIds?.length ? options.randomShortPoolIds : getShortPoolIds(poolKind))]
+    : [];
+  return {
+    ...payload,
+    shortPlaybackMode: mode,
+    shortPoolKind: poolKind,
+    shortCollectionId: collection?.id ?? target.collectionId ?? null,
+    nextShortId: mode === SHORT_PLAYBACK_SEQUENTIAL ? getNextSequentialShortId(collectionIds, target.id) : null,
+    randomShortPoolIds,
+  };
+}
+
+function continueShortPlaybackAfterEnd(player) {
+  if (!player?.shortPlaybackMode) return false;
+  const nextId = player.shortPlaybackMode === SHORT_PLAYBACK_RANDOM_POOL
+    ? selectRandomShortId(player.randomShortPoolIds, player.itemId)
+    : readPlayerAutoplay() ? player.nextShortId : null;
+  const nextShort = nextId ? getTitleItem(nextId) : null;
+  if (!nextShort) return false;
+  launchTitlePlayback(nextShort, {
+    startOver: true,
+    shortPlaybackMode: player.shortPlaybackMode,
+    randomShortPoolIds: player.randomShortPoolIds,
+  });
+  return true;
+}
+
+function launchTvEpisodeLocation(located, options = {}) {
   if (!located) return;
+  stopTeebeeShuffle();
   state.section = "tv";
   state.subView = "home";
   state.selectedTitleId = located.show.id;
@@ -9035,6 +11342,10 @@ function launchTvEpisodePlayback(episodeId, options = {}) {
   state.player = buildTvPlaybackPayload(located);
   if (options.startOver && state.player) state.player.startSeconds = 0;
   render();
+}
+
+function launchTvEpisodePlayback(episodeId, options = {}) {
+  launchTvEpisodeLocation(findAvailableTvEpisode(episodeId), options);
 }
 
 function buildPlaybackPayload(item) {
@@ -9059,7 +11370,7 @@ function buildPlaybackPayload(item) {
       startSeconds: getInitialPlaybackSeconds(`wrestling:${item.metadataId ?? item.id}`, getMediaDurationSeconds(file)),
       durationSeconds: getMediaDurationSeconds(file),
       audioStreamIndex: readStreamSelection(mediaKey, "audio") ?? "default",
-      subtitleStreamIndex: readStreamSelection(mediaKey, "subtitles") ?? "off",
+      subtitleStreamIndex: getPreferredSubtitleSelection(mediaKey, getStreamOptionsForFile(file).subtitles),
       videoStreamIndex: readStreamSelection(mediaKey, "video") ?? "default",
       streamOptions: getStreamOptionsForFile(file),
       heading: item.title,
@@ -9102,7 +11413,7 @@ function buildPlaybackPayload(item) {
     multipartSegments,
     segmentIndex: position.index,
     audioStreamIndex: readStreamSelection(mediaKey, "audio") ?? "default",
-    subtitleStreamIndex: readStreamSelection(mediaKey, "subtitles") ?? "off",
+    subtitleStreamIndex: getPreferredSubtitleSelection(mediaKey, getStreamOptionsForFile(file).subtitles),
     videoStreamIndex: readStreamSelection(mediaKey, "video") ?? "default",
     streamOptions: getStreamOptionsForFile(file),
     heading: item.title,
@@ -9113,6 +11424,15 @@ function buildPlaybackPayload(item) {
     ],
     originLabel: getPlaybackOriginLabel(state.playbackOriginCollectionId),
     formatLabel: file ? formatFileLabel(file.path) : "UNMATCHED",
+    subtitleSearch: {
+      mediaType: "movie",
+      title: item.title,
+      year: Number(item.year ?? String(details.releaseDate ?? "").match(/\d{4}/)?.[0]) || null,
+      tmdbId: details.tmdbId ?? null,
+      imdbId: details.imdbId ?? null,
+      runtimeMinutes: Number(details.runtime) || null,
+      releaseName: file?.path?.split(/[\\/]/).pop() ?? null,
+    },
   };
 }
 
@@ -9143,6 +11463,20 @@ function buildTvPlaybackPayload({ show, details, season, episode }) {
     previousEpisodeId: getEpisodeBefore(show, episode)?.id ?? null,
     backdropUrl: episode.stillUrl ?? details.backdropUrl ?? null,
     seasonNumber: season.seasonNumber,
+    episodeNumber: episode.episodeNumber,
+    seriesTitle: show.title,
+    subtitleSearch: {
+      mediaType: "episode",
+      title: show.title,
+      episodeTitle: episode.title,
+      year: Number(String(episode.airDate ?? details.firstAirDate ?? "").slice(0, 4)) || null,
+      tmdbId: details.tmdbId ?? null,
+      imdbId: details.externalIds?.imdb_id ?? null,
+      seasonNumber: Number(season.seasonNumber),
+      episodeNumber: Number(episode.episodeNumber),
+      runtimeMinutes: Number(episode.runtime ?? details.averageRuntime) || null,
+      releaseName: file?.path?.split(/[\\/]/).pop() ?? null,
+    },
   };
 }
 
@@ -9263,7 +11597,9 @@ function setupPlayerSource(video) {
       else {
         hls.destroy();
         video._tobytubeHls = null;
-        video.src = source.replace(/[?&]mode=hls\b/, "");
+        if (state.player) state.player = buildPlaybackRecoveryState(state.player, video.currentTime);
+        video.dataset.playerSource = buildPlaybackStreamUrl(state.player);
+        video.src = video.dataset.playerSource;
         video.load();
       }
     });
@@ -9274,49 +11610,52 @@ function setupPlayerSource(video) {
 }
 
 async function hydratePlayerPlaybackInfo(video) {
-  if (!video || !state.player?.filePath) return;
+  if (!isActivePlayerVideo(video) || !state.player?.filePath) return;
+  const requestedFilePath = state.player.filePath;
   try {
     const url = new URL("./api/media/playback-info", window.location.href);
-    url.searchParams.set("path", state.player.filePath);
+    url.searchParams.set("path", requestedFilePath);
     const response = await fetch(`${url.pathname}${url.search}`);
     if (!response.ok) throw new Error(`Playback inspection failed: ${response.status}`);
     const info = await response.json();
-    if (!state.player || state.player.filePath !== info.path) return;
+    if (!isActivePlayerVideo(video) || !state.player || state.player.filePath !== requestedFilePath || state.player.filePath !== info.path) return;
     const streamOptions = {
       video: info.streams?.video ?? state.player.streamOptions?.video ?? [],
       audio: info.streams?.audio ?? state.player.streamOptions?.audio ?? [],
       subtitles: info.streams?.subtitles ?? state.player.streamOptions?.subtitles ?? [],
     };
-    let selectedSubtitle = String(state.player.subtitleStreamIndex ?? "off");
+    let selectedSubtitle = getPreferredSubtitleSelection(state.player.mediaKey, streamOptions.subtitles);
     let subtitleAvailable = selectedSubtitle === "off" || streamOptions.subtitles.some((track) => String(track.index) === selectedSubtitle) || Boolean(state.player.multipartSegments?.length);
-    if (!subtitleAvailable && readGlobalSubtitlePreference()?.enabled) {
-      selectedSubtitle = getPreferredSubtitleSelection(state.player.mediaKey, streamOptions.subtitles);
-      subtitleAvailable = streamOptions.subtitles.some((track) => String(track.index) === selectedSubtitle);
-    }
     const previousTransport = state.player.transport;
+    const canRetuneBeforePlayback = video.readyState === HTMLMediaElement.HAVE_NOTHING && video.currentTime <= 0;
+    const inspectedTransport = info.transport ?? "direct";
     state.player = {
       ...state.player,
-      transport: info.transport ?? "direct",
+      transport: canRetuneBeforePlayback ? inspectedTransport : previousTransport,
       durationSeconds: state.player.multipartSegments?.length ? state.player.durationSeconds : Number(info.durationSeconds) || state.player.durationSeconds,
       segmentDurationSeconds: state.player.multipartSegments?.length ? Number(info.durationSeconds) || state.player.segmentDurationSeconds : state.player.segmentDurationSeconds,
       streamOptions,
       subtitleStreamIndex: subtitleAvailable ? selectedSubtitle : "off",
     };
-    if (previousTransport !== state.player.transport) {
+    if (previousTransport !== state.player.transport && canRetuneBeforePlayback) {
       const wasPaused = video.paused;
       state.player = { ...state.player, startSeconds: Math.floor(getPlayerAbsoluteTime(video)), userPaused: wasPaused };
       video.dataset.playerSource = buildPlaybackStreamUrl(state.player);
       setupPlayerSource(video);
     }
   } catch {
+    if (!isActivePlayerVideo(video) || state.player?.filePath !== requestedFilePath) return;
     state.player = { ...state.player, transport: state.player.transport ?? "direct" };
   }
+  if (!isActivePlayerVideo(video) || state.player?.filePath !== requestedFilePath) return;
   applyPlayerSubtitleSelection(video);
-  setTimeout(() => hydratePlayerTrackOptions(video, state.player?.filePath), 900);
+  setTimeout(() => {
+    if (isActivePlayerVideo(video) && state.player?.filePath === requestedFilePath) hydratePlayerTrackOptions(video, requestedFilePath);
+  }, 900);
 }
 
 async function hydratePlayerTrackOptions(video, filePath) {
-  if (!video || !filePath || state.player?.filePath !== filePath) return;
+  if (!isActivePlayerVideo(video) || !filePath || state.player?.filePath !== filePath) return;
   try {
     const url = new URL("./api/media/playback-info", window.location.href);
     url.searchParams.set("path", filePath);
@@ -9324,11 +11663,13 @@ async function hydratePlayerTrackOptions(video, filePath) {
     const response = await fetch(`${url.pathname}${url.search}`);
     if (!response.ok) return;
     const info = await response.json();
-    if (!state.player || state.player.filePath !== filePath) return;
+    if (!isActivePlayerVideo(video) || !state.player || state.player.filePath !== filePath) return;
     const previousTransport = state.player.transport;
+    const canRetuneBeforePlayback = video.readyState === HTMLMediaElement.HAVE_NOTHING && video.currentTime <= 0;
+    const inspectedTransport = info.transport ?? previousTransport;
     state.player = {
       ...state.player,
-      transport: info.transport ?? state.player.transport,
+      transport: canRetuneBeforePlayback ? inspectedTransport : previousTransport,
       durationSeconds: state.player.multipartSegments?.length ? state.player.durationSeconds : Number(info.durationSeconds) || state.player.durationSeconds,
       segmentDurationSeconds: state.player.multipartSegments?.length ? Number(info.durationSeconds) || state.player.segmentDurationSeconds : state.player.segmentDurationSeconds,
       streamOptions: {
@@ -9337,13 +11678,13 @@ async function hydratePlayerTrackOptions(video, filePath) {
         subtitles: info.streams?.subtitles ?? state.player.streamOptions?.subtitles ?? [],
       },
     };
-    if (previousTransport !== state.player.transport) {
+    if (previousTransport !== state.player.transport && canRetuneBeforePlayback) {
       const wasPaused = video.paused;
       state.player = { ...state.player, startSeconds: Math.floor(getPlayerAbsoluteTime(video)), userPaused: wasPaused };
       video.dataset.playerSource = buildPlaybackStreamUrl(state.player);
       setupPlayerSource(video);
     }
-    applyPlayerSubtitleSelection(video);
+    if (isActivePlayerVideo(video) && state.player?.filePath === filePath) applyPlayerSubtitleSelection(video);
   } catch {}
 }
 function recordPlayerCompletion(video) {
@@ -9354,7 +11695,7 @@ function recordPlayerCompletion(video) {
   if (player.kind === "tv" && player.episodeId) {
     markTvEpisodeCompleted(player.episodeId);
     recordCompletedTvEpisodeForSession(player.itemId, player.episodeId, player.nextEpisodeId, state.playbackOriginCollectionId);
-    appendLocalHistory(player.itemId, "episode-completion-threshold");
+    appendLocalHistory(player.episodeId, "episode-completion-threshold");
   } else if (player.itemId) {
     markItemWatched(player.itemId);
     appendLocalHistory(player.itemId, `${player.kind ?? "media"}-completion-threshold`);
@@ -9367,8 +11708,11 @@ function recordPlayerCompletionAtThreshold(video) {
   const duration = getPlayerDuration(video);
   const absoluteTime = getPlayerAbsoluteTime(video);
   if (!duration || absoluteTime <= 0) return false;
-  const thresholdSeconds = state.player.kind === "tv" ? 2 * 60 : 7 * 60;
-  if (duration - absoluteTime > thresholdSeconds) return false;
+  if (state.player.kind === "tv") {
+    if ((absoluteTime / duration) < TV_COMPLETION_THRESHOLD) return false;
+  } else if (duration - absoluteTime > 7 * 60) {
+    return false;
+  }
   return recordPlayerCompletion(video);
 }
 
@@ -9404,11 +11748,13 @@ function syncPlayerOverlay() {
     applyPlayerVolume(video, Number(volume?.value ?? readPlayerVolume()));
     if (volumeLabel) volumeLabel.textContent = `${volume?.value ?? readPlayerVolume()}%`;
     video.addEventListener("loadedmetadata", () => {
+      if (!isActivePlayerVideo(video)) return;
       applyInitialPlayerSeek(video);
       if (!state.player?.userPaused) video.play().catch(() => {});
       updatePlayerStatus(video, progress, timeLabel, toggle);
     }, { once: true });
     video.addEventListener("error", () => {
+      if (!isActivePlayerVideo(video)) return;
       if (state.player?.transport === "direct" && !state.player.compatibilityRetry) {
         const retryAt = getPlayerAbsoluteTime(video);
         const wasPaused = Boolean(state.player?.userPaused || video.paused);
@@ -9442,7 +11788,8 @@ function syncPlayerOverlay() {
       if (progress?.dataset.scrubbing !== "true") updatePlayerStatus(video, progress, timeLabel, toggle);
       const absoluteTime = getPlayerAbsoluteTime(video);
       const duration = getPlayerDuration(video);
-      if (absoluteTime >= RESUME_THRESHOLD_SECONDS && duration && absoluteTime < duration - 5) {
+      const completed = recordPlayerCompletionAtThreshold(video);
+      if (!completed && !state.player?.completionRecorded && absoluteTime >= RESUME_THRESHOLD_SECONDS && duration && absoluteTime < duration - 5) {
         localStorage.setItem(`tobytube.resume.${resumeKey}`, JSON.stringify({
           schemaVersion: RESUME_SCHEMA_VERSION,
           key: resumeKey,
@@ -9458,7 +11805,6 @@ function syncPlayerOverlay() {
           updatedAt: new Date().toISOString(),
         }));
       }
-      recordPlayerCompletionAtThreshold(video);
     });
     video.addEventListener("ended", () => {
       if (state.player?.multipartSegments?.length && Number(state.player.segmentIndex) < state.player.multipartSegments.length - 1) {
@@ -9478,7 +11824,10 @@ function syncPlayerOverlay() {
         render();
         return;
       }
+      const completedPlayer = state.player;
       recordPlayerCompletion(video);
+      if (continueShortPlaybackAfterEnd(completedPlayer)) return;
+      if (completedPlayer?.animationRandomizer && playNextAnimationRandomizerItem()) return;
       if (state.player?.kind === "tv" && state.player.nextEpisodeId) showPlayerNextEpisodeCard();
     });
     progress?.addEventListener("input", () => {
@@ -9511,6 +11860,12 @@ function syncPlayerOverlay() {
 
   overlay.querySelectorAll("[data-player-control]").forEach((button) => {
     button.addEventListener("click", () => handlePlayerControl(button.dataset.playerControl, video));
+  });
+  overlay.addEventListener("pointerdown", (event) => {
+    const popover = overlay.querySelector("[data-player-popover]");
+    if (!popover || popover.hidden || popover.contains(event.target)) return;
+    if (event.target.closest("[data-player-control='subtitles'], [data-player-control='audio'], [data-player-control='options']")) return;
+    closePlayerPopover();
   });
 }
 
@@ -9577,7 +11932,10 @@ async function refreshPlayerSubtitleTracks(video, preferredPath = "") {
   const subtitles = info.streams?.subtitles ?? [];
   const preferred = subtitles.find((track) => track.externalPath === preferredPath) ?? subtitles.at(-1);
   state.player = { ...state.player, streamOptions: { ...state.player.streamOptions, subtitles }, subtitleStreamIndex: preferred ? String(preferred.index) : "off" };
-  if (preferred) applyPlayerSubtitleSelection(video, String(preferred.index));
+  if (preferred) {
+    persistPlayerSubtitleSelection(state.player.mediaKey, String(preferred.index), subtitles);
+    applyPlayerSubtitleSelection(video, String(preferred.index));
+  }
 }
 
 function handlePlayerControl(action, video) {
@@ -9610,6 +11968,14 @@ function handlePlayerControl(action, video) {
     const duration = getPlayerDuration(video);
     seekPlayerTo(video, Math.min(duration || getPlayerAbsoluteTime(video) + 15, getPlayerAbsoluteTime(video) + 15));
     showPlayerFeedback("+15s");
+  }
+  if (action === "previous" && state.player?.animationRandomizer) {
+    playPreviousAnimationRandomizerItem();
+    return;
+  }
+  if (action === "next" && state.player?.animationRandomizer) {
+    playNextAnimationRandomizerItem();
+    return;
   }
   if (action === "previous" && state.player?.previousEpisodeId) launchTvEpisodePlayback(state.player.previousEpisodeId);
   if (action === "next" && state.player?.nextEpisodeId) launchTvEpisodePlayback(state.player.nextEpisodeId);
@@ -9661,8 +12027,9 @@ function getPlayerDuration(video) {
   return Number(state.player?.durationSeconds) || (Number.isFinite(video?.duration) ? Number(video.duration) : 0);
 }
 
-function restartPlaybackAt(seconds) {
-  if (!state.player) return;
+function restartPlaybackAt(seconds, video = document.querySelector(".toby-player-video")) {
+  if (!state.player || !video) return;
+  const wasPlaying = !video.paused && !state.player.userPaused;
   if (state.player.multipartSegments?.length) {
     const position = locateMultipartPosition(state.player.multipartSegments, seconds);
     const segment = state.player.multipartSegments[position.index];
@@ -9677,11 +12044,16 @@ function restartPlaybackAt(seconds) {
       startSeconds: position.localSeconds,
       compatibilityRetry: false,
     };
-    render();
-    return;
+  } else {
+    updatePlayerStartTime(seconds);
   }
-  updatePlayerStartTime(seconds);
-  render();
+  clearPlayerSubtitleRenderer(video);
+  video.dataset.playerSource = buildPlaybackStreamUrl(state.player);
+  setupPlayerSource(video);
+  applyPlayerSubtitleSelection(video);
+  video.addEventListener("canplay", () => {
+    if (wasPlaying && isActivePlayerVideo(video)) video.play().catch(() => {});
+  }, { once: true });
 }
 
 function seekPlayerTo(video, seconds) {
@@ -9690,7 +12062,7 @@ function seekPlayerTo(video, seconds) {
   if (state.player.multipartSegments?.length) {
     const position = locateMultipartPosition(state.player.multipartSegments, target);
     if (position.index !== state.player.segmentIndex || state.player.transport !== "direct") {
-      restartPlaybackAt(target);
+      restartPlaybackAt(target, video);
       return;
     }
     state.player = { ...state.player, startSeconds: 0, segmentOffsetSeconds: position.offset };
@@ -9702,7 +12074,7 @@ function seekPlayerTo(video, seconds) {
     video.currentTime = target;
     return;
   }
-  restartPlaybackAt(target);
+  restartPlaybackAt(target, video);
 }
 
 function readPlayerVolume() {
@@ -9800,6 +12172,14 @@ function showPlayerFeedback(text) {
   setTimeout(() => feedback.classList.remove("visible"), 900);
 }
 
+function closePlayerPopover() {
+  const popover = document.querySelector("[data-player-popover]");
+  if (!popover) return;
+  clearTimeout(showPlayerPopover.timer);
+  popover.hidden = true;
+  popover.innerHTML = "";
+}
+
 function showPlayerPopover(title, items, streamKind = null) {
   const popover = document.querySelector("[data-player-popover]");
   if (!popover) return;
@@ -9810,19 +12190,33 @@ function showPlayerPopover(title, items, streamKind = null) {
   if (streamKind === "audio" && selectedValue === "default" && normalizedItems.length) selectedValue = String(normalizedItems[0].value);
   popover.hidden = false;
   popover.innerHTML = `
-    <b>${escapeHtml(title)}</b>
+    <div class="toby-player-popover-heading">
+      <b>${escapeHtml(title)}</b>
+      <button type="button" class="toby-player-popover-close" data-player-popover-close aria-label="Close menu" title="Close menu">&times;</button>
+    </div>
     ${normalizedItems.map((item, index) => {
       const selected = selectedValue !== null && String(item.value) === selectedValue;
-      return `<button type="button" class="${selected ? "is-selected" : ""}" aria-pressed="${selected}" data-popover-index="${index}" data-popover-value="${escapeHtml(item.value)}"><span>${escapeHtml(item.label)}</span><i class="player-selection-mark" aria-hidden="true">${selected ? "&#10003;" : ""}</i></button>`;
+      return `<button type="button" class="${selected ? "is-selected" : ""}" aria-pressed="${selected}" data-popover-index="${index}" data-popover-value="${escapeHtml(item.value)}" ${item.disabled ? "disabled" : ""}><span>${escapeHtml(item.label)}</span><i class="player-selection-mark" aria-hidden="true">${selected ? "&#10003;" : ""}</i></button>`;
     }).join("")}
   `;
   popover.querySelectorAll("[data-popover-index]").forEach((button) => {
     button.addEventListener("click", () => handlePlayerPopoverChoice(title, Number(button.dataset.popoverIndex), button.dataset.popoverValue, streamKind));
   });
+  popover.querySelector("[data-player-popover-close]")?.addEventListener("click", closePlayerPopover);
   clearTimeout(showPlayerPopover.timer);
-  showPlayerPopover.timer = setTimeout(() => {
-    popover.hidden = true;
-  }, 4500);
+  const isSubtitleWorkflow = ["subtitles", "folder-subtitles", "opensubtitles"].includes(streamKind);
+  showPlayerPopover.timer = setTimeout(closePlayerPopover, isSubtitleWorkflow ? 30000 : 4500);
+}
+
+function markPlayerPopoverChoice(index, status = "selected") {
+  document.querySelectorAll("[data-player-popover] [data-popover-index]").forEach((button, buttonIndex) => {
+    const selected = buttonIndex === index;
+    button.classList.toggle("is-selected", selected && status === "selected");
+    button.classList.toggle("is-pending", selected && status === "pending");
+    button.setAttribute("aria-pressed", String(selected));
+    const mark = button.querySelector(".player-selection-mark");
+    if (mark) mark.textContent = selected ? (status === "pending" ? "…" : "✓") : "";
+  });
 }
 
 function handlePlayerPopoverChoice(title, index, value, streamKind) {
@@ -9846,7 +12240,11 @@ function handlePlayerPopoverChoice(title, index, value, streamKind) {
     return;
   }
   if (streamKind === "opensubtitles" && String(value).startsWith("opensubtitles:")) {
-    downloadOpenSubtitle(value.split(":")[1], video);
+    const [, fileId, language = "en"] = value.split(":");
+    markPlayerPopoverChoice(index, "pending");
+    downloadOpenSubtitle(fileId, video, language).then((downloaded) => {
+      if (downloaded) closePlayerPopover();
+    });
     return;
   }
   if (streamKind === "options") {
@@ -9863,7 +12261,7 @@ function handlePlayerPopoverChoice(title, index, value, streamKind) {
   if (streamKind && state.player?.mediaKey) {
     writeStreamSelection(state.player.mediaKey, streamKind, value);
     if (streamKind === "subtitles") {
-      writeGlobalSubtitlePreference(value, state.player.streamOptions?.subtitles ?? []);
+      persistPlayerSubtitleSelection(state.player.mediaKey, value, state.player.streamOptions?.subtitles ?? []);
       state.player = { ...state.player, subtitleStreamIndex: value };
       applyPlayerSubtitleSelection(video, value);
       document.querySelector("[data-player-popover]")?.setAttribute("hidden", "");
@@ -9889,18 +12287,61 @@ function handlePlayerPopoverChoice(title, index, value, streamKind) {
 async function searchOpenSubtitles(video) {
   try {
     showPlayerFeedback("Searching subtitles…");
+    const context = state.player?.subtitleSearch ?? {};
+    showPlayerPopover("OpenSubtitles", [{ value: "searching", label: "Searching for English subtitles…", disabled: true }], "opensubtitles");
     const url = new URL("./api/subtitles/search", window.location.href);
-    url.searchParams.set("query", state.player?.seriesTitle || state.player?.heading || "");
+    url.searchParams.set("query", context.title || state.player?.seriesTitle || state.player?.heading || "");
     url.searchParams.set("languages", "en");
+    if (context.mediaType) url.searchParams.set("type", context.mediaType);
+    if (context.tmdbId) url.searchParams.set("tmdb_id", String(context.tmdbId));
+    if (context.imdbId) url.searchParams.set("imdb_id", String(context.imdbId).replace(/^tt/i, ""));
+    if (context.year) url.searchParams.set("year", String(context.year));
+    if (context.seasonNumber != null) url.searchParams.set("season_number", String(context.seasonNumber));
+    if (context.episodeNumber != null) url.searchParams.set("episode_number", String(context.episodeNumber));
     const response = await fetch(url, { cache: "no-store" });
     const result = await response.json();
     if (!response.ok) throw new Error(result.error || "OpenSubtitles search failed");
-    const choices = (result.results ?? []).slice(0, 8).map((entry) => ({ value: `opensubtitles:${entry.fileId}`, label: `${entry.language?.toUpperCase() || "SUB"} · ${entry.release || entry.fileName}` }));
-    if (!choices.length) return showPlayerFeedback("No subtitles found");
-    showPlayerPopover("OpenSubtitles", choices, "opensubtitles");
+    const matchingResults = (result.results ?? []).filter((entry) => isRelevantOpenSubtitleResult(entry, context));
+    const choices = matchingResults.slice(0, 12).map((entry) => ({
+      value: `opensubtitles:${entry.fileId}:${entry.language || "en"}`,
+      label: [
+        entry.language?.toUpperCase() || "SUB",
+        entry.release || entry.fileName,
+        entry.seasonNumber != null && entry.episodeNumber != null ? `S${String(entry.seasonNumber).padStart(2, "0")}E${String(entry.episodeNumber).padStart(2, "0")}` : null,
+        entry.hearingImpaired ? "SDH" : null,
+      ].filter(Boolean).join(" · "),
+    }));
+    if (!choices.length) {
+      showPlayerFeedback("No matching subtitles found");
+      showPlayerPopover("OpenSubtitles", [{ value: "no-results", label: `No matching English subtitles found for ${context.title || state.player?.heading || "this title"}.`, disabled: true }], "opensubtitles");
+      return;
+    }
+    const searchLabel = context.mediaType === "episode"
+      ? `${context.title} · S${String(context.seasonNumber).padStart(2, "0")}E${String(context.episodeNumber).padStart(2, "0")}`
+      : context.title || "OpenSubtitles";
+    showPlayerPopover(`Subtitles for ${searchLabel}`, choices, "opensubtitles");
   } catch (error) {
     showPlayerFeedback(error.message || "OpenSubtitles unavailable");
+    showPlayerPopover("OpenSubtitles", [{ value: "error", label: error.message || "OpenSubtitles is unavailable.", disabled: true }], "opensubtitles");
   }
+}
+
+function isRelevantOpenSubtitleResult(entry, context) {
+  const target = normalizeTitleForMatch(context.title || state.player?.seriesTitle || state.player?.heading || "");
+  if (!target) return true;
+  const targetYear = Number(context.year) || null;
+  if (targetYear && entry.featureYear && Number(entry.featureYear) !== targetYear) return false;
+  const candidates = [entry.featureTitle, entry.release, entry.fileName]
+    .map((value) => normalizeTitleForMatch(value || ""))
+    .filter(Boolean);
+  if (candidates.some((candidate) => candidate === target || candidate.includes(target))) return true;
+  const targetTokens = new Set(target.split(/\s+/).filter((token) => token.length > 2));
+  if (!targetTokens.size) return false;
+  return candidates.some((candidate) => {
+    const candidateTokens = new Set(candidate.split(/\s+/));
+    const matches = [...targetTokens].filter((token) => candidateTokens.has(token)).length;
+    return matches / targetTokens.size >= 0.75;
+  });
 }
 
 async function browseVideoFolderSubtitles(video) {
@@ -9929,24 +12370,27 @@ function selectFolderSubtitle(subtitlePath, video) {
   };
   const next = existing ? subtitles : [...subtitles, track];
   state.player = { ...state.player, streamOptions: { ...state.player.streamOptions, subtitles: next }, subtitleStreamIndex: String(track.index) };
+  persistPlayerSubtitleSelection(state.player.mediaKey, String(track.index), next);
   applyPlayerSubtitleSelection(video, String(track.index));
   document.querySelector("[data-player-popover]")?.setAttribute("hidden", "");
 }
 
-async function downloadOpenSubtitle(fileId, video) {
+async function downloadOpenSubtitle(fileId, video, language = "en") {
   try {
     showPlayerFeedback("Downloading subtitle…");
     const response = await fetch("./api/subtitles/download", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ fileId, mediaPath: state.player?.filePath }),
+      body: JSON.stringify({ fileId, mediaPath: state.player?.filePath, language }),
     });
     const result = await response.json();
     if (!response.ok) throw new Error(result.error || "Subtitle download failed");
     await refreshPlayerSubtitleTracks(video, result.subtitlePath);
     showPlayerFeedback("Subtitle downloaded");
+    return true;
   } catch (error) {
     showPlayerFeedback(error.message || "Subtitle download failed");
+    return false;
   }
 }
 
@@ -9975,21 +12419,30 @@ function truncateText(value = "", maxLength = 160) {
 }
 
 function getRelatedMovies(item) {
-  const baseYear = Number(item.year);
   const source = state.libraryMode === "media" ? getMovieLibraryItems() : movies;
-  const itemGenre = getPrimaryGenreForItem(item);
-  return source
+  return rankRelatedMovies(item, source
     .filter((movie) => movie.id !== item.id)
-    .filter((movie) => state.libraryMode !== "media" || hasPlayableMediaFiles(movie))
-    .map((movie) => {
-      const movieGenre = getPrimaryGenreForItem(movie);
-      const genreScore = movieGenre && itemGenre && movieGenre === itemGenre ? 6 : 0;
-      const yearScore = Number.isFinite(baseYear) && Number.isFinite(Number(movie.year)) ? Math.max(0, 4 - Math.abs(Number(movie.year) - baseYear) / 5) : 0;
-      return { movie, score: genreScore + yearScore };
+    .filter((movie) => state.libraryMode !== "media" || hasPlayableMediaFiles(movie)), {
+      detailsFor: getRecommendationDetails,
+      collectionIdsFor: getRecommendationCollectionIds,
     })
-    .filter((entry) => entry.score > 0 || state.libraryMode !== "media")
-    .sort((a, b) => b.score - a.score || Number(b.movie.year) - Number(a.movie.year))
-    .map(({ movie }) => movie);
+    .map(({ movie, score, reasons }) => ({ ...movie, recommendationScore: score, recommendationReasons: reasons }));
+}
+
+function getRecommendationDetails(item) {
+  const details = movieDetailIndex[item.id] ?? mcuDetailIndex[item.id] ?? criterionDetailIndex[item.id] ?? item;
+  return applyMetadataOverrideToDetails(item, details);
+}
+
+function getRecommendationCollectionIds(item) {
+  const override = getItemMetadataOverride(item.id);
+  return [...new Set([
+    ...(item.collectionIds ?? []),
+    ...(item.collections ?? []),
+    item.collectionId,
+    item.sourceCollectionId,
+    ...(override.collectionAllocations ?? []).map((allocation) => allocation.collectionId),
+  ].filter((id) => id && !/^(unsorted|library)$/i.test(String(id).trim())))];
 }
 
 function getRelatedMediaFamily(item) {
@@ -10038,9 +12491,7 @@ function inferMediaFamilyKey(title) {
     "bob s burgers",
     "beavis and butt head",
   ];
-  const collectionAnchors = getGroupedCollections()
-    .filter((group) => /^(sagas|worlds|boxed sets)$/i.test(group.title))
-    .flatMap((group) => group.collections ?? [])
+  const collectionAnchors = getCollectionNavigationCards()
     .map((collection) => normalizeTitleForMatch(collection.title))
     .filter((key) => key.length >= 5);
   return [...new Set([...configured, ...collectionAnchors])]
@@ -10061,7 +12512,9 @@ function renderTvProgramScreen(show) {
   const next = resume?.episodeId ? findAvailableTvEpisode(resume.episodeId)?.episode : getNextTvEpisode(show);
   const episodeQueueLabel = Number(resume?.seconds ?? 0) >= TV_CURRENT_EPISODE_THRESHOLD_SECONDS ? "Current Episode" : "Next Episode";
   const playLabel = resume?.episodeId ? "Resume Watching" : "Play";
-  const relatedMovies = getRelatedMediaFamily(show).filter((entry) => entry.mediaType === "movie");
+  const mediaFamily = getRelatedMediaFamily(show);
+  const relatedMovies = mediaFamily.filter((entry) => entry.mediaType === "movie");
+  const relatedShows = mediaFamily.filter((entry) => entry.mediaType === "tv");
   return `
     <div class="toby-tv-detail toby-tv-program-page">
       ${renderTobyTvTopbar()}
@@ -10084,15 +12537,10 @@ function renderTvProgramScreen(show) {
           </div>
           ${renderTobyTvNextEpisode(show, next, episodeQueueLabel)}
         </div>
-        <aside class="toby-tv-side">
-          <div class="toby-tv-counts">
-            <strong>${seasons.length} seasons</strong>
-            <span>${countTvEpisodes(seasons)} episodes in library</span>
-          </div>
-          ${renderTobyTvFoundIn(show)}
-        </aside>
+        <aside class="toby-tv-side">${renderTobyTvRentalCard(show, details, "program")}</aside>
       </section>
       ${renderTobyTvSeasonShelf(show, seasons)}
+      ${renderRelatedMediaShelf(relatedShows.length === 1 ? "TV Series" : "TV Series", relatedShows)}
       ${renderRelatedMediaShelf(relatedMovies.length === 1 ? "Movie" : "Movies", relatedMovies)}
       ${renderTobyTvSubcollectionShelf(show)}
       ${renderTobyTvCastShelf(details.cast ?? [], `Cast for ${show.title}`, `program:${show.id}`)}
@@ -10106,6 +12554,17 @@ const TV_SUBCOLLECTION_RULES = {
       id: "autumnal-bobs",
       title: "Autumnal Bob's",
       description: "Halloween, Thanksgiving, harvest weather, and the Belchers' annual surrender to autumn.",
+      episodeIds: [
+        "bobs-burgers-s03-e05",
+        "bobs-burgers-s04-e05",
+        "bobs-burgers-s06-e04",
+        "bobs-burgers-s07-e06",
+        "bobs-burgers-s08-e05",
+        "bobs-burgers-s10-e08",
+        "bobs-burgers-s11-e07",
+        "bobs-burgers-s12-e08",
+        "bobs-burgers-s13-e08",
+      ],
       pattern: /full bars|fort night|dawn of the peck|hauntening|teen-a-witch|quirk-ducers|wolf of wharf|thanks-hoarding|nightmare on ocean|i bob your pardon|heartbreak hotel-oween|pumpkinening|stuck in the kitchen|apple gore-chard|putts-giving|twinnening/i,
     },
     {
@@ -10130,7 +12589,10 @@ function getTvSubcollections(show) {
     .map((rule) => ({
       ...rule,
       showId: show.id,
-      episodes: episodes.filter((episode) => rule.pattern.test(`${episode.title ?? ""} ${episode.overview ?? episode.summary ?? ""}`)),
+      episodes: episodes.filter((episode) =>
+        rule.episodeIds?.includes(episode.id)
+        || rule.pattern.test(`${episode.title ?? ""} ${episode.overview ?? episode.summary ?? ""}`),
+      ),
     }))
     .filter((collection) => collection.episodes.length);
 }
@@ -10270,7 +12732,7 @@ function renderTvSeasonCard(show, season) {
         },
       )}
       <div class="card-body">
-        <div class="card-title">Series ${season.seasonNumber}</div>
+        <div class="card-title">${escapeHtml(formatTvSeasonLabel(season))}</div>
         <div class="card-meta">${season.episodes.length} episodes</div>
       </div>
       ${renderTvSeasonCompletionCheck(show, season)}
@@ -10305,19 +12767,19 @@ function renderTvSeasonScreen(showId, seasonNumber) {
             )}
           </div>
           <p class="toby-tv-meta">${escapeHtml(renderTobyTvProgramMeta(show, details))}</p>
-          ${renderTobyTvFoundIn(show)}
+          ${renderTobyTvRentalCard(show, details, "season", season)}
         </aside>
         <div class="toby-tv-season-main">
           <div class="toby-tv-season-head">
             <div>
-              <h1>${escapeHtml(getDisplayTitle(show))}</h1>
-              <p class="toby-tv-season-kicker">Season ${season.seasonNumber}</p>
+              <h1><button class="toby-tv-hierarchy-link heading" type="button" data-action="open-tv-program-parent" data-tv-show-id="${escapeHtml(show.id)}">${escapeHtml(getDisplayTitle(show))}</button></h1>
+              <p class="toby-tv-season-kicker">${escapeHtml(formatTvSeasonLabel(season))}</p>
               <p class="toby-tv-meta">${season.episodes.length} episodes</p>
               ${renderTobyTvRatings(details)}
             </div>
             <div class="toby-tv-actions slim">
               <button class="toby-tv-play" type="button" data-action="play-tv-episode" data-play-tv-episode-id="${firstEpisode?.id ?? ""}"><span></span>${playLabel}</button>
-              <button class="toby-tv-secondary" type="button" data-action="random-tv-episode" data-tv-show-id="${show.id}">Random Episode</button>
+              <button class="toby-tv-secondary" type="button" data-action="random-tv-episode" data-tv-show-id="${escapeHtml(show.id)}" data-tv-season-number="${season.seasonNumber}">Random Episode</button>
               ${renderTvSeasonCompletionCheck(show, season)}
             </div>
           </div>
@@ -10325,7 +12787,7 @@ function renderTvSeasonScreen(showId, seasonNumber) {
         </div>
       </section>
       ${renderTobyTvSeasonShelf(show, getAvailableTvSeasons(show), season.seasonNumber)}
-      ${renderTobyTvCastShelf(season.cast ?? details.cast ?? [], `Cast for ${show.title} Season ${season.seasonNumber}`, `season:${show.id}:${season.seasonNumber}`)}
+      ${renderTobyTvCastShelf(season.cast ?? details.cast ?? [], `Cast for ${show.title} ${formatTvSeasonLabel(season)}`, `season:${show.id}:${season.seasonNumber}`)}
     </div>
   `;
 }
@@ -10347,12 +12809,14 @@ function renderEpisodeWheel(show, season) {
 function renderEpisodeCard(show, episode) {
   return `
     <article class="episode-card" data-tv-episode-id="${episode.id}" tabindex="0">
-      <div class="episode-still">${episode.stillUrl ? `<img src="${escapeHtml(episode.stillUrl)}" alt="" loading="lazy" />` : `<span>${escapeHtml(formatEpisodeNumber(episode))}</span>`}</div>
+      <div class="episode-still">
+        ${episode.stillUrl ? `<img src="${escapeHtml(episode.stillUrl)}" alt="" loading="lazy" />` : `<span>${escapeHtml(formatEpisodeNumber(episode))}</span>`}
+        ${renderCompletionCheck({ id: episode.id, mediaType: "episode" }, "Episode watched")}
+      </div>
       <div class="episode-card-copy">
         <div class="card-title">${escapeHtml(formatEpisodeNumber(episode))}: ${escapeHtml(episode.title)}</div>
         <p>${escapeHtml(episode.overview || "Episode summary pending.")}</p>
       </div>
-      ${renderCompletionCheck({ id: episode.id, mediaType: "episode" }, "Episode watched")}
     </article>
   `;
 }
@@ -10383,12 +12847,19 @@ function renderTvEpisodeScreen(episodeId) {
             )}
             ${renderMediaStoplightButton(getEpisodeMetadataItem(show, season, episode), "gear")}
           </div>
-          <p class="toby-tv-meta">${escapeHtml(renderTobyTvProgramMeta(show, details))}</p>
-          ${renderTobyTvFoundIn(show)}
+          ${renderTobyTvRentalCard(show, details, "episode", season, episode)}
         </aside>
         <div class="toby-tv-episode-main">
           <h1>${escapeHtml(episode.title)}</h1>
-          <p class="toby-tv-meta">${escapeHtml(show.title)} / Season ${season.seasonNumber} / Episode ${episode.episodeNumber} / ${escapeHtml(formatEpisodeAirDate(episode))}</p>
+          <nav class="toby-tv-meta toby-tv-hierarchy" aria-label="Episode location">
+            <button class="toby-tv-hierarchy-link" type="button" data-action="open-tv-program-parent" data-tv-show-id="${escapeHtml(show.id)}">${escapeHtml(getDisplayTitle(show))}</button>
+            <span aria-hidden="true">/</span>
+            <button class="toby-tv-hierarchy-link" type="button" data-action="open-tv-season-parent" data-tv-show-id="${escapeHtml(show.id)}" data-tv-season-number="${season.seasonNumber}">${escapeHtml(formatTvSeasonLabel(season))}</button>
+            <span aria-hidden="true">/</span>
+            <span>Episode ${episode.episodeNumber}</span>
+            <span aria-hidden="true">/</span>
+            <span>${escapeHtml(formatEpisodeAirDate(episode))}</span>
+          </nav>
           ${renderTobyTvRatings(details, episode)}
           <div class="toby-tv-actions">
             <button class="toby-tv-play" type="button" data-action="play-tv-episode" data-play-tv-episode-id="${escapeHtml(episode.id)}"><span></span>${playLabel}</button>
@@ -10426,7 +12897,7 @@ function renderTobyTvTopbar() {
     <header class="toby-tv-detail-bar">
       <div class="toby-tv-brand">
         <span>TOBY'S 24-HOUR TV</span>
-        <i></i><i></i><i></i><i></i>
+        <div class="toby-tv-brand-bars" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
       </div>
       <div class="toby-tv-detail-icons">
         <span>Search</span>
@@ -10476,18 +12947,10 @@ function renderTobyTvRatings(details, episode = null) {
 }
 
 function renderTobyTvFoundIn(show) {
-  const foundIn =
-    show.id === "bobs-burgers"
-      ? [
-          { title: "Animation", id: "animation", tone: "animation" },
-          { title: "The Cult Collection", id: "cult-films", tone: "cult" },
-          { title: "2010s", id: "2010s", tone: "decade" },
-          { title: "Saturday Morning Cartoons", id: "saturday-morning-marathon", tone: "saturday" },
-        ]
-      : getTvCollections()
-          .filter((collection) => collection.itemIds.includes(show.id))
-          .slice(0, 4)
-          .map((collection) => ({ title: collection.title, id: collection.id, tone: "default" }));
+  const foundIn = getTvCollections()
+    .filter((collection) => collection.itemIds.includes(show.id))
+    .slice(0, 4)
+    .map((collection) => ({ title: collection.title, id: collection.id, tone: "default" }));
   if (!foundIn.length) return "";
   return `
     <div class="toby-found">
@@ -10538,7 +13001,7 @@ function renderTobyTvSeasonShelfCard(show, season, activeSeasonNumber = null) {
   return `
     <button class="toby-season-card ${Number(activeSeasonNumber) === season.seasonNumber ? "active" : ""}" type="button" data-tv-season data-tv-show-id="${escapeHtml(show.id)}" data-tv-season-number="${season.seasonNumber}">
       <img src="${escapeHtml(season.posterUrl ?? getTvDetails(show).posterUrl ?? TOBY_TV_LOGO_FALLBACK)}" alt="" loading="lazy" />
-      <span>Season ${season.seasonNumber}</span>
+      <span>${escapeHtml(formatTvSeasonLabel(season))}</span>
       <small>${season.episodes.length} episodes</small>
       ${renderTvSeasonCompletionCheck(show, season)}
     </button>
@@ -10587,17 +13050,19 @@ function updateTobyMoreEpisodeIndicators() {
 function renderTobyTvEpisodeShelf(show, season, activeEpisodeId) {
   return `
     <section class="toby-tv-shelf">
-      <div class="toby-tv-section-title">Season ${season.seasonNumber} Episodes</div>
+      <div class="toby-tv-section-title">${escapeHtml(formatTvSeasonLabel(season))}</div>
       <div class="toby-tv-episode-carousel">
         ${season.episodes
           .map(
             (episode) => `
               <button class="toby-episode-card ${episode.id === activeEpisodeId ? "active" : ""}" type="button" data-tv-episode-id="${episode.id}">
-                <img src="${escapeHtml(episode.stillUrl ?? TOBY_TV_LOGO_FALLBACK)}" alt="" loading="lazy" />
+                <div class="toby-episode-card-still">
+                  <img src="${escapeHtml(episode.stillUrl ?? TOBY_TV_LOGO_FALLBACK)}" alt="" loading="lazy" />
+                  ${renderCompletionCheck({ id: episode.id, mediaType: "episode" }, "Episode watched")}
+                </div>
                 <span>${escapeHtml(formatEpisodeNumber(episode))}</span>
                 <b>${escapeHtml(episode.title)}</b>
                 <small>${escapeHtml(truncateText(episode.overview || "Episode summary pending.", 82))}</small>
-                ${renderCompletionCheck({ id: episode.id, mediaType: "episode" }, "Episode watched")}
               </button>
             `,
           )
@@ -10605,6 +13070,10 @@ function renderTobyTvEpisodeShelf(show, season, activeEpisodeId) {
       </div>
     </section>
   `;
+}
+
+function formatTvSeasonLabel(season) {
+  return Number(season?.seasonNumber) === 0 ? "Specials" : `Season ${season?.seasonNumber}`;
 }
 
 function renderTobyTvCastShelf(cast = [], title = "Cast", contextKey = "program") {
@@ -10764,11 +13233,16 @@ function getEpisodeAfter(show, episode) {
   return index >= 0 ? episodes[index + 1] ?? null : null;
 }
 
-function getRandomTvEpisodeLocationForShow(showId) {
+function getRandomTvEpisodeLocationForShow(showId, seasonNumber = null) {
   const show = getTvTitleItem(showId);
   if (!show) return null;
   const details = getTvDetails(show);
-  const episodes = getAvailableTvSeasons(show).flatMap((season) =>
+  const hasRequestedSeason = seasonNumber !== null && seasonNumber !== undefined && String(seasonNumber).trim() !== "";
+  const requestedSeason = hasRequestedSeason ? Number(seasonNumber) : null;
+  const availableSeasons = getAvailableTvSeasons(show).filter((season) =>
+    requestedSeason === null || (Number.isFinite(requestedSeason) && season.seasonNumber === requestedSeason)
+  );
+  const episodes = availableSeasons.flatMap((season) =>
     (season.episodes ?? []).map((episode) => ({
       show,
       details,
@@ -10777,7 +13251,41 @@ function getRandomTvEpisodeLocationForShow(showId) {
     })),
   );
   if (!episodes.length) return null;
-  return episodes[Math.floor(Math.random() * episodes.length)];
+  const resumedEpisodeId = getResumeEntryForTvShow(show.id)?.episodeId ?? null;
+  const excludedEpisodeIds = new Set([resumedEpisodeId, state.selectedTvEpisodeId].filter(Boolean));
+  return selectRandomEpisodeCandidate(episodes, { excludedEpisodeIds });
+}
+
+function selectRandomEpisodeCandidate(entries, options = {}) {
+  if (!Array.isArray(entries) || !entries.length) return null;
+  const excludedEpisodeIds = options.excludedEpisodeIds instanceof Set
+    ? options.excludedEpisodeIds
+    : new Set(options.excludedEpisodeIds ?? []);
+  const random = typeof options.random === "function" ? options.random : Math.random;
+  const alternatives = entries.length > 1
+    ? entries.filter((entry) => !excludedEpisodeIds.has(entry?.episode?.id))
+    : entries;
+  const candidates = alternatives.length ? alternatives : entries;
+  const roll = Number(random());
+  const normalizedRoll = Number.isFinite(roll) ? Math.min(Math.max(roll, 0), 0.9999999999999999) : 0;
+  return candidates[Math.floor(normalizedRoll * candidates.length)] ?? candidates[0] ?? null;
+}
+
+function handleDelegatedRandomTvEpisodeClick(event) {
+  const button = event.target instanceof Element ? event.target.closest("[data-action='random-tv-episode']") : null;
+  if (!button || !app?.contains(button)) return;
+  event.preventDefault();
+  event.stopPropagation();
+  const located = getRandomTvEpisodeLocationForShow(button.dataset.tvShowId, button.dataset.tvSeasonNumber);
+  if (!located) {
+    console.warn("Random Episode could not find a playable episode", {
+      showId: button.dataset.tvShowId,
+      seasonNumber: button.dataset.tvSeasonNumber ?? null,
+    });
+    return;
+  }
+  pushNavigationState();
+  launchTvEpisodeLocation(located, { startOver: true });
 }
 
 function getTvDetails(show) {
@@ -10802,6 +13310,7 @@ function getTvDetails(show) {
     overview: generated.overview ?? "",
     tagline: generated.tagline ?? "",
     firstAirDate: generated.firstAirDate ?? "",
+    tmdbId: generated.tmdbId ?? null,
     rating: generated.rating ?? "",
     averageRuntime: generated.averageRuntime ?? null,
     genres: generated.genres ?? [],
@@ -10819,12 +13328,21 @@ function getTvDetails(show) {
 }
 
 function getTvTitleItem(id) {
+  const cacheKey = getMetadataCacheKey();
+  if (getTvTitleItem.cache?.key !== cacheKey) getTvTitleItem.cache = { key: cacheKey, items: new Map() };
+  if (getTvTitleItem.cache.items.has(id)) return getTvTitleItem.cache.items.get(id);
   const shows = getAllTvTitleItems();
   const merged = applyMergedMediaItems(shows).find((item) => item.id === id || item.mergedItemIds?.includes(id));
-  if (merged) return merged;
+  if (merged) {
+    getTvTitleItem.cache.items.set(id, merged);
+    return merged;
+  }
   const canonicalId = tvCanonicalIdByAlias.get(id) ?? id;
   const direct = shows.find((item) => item.id === canonicalId);
-  if (direct) return direct;
+  if (direct) {
+    getTvTitleItem.cache.items.set(id, direct);
+    return direct;
+  }
   const source =
     tvShows.find((item) => item.id === id) ??
     tvDetailIndex[id] ??
@@ -10832,11 +13350,15 @@ function getTvTitleItem(id) {
     (generatedMetadata.records ?? []).find((item) => item.id === id) ??
     findCuratedManifestTitleItem(id) ??
     null;
-  if (source?.mediaType && source.mediaType !== "tv") return null;
+  if (source?.mediaType && source.mediaType !== "tv") {
+    getTvTitleItem.cache.items.set(id, null);
+    return null;
+  }
   const resolved = source?.title
     ? shows.find((item) => normalizeTitleForMatch(item.title) === normalizeTitleForMatch(source.title)) ?? null
     : null;
   if (resolved) tvCanonicalIdByAlias.set(id, resolved.id);
+  getTvTitleItem.cache.items.set(id, resolved);
   return resolved;
 }
 
@@ -10844,6 +13366,8 @@ function getAllTvTitleItems() {
   const cacheKey = getMetadataCacheKey();
   if (getAllTvTitleItems.cache?.key === cacheKey) return getAllTvTitleItems.cache.items;
   const byIdentity = new Map();
+  const byProviderIdentity = new Map();
+  const byRegionalAliasIdentity = new Map();
   tvCanonicalIdByAlias = new Map();
   const addShow = (show, files = []) => {
     if (!show?.id || !show.title) return;
@@ -10852,14 +13376,25 @@ function getAllTvTitleItems() {
       ? { ...show, title: matchedTitle, matchedSourceTitle: show.title }
       : show;
     const identity = normalizeTitleForMatch(canonicalShow.title);
-    const existing = byIdentity.get(identity);
+    const providerId = canonicalShow.tmdbId ?? canonicalShow.provider?.tmdbId ?? canonicalShow.provider?.providerId ?? canonicalShow.provider?.id;
+    const providerName = String(canonicalShow.provider?.provider ?? (canonicalShow.tmdbId ? "tmdb" : "")).toLowerCase();
+    const providerIdentity = providerId ? `${providerName || "provider"}:${providerId}` : null;
+    const regionalAliasIdentity = getTvRegionalAliasIdentity(canonicalShow);
+    const existing = (providerIdentity ? byProviderIdentity.get(providerIdentity) : null)
+      ?? byIdentity.get(identity)
+      ?? (regionalAliasIdentity ? byRegionalAliasIdentity.get(regionalAliasIdentity) : null);
     if (existing) {
       tvCanonicalIdByAlias.set(show.id, existing.id);
       existing.files = [...new Map([...(existing.files ?? []), ...files].map((file) => [String(file.path ?? file.episodeId), file])).values()];
+      byIdentity.set(identity, existing);
+      if (providerIdentity) byProviderIdentity.set(providerIdentity, existing);
+      if (regionalAliasIdentity) byRegionalAliasIdentity.set(regionalAliasIdentity, existing);
       return;
     }
     const next = { ...canonicalShow, files: [...(canonicalShow.files ?? []), ...files] };
     byIdentity.set(identity, next);
+    if (providerIdentity) byProviderIdentity.set(providerIdentity, next);
+    if (regionalAliasIdentity) byRegionalAliasIdentity.set(regionalAliasIdentity, next);
     tvCanonicalIdByAlias.set(show.id, next.id);
   };
   tvShows.forEach((show) => addShow(show));
@@ -10870,7 +13405,8 @@ function getAllTvTitleItems() {
     addShow({
       id: record.id,
       mediaType: "tv",
-      title: record.title,
+      title: record.provider?.title ?? record.title,
+      matchedSourceTitle: record.provider?.title && record.provider.title !== record.title ? record.title : null,
       year: record.year ?? record.files?.[0]?.parsed?.year ?? "Year pending",
       genre: getPrimaryGenreFromRecord(record) ?? "TV",
       status: "scanned",
@@ -10878,17 +13414,48 @@ function getAllTvTitleItems() {
       posterA: record.art?.colors?.[0] ?? "#202329",
       posterB: record.art?.colors?.[1] ?? "#d8b35d",
       posterCode: buildPosterCode(record.title),
+      provider: record.provider ?? null,
+      tmdbId: record.provider?.tmdbId ?? (String(record.provider?.provider ?? "").toLowerCase() === "tmdb" ? record.provider?.providerId ?? record.provider?.id : null),
       addedAt: latestFileDate ?? generatedMetadata.generatedAt,
       hasNewEpisodes: true,
     }, record.files ?? []);
   });
-  const items = [...byIdentity.values()];
+  (generatedMetadata.unmatchedFiles ?? []).forEach((file) => {
+    if (file?.parsed?.mediaType !== "tv" || !isEpisodeStructuredMediaFile(file)) return;
+    const pathInfo = getMovieCollectionPathInfo(file.path);
+    if (!pathInfo) return;
+    const showTitle = cleanCollectionShowFolderTitle(pathInfo.showFolder);
+    if (!showTitle) return;
+    addShow({
+      id: `scanned-tv-${slugify(showTitle)}`,
+      mediaType: "tv",
+      title: showTitle,
+      year: String(pathInfo.showFolder).match(/\b(?:19|20)\d{2}\b/)?.[0] ?? file.parsed?.year ?? "Year pending",
+      genre: pathInfo.section || "TV",
+      status: "scanned",
+      posterA: file.art?.colors?.[0] ?? "#202329",
+      posterB: file.art?.colors?.[1] ?? "#d8b35d",
+      posterCode: buildPosterCode(showTitle),
+      addedAt: file.modifiedAt ?? generatedMetadata.generatedAt,
+      hasNewEpisodes: true,
+    }, [file]);
+  });
+  const items = [...new Set(byIdentity.values())];
   getAllTvTitleItems.cache = { key: cacheKey, items };
   return items;
 }
 
+function getTvRegionalAliasIdentity(show) {
+  const title = String(show?.title ?? "").trim();
+  const baseTitle = title.replace(/\s*\((?:u\.?s\.?(?:a\.?)?|u\.?k\.?|australia|canada)\)\s*$/i, "").trim();
+  const firstYear = String(show?.year ?? show?.startYear ?? show?.years ?? "").match(/\b(?:19|20)\d{2}\b/)?.[0];
+  return baseTitle && firstYear ? `${normalizeTitleForMatch(baseTitle)}:${firstYear}` : null;
+}
+
 function getDirectMatchedTvTitle(show) {
   const direct = metadataOverrides?.items?.[show.id];
+  const directTitle = direct?.metadata?.title ?? direct?.match?.title;
+  if (directTitle) return directTitle;
   const rawTitleKey = normalizeTitleForMatch(show.title);
   const rawYear = String(show.year ?? show.startYear ?? "");
   const identityMatch = Object.values(metadataOverrides?.items ?? {}).find((override) => {
@@ -10930,10 +13497,10 @@ function buildScannedTvSeasons(show, record, details = {}) {
     const parsed = file.parsed ?? {};
     const seasonNumber = Number(parsed.season);
     const episodeNumber = Number(parsed.episode);
-    if (!seasonNumber || !episodeNumber) return;
+    if (!Number.isInteger(seasonNumber) || seasonNumber < 0 || !Number.isInteger(episodeNumber) || episodeNumber < 1) return;
     const season = bySeason.get(seasonNumber) ?? {
       seasonNumber,
-      title: `Season ${seasonNumber}`,
+      title: seasonNumber === 0 ? "Specials" : `Season ${seasonNumber}`,
       airDate: parsed.airDate ?? details.firstAirDate ?? null,
       episodeCount: 0,
       episodes: [],
@@ -11003,20 +13570,61 @@ function getNextTvEpisode(show) {
   return episodes.find((episode) => !isTvEpisodeCompleted(episode.id)) ?? null;
 }
 
+function getTvEpisodeCoordinate(episodeId) {
+  const match = String(episodeId ?? "").match(/^(.*)-s(\d+)-?e(\d+)$/i);
+  return match ? { showId: match[1], seasonNumber: Number(match[2]), episodeNumber: Number(match[3]) } : null;
+}
+
+function findTvEpisodeInShow(show, episodeId, availableOnly = false) {
+  if (!show) return null;
+  const details = getTvDetails(show);
+  const coordinate = getTvEpisodeCoordinate(episodeId);
+  const seasons = availableOnly ? getAvailableTvSeasons(show) : details.seasons ?? [];
+  for (const season of seasons) {
+    const episode = (season.episodes ?? []).find((item) => item.id === episodeId || (
+      coordinate &&
+      Number(item.seasonNumber) === coordinate.seasonNumber &&
+      Number(item.episodeNumber) === coordinate.episodeNumber
+    ));
+    if (episode) return { show, details, season, episode };
+  }
+  return null;
+}
+
+function getLikelyTvShowsForEpisode(episodeId) {
+  const shows = [];
+  const add = (show) => {
+    if (show && !shows.some((candidate) => candidate.id === show.id)) shows.push(show);
+  };
+  add(state.selectedTitleId ? getTvTitleItem(state.selectedTitleId) : null);
+  const coordinate = getTvEpisodeCoordinate(episodeId);
+  add(coordinate?.showId ? getTvTitleItem(coordinate.showId) : null);
+  return shows;
+}
+
 function findTvEpisode(episodeId) {
-  const coordinate = String(episodeId ?? "").match(/^(.*)-s(\d+)-e(\d+)$/i);
-  for (const show of getAllTvTitleItems()) {
-    const details = getTvDetails(show);
-    for (const season of details.seasons ?? []) {
-      const episode = (season.episodes ?? []).find((item) => item.id === episodeId || (
-        coordinate &&
-        (tvCanonicalIdByAlias.get(coordinate[1]) ?? coordinate[1]) === show.id &&
-        Number(item.seasonNumber) === Number(coordinate[2]) &&
-        Number(item.episodeNumber) === Number(coordinate[3])
-      ));
-      if (episode) return { show, details, season, episode };
+  const cacheKey = `${getMetadataCacheKey()}:${episodeId}`;
+  findTvEpisode.cache = findTvEpisode.cache ?? new Map();
+  if (findTvEpisode.cache.has(cacheKey)) return findTvEpisode.cache.get(cacheKey);
+  for (const show of getLikelyTvShowsForEpisode(episodeId)) {
+    const located = findTvEpisodeInShow(show, episodeId);
+    if (located) {
+      findTvEpisode.cache.set(cacheKey, located);
+      return located;
     }
   }
+  if (getTvEpisodeCoordinate(episodeId)) {
+    findTvEpisode.cache.set(cacheKey, null);
+    return null;
+  }
+  for (const show of getAllTvTitleItems()) {
+    const located = findTvEpisodeInShow(show, episodeId);
+    if (located) {
+      findTvEpisode.cache.set(cacheKey, located);
+      return located;
+    }
+  }
+  findTvEpisode.cache.set(cacheKey, null);
   return null;
 }
 
@@ -11024,16 +13632,24 @@ function findAvailableTvEpisode(episodeId) {
   const cacheKey = `${getMetadataCacheKey()}:${episodeId}`;
   findAvailableTvEpisode.cache = findAvailableTvEpisode.cache ?? new Map();
   if (findAvailableTvEpisode.cache.has(cacheKey)) return findAvailableTvEpisode.cache.get(cacheKey);
+  for (const show of getLikelyTvShowsForEpisode(episodeId)) {
+    const located = findTvEpisodeInShow(show, episodeId, true);
+    if (located) {
+      if (findAvailableTvEpisode.cache.size >= 500) findAvailableTvEpisode.cache.delete(findAvailableTvEpisode.cache.keys().next().value);
+      findAvailableTvEpisode.cache.set(cacheKey, located);
+      return located;
+    }
+  }
+  if (getTvEpisodeCoordinate(episodeId)) {
+    findAvailableTvEpisode.cache.set(cacheKey, null);
+    return null;
+  }
   for (const show of getAllTvTitleItems()) {
-    const details = getTvDetails(show);
-    for (const season of getAvailableTvSeasons(show)) {
-      const episode = (season.episodes ?? []).find((item) => item.id === episodeId);
-      if (episode) {
-        const located = { show, details, season, episode };
-        if (findAvailableTvEpisode.cache.size >= 500) findAvailableTvEpisode.cache.delete(findAvailableTvEpisode.cache.keys().next().value);
-        findAvailableTvEpisode.cache.set(cacheKey, located);
-        return located;
-      }
+    const located = findTvEpisodeInShow(show, episodeId, true);
+    if (located) {
+      if (findAvailableTvEpisode.cache.size >= 500) findAvailableTvEpisode.cache.delete(findAvailableTvEpisode.cache.keys().next().value);
+      findAvailableTvEpisode.cache.set(cacheKey, located);
+      return located;
     }
   }
   findAvailableTvEpisode.cache.set(cacheKey, null);
@@ -11080,6 +13696,13 @@ function stopTeebeeShuffle() {
 }
 
 function playRandomTeebeeEpisode() {
+  // TeeBee's ambient channel changes the selected programme every 22 minutes.
+  // It must never redraw the app while the full player is open: doing so
+  // destroys the video element and recreates it at its original start point.
+  if (state.player) {
+    stopTeebeeShuffle();
+    return;
+  }
   const located = getRandomTvEpisodeLocation();
   if (!located) return;
   state.section = "tv";
@@ -11096,6 +13719,7 @@ function playRandomTeebeeEpisode() {
   state.selectedCriterionSubCollectionId = null;
   state.selectedIndiaView = "home";
   state.selectedIndiaLanguageId = null;
+  state.selectedJapanView = "home";
   render();
 }
 
@@ -11112,7 +13736,7 @@ function powerOffTeebee() {
   setTimeout(() => {
     state.powerOffMode = "off";
     render();
-  }, 6000);
+  }, 5000);
 }
 
 function formatTvYear(firstAirDate, fallback) {
@@ -11378,6 +14002,27 @@ function renderCastShelf(cast, item = null) {
   `;
 }
 
+function renderInductionCard(details) {
+  const inductions = details.inductions ?? [];
+  if (!inductions.length) return "";
+  return `
+    <section class="match-panel induction-panel">
+      <div class="lane-head">
+        <h2>Inductees</h2>
+        <span class="muted">${inductions.length} inductions</span>
+      </div>
+      <div class="match-list induction-list">
+        ${inductions.map((entry) => {
+          const members = entry.members?.length ? ` (${entry.members.join(" & ")})` : "";
+          const byline = entry.inductedBy?.length ? `Inducted by ${entry.inductedBy.join(", ")}` : "Inducted through the Legacy wing";
+          const context = [entry.category, byline, entry.description, entry.posthumous ? "Posthumous" : null].filter(Boolean).join(" / ");
+          return `<article class="match-row induction-row"><span>${entry.order}</span><div><strong>${escapeHtml(entry.inductee)}${escapeHtml(members)}</strong><p class="card-meta">${escapeHtml(context)}</p></div></article>`;
+        }).join("")}
+      </div>
+    </section>
+  `;
+}
+
 function renderMatchCard(details) {
   if (!details.matches?.length) {
     if (!/no match disputed|recap episode/i.test(details.summary ?? "")) return "";
@@ -11429,25 +14074,63 @@ function findLibraryTitleForCredit(credit) {
   }) ?? null;
 }
 
+function consolidateDirectorWorks(works = []) {
+  const byProduction = new Map();
+  works.forEach((work) => {
+    const fallbackIdentity = [work.mediaType, normalizeTitleForMatch(work.title), work.year ?? ""].join(":");
+    const productionId = work.tmdbId ? `${work.mediaType ?? "title"}:tmdb:${work.tmdbId}` : fallbackIdentity;
+    const existing = byProduction.get(productionId);
+    if (!existing) {
+      byProduction.set(productionId, { ...work, jobs: [...new Set([work.job].filter(Boolean))] });
+      return;
+    }
+    existing.jobs = [...new Set([...existing.jobs, work.job].filter(Boolean))];
+    existing.job = existing.jobs.join(" / ");
+    existing.country ??= work.country;
+    existing.posterUrl ??= work.posterUrl;
+    if (!(existing.genreIds ?? []).length && work.genreIds?.length) existing.genreIds = work.genreIds;
+  });
+  return [...byProduction.values()].map(({ jobs, ...work }) => ({
+    ...work,
+    job: jobs.length ? jobs.join(" / ") : work.job,
+  }));
+}
+
 function renderDirectorFilmography(person) {
-  const works = (person.works ?? []).map((work) => {
+  const works = consolidateDirectorWorks(person.works).map((work) => {
     const local = findLibraryTitleForCredit(work);
     const details = local ? (local.mediaType === "tv" ? getTvDetails(local) : getTitleDetails(local)) : {};
     return { ...work, local, details };
   });
   const available = [...new Map(works.filter((work) => work.local).map((work) => [work.local.id, work.local])).values()];
+  const lifeFacts = [
+    person.birthday ? ["Born", person.birthday] : null,
+    person.birthplace ? ["From", person.birthplace] : null,
+    ["Credits", works.length],
+    ["In TobyTube", available.length],
+  ].filter(Boolean);
   return `
     <div class="title-screen person-filmography-page">
-      <button class="icon-button" type="button" data-action="back-title">Back</button>
+      <button class="icon-button title-back" type="button" data-action="back-title">Back</button>
       <header class="person-filmography-hero">
         <div class="person-filmography-portrait">${person.profileUrl ? `<img src="${escapeHtml(person.profileUrl)}" alt="" />` : `<span>${escapeHtml(buildPosterCode(person.name))}</span>`}</div>
-        <div><span class="person-kicker">Director / Producer</span><h1>${escapeHtml(person.name)}</h1><p>${escapeHtml(person.biography || "TMDB filmography record.")}</p><small>${escapeHtml([person.birthday, person.birthplace].filter(Boolean).join(" / "))}</small></div>
+        <div class="person-filmography-copy">
+          <span class="person-kicker">Director / Producer</span>
+          <h1>${escapeHtml(person.name)}</h1>
+          <p class="person-biography">${escapeHtml(person.biography || "TMDB filmography record.")}</p>
+          <div class="person-fact-grid">${lifeFacts.map(([label, value]) => `<div><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong></div>`).join("")}</div>
+        </div>
       </header>
       <section class="person-available"><h2>Available for Rent</h2><div class="carousel person-available-row">${available.map(renderMixedCard).join("") || `<div class="empty">No local titles currently available.</div>`}</div></section>
-      <section class="person-credits"><h2>Film & Television Credits</h2><div class="person-credit-table" role="table">
-        <div class="person-credit-row heading" role="row"><b>Year</b><b>Title</b><b>Credit</b><b>Genre</b><b>Runtime</b><b>Country</b><b>Library</b><b>Watched</b></div>
-        ${works.map(({ local, details, ...work }) => `<div class="person-credit-row" role="row"><span>${escapeHtml(work.year ?? "—")}</span><strong>${escapeHtml(work.title)}</strong><span>${escapeHtml(work.job ?? "—")}</span><span>${escapeHtml(details.genres?.join?.(", ") ?? local?.genre ?? "—")}</span><span>${escapeHtml(formatMovieRuntime(details.runtime) ?? "—")}</span><span>${escapeHtml(details.country ?? local?.country ?? work.country ?? "—")}</span><span class="credit-tick ${local ? "yes" : "no"}" aria-label="${local ? "In library" : "Not in library"}">${local ? "✓" : "—"}</span><span class="credit-tick ${local && isItemCompleted(local) ? "watched" : "no"}" aria-label="${local && isItemCompleted(local) ? "Watched" : "Not watched"}">${local && isItemCompleted(local) ? "✓" : "—"}</span></div>`).join("")}
-      </div></section>
+      <section class="person-credits championship-history-panel">
+        <div class="lane-head"><h2>Film & Television Credits</h2><span class="muted">${works.length} entries</span></div>
+        <div class="championship-table-wrap person-credit-table-wrap">
+          <table class="championship-history-table person-credit-table">
+            <thead><tr><th>Year</th><th>Title</th><th>Credit</th><th>Genre</th><th>Runtime</th><th>Country</th><th>Library</th><th>Watched</th></tr></thead>
+            <tbody>${works.map(({ local, details, ...work }) => `<tr><td><strong>${escapeHtml(work.year ?? "—")}</strong></td><td class="person-credit-title">${escapeHtml(work.title)}</td><td>${escapeHtml(work.job ?? "—")}</td><td>${escapeHtml(details.genres?.join?.(", ") ?? local?.genre ?? "—")}</td><td>${escapeHtml(formatMovieRuntime(details.runtime) ?? "—")}</td><td>${escapeHtml(details.country ?? local?.country ?? work.country ?? "—")}</td><td>${local ? `<button class="credit-status yes credit-library-link" type="button" data-action="open-library-title" data-title-id="${escapeHtml(local.id)}" aria-label="Open ${escapeHtml(getDisplayTitle(local))} in TobyTube">Available</button>` : `<span class="credit-status no" aria-label="Not in library">—</span>`}</td><td><span class="credit-status ${local && isItemCompleted(local) ? "watched" : "no"}" aria-label="${local && isItemCompleted(local) ? "Watched" : "Not watched"}">${local && isItemCompleted(local) ? "Watched" : "—"}</span></td></tr>`).join("")}</tbody>
+          </table>
+        </div>
+      </section>
     </div>`;
 }
 
@@ -11465,7 +14148,8 @@ async function ensureDirectorFilmography(personId, name) {
 }
 
 function formatWrestlingMatchForDisplay(match = {}) {
-  let participants = String(match.match ?? "").trim();
+  const sourceText = match.match ?? match.displayText ?? match.raw ?? "";
+  let participants = String(sourceText).trim();
   const stipulations = [match.stipulation, match.titleMatch].map((value) => String(value ?? "").trim()).filter(Boolean);
   const colonIndex = participants.indexOf(":");
   if (colonIndex > 0) {
@@ -11485,7 +14169,7 @@ function formatWrestlingMatchForDisplay(match = {}) {
     seen.add(key);
     unique.push(cleaned);
   });
-  return { participants: participants || String(match.match ?? "Match"), stipulation: unique.join(" / ") || "Match" };
+  return { participants: participants || "Match", stipulation: unique.join(" / ") || "Match" };
 }
 
 function getWrestlingPersonRecord(personId) {
@@ -11600,12 +14284,13 @@ function getTitleDetails(item) {
       language: "English",
       directorLabel: "Promotion",
       director: item.promotionName,
-      runtime: itemMatches?.length ? `${itemMatches.length} matches` : item.matchCount ? `${item.matchCount} matches` : null,
+      runtime: item.inductions?.length ? `${item.inductions.length} inductees` : itemMatches?.length ? `${itemMatches.length} matches` : item.matchCount ? `${item.matchCount} matches` : null,
       venue: item.venue,
       attendance: item.attendance,
       broadcastType: item.broadcastType,
       network: item.network,
       commentary: item.commentary,
+      inductions: item.inductions ?? [],
       matches: itemMatches,
       mainEvent: item.mainEvent ?? derivedMainEvent,
       contents: item.contents,
@@ -11632,6 +14317,9 @@ function getTitleDetails(item) {
       genres: seeded.genres ?? generated.genres ?? [item.genre],
       ratings,
       cast: generated.cast ?? seeded.cast ?? [],
+      crew: generated.crew ?? seeded.crew ?? [],
+      writers: generated.writers ?? seeded.writers ?? [],
+      producers: generated.producers ?? seeded.producers ?? [],
       posterUrl: generated.posterUrl ?? tmdbPosters[item.id]?.posterUrl ?? null,
       backdropUrl: generated.backdropUrl ?? null,
       tmdbId: generated.tmdbId ?? tmdbPosters[item.id]?.tmdbId ?? null,
@@ -11681,8 +14369,14 @@ function getNightMainEvents(matches = []) {
 }
 
 function getWrestlingMatchesForItem(item) {
-  if (item.matches?.length) return item.matches;
-  return wrestlingMatchDetailsIndex?.[item.referenceId] ?? wrestlingMatchDetailsIndex?.[item.id] ?? null;
+  const indexedMatches = wrestlingMatchDetailsIndex?.[item.referenceId]
+    ?? wrestlingMatchDetailsIndex?.[item.id];
+  const hasNamedMatch = (matches) => matches?.some((entry) => entry?.match);
+  if (hasNamedMatch(indexedMatches)) return indexedMatches;
+  if (hasNamedMatch(item.matches)) return item.matches;
+  const parsedMatches = parseWrestlingMatches(item.summary);
+  if (hasNamedMatch(parsedMatches)) return parsedMatches;
+  return indexedMatches?.length ? indexedMatches : item.matches?.length ? item.matches : null;
 }
 
 async function ensureWrestlingMatchDetails(item = null) {
@@ -11710,6 +14404,10 @@ async function ensureWrestlingMatchDetails(item = null) {
 
 function getTitleItem(id) {
   if (isItemDeleted(id)) return null;
+  const disneyShortsItem = getDisneyShortsItem(id);
+  if (disneyShortsItem) return disneyShortsItem;
+  const looneyTunesItem = getLooneyTunesGoldenItem(id);
+  if (looneyTunesItem) return looneyTunesItem;
   const userFranchise = getUserFranchiseItems().find((item) => item.id === id);
   if (userFranchise) return userFranchise;
   const unmatchedItem = batcaveUnmatchedItemIndex.get(id);
@@ -11717,7 +14415,13 @@ function getTitleItem(id) {
   const fancamItem = ecwExtremeFancamById.get(id);
   if (fancamItem) return { ...fancamItem, title: getDisplayTitle(fancamItem) };
   const generatedWrestlingItem = generatedWrestlingById.get(id);
-  if (generatedWrestlingItem) return { ...generatedWrestlingItem, title: getDisplayTitle(generatedWrestlingItem) };
+  if (generatedWrestlingItem) {
+    return {
+      ...generatedWrestlingItem,
+      matches: getWrestlingMatchesForItem(generatedWrestlingItem),
+      title: getDisplayTitle(generatedWrestlingItem),
+    };
+  }
   const mergedMovie = getMovieLibraryItems.cache?.items?.find((item) => item.id === id) ?? null;
   if (mergedMovie) return mergedMovie;
   const currentPromotion = state.promotionId ? getPromotion(state.promotionId) : null;
@@ -11736,13 +14440,251 @@ function getTitleItem(id) {
     generatedWrestlingItem ??
     getWweDocumentaryArchiveItems().find((item) => item.id === id) ??
     batcaveWrestlingObjectIndex.get(id) ??
-    promotionEvents.find((item) => item.id === id) ??
     promotionArchiveEvents.find((item) => item.id === id) ??
+    promotionEvents.find((item) => item.id === id) ??
     null
   );
   if (item) return { ...item, title: getDisplayTitle(item) };
   const locatedEpisode = findTvEpisode(id);
   return locatedEpisode ? getEpisodeMetadataItem(locatedEpisode.show, locatedEpisode.season, locatedEpisode.episode) : null;
+}
+
+function getDisneyShortsItem(id) {
+  for (const collection of disneyShortsIndex.collections ?? []) {
+    if (collection.id === id) return collection;
+    const short = collection.shorts?.find((item) => item.id === id);
+    if (short) return short;
+  }
+  return null;
+}
+
+function getLooneyTunesGoldenItem(id) {
+  for (const volume of looneyTunesGoldenIndex.volumes ?? []) {
+    if (volume.id === id) return volume;
+    const short = volume.shorts?.find((item) => item.id === id);
+    if (short) return short;
+  }
+  return null;
+}
+
+function renderLooneyTunesVolumePage(volume) {
+  const sort = state.looneyTunesSort || "disc";
+  const shorts = [...(volume.shorts ?? [])];
+  const compareTitle = (a, b) => a.title.localeCompare(b.title, undefined, { sensitivity: "base" });
+  const sorted = sort === "release" ? shorts.sort((a, b) => String(a.releaseDate).localeCompare(String(b.releaseDate)) || compareTitle(a, b))
+    : sort === "az" ? shorts.sort(compareTitle)
+    : sort === "za" ? shorts.sort((a, b) => compareTitle(b, a))
+    : sort === "looney" ? shorts.filter((item) => item.series === "Looney Tunes").sort((a, b) => String(a.releaseDate).localeCompare(String(b.releaseDate)))
+    : sort === "merrie" ? shorts.filter((item) => item.series === "Merrie Melodies").sort((a, b) => String(a.releaseDate).localeCompare(String(b.releaseDate)))
+    : shorts.sort((a, b) => a.disc - b.disc || a.discOrder - b.discOrder);
+  const sections = sort === "disc"
+    ? [1, 2, 3, 4].map((disc) => ({ title: `Disc ${disc}`, items: sorted.filter((item) => item.disc === disc) }))
+    : [{ title: sort === "looney" ? "Looney Tunes" : sort === "merrie" ? "Merrie Melodies" : "Cartoons", items: sorted }];
+  const nextShort = getNextShortInCollection(volume);
+  return `
+    <div class="toby-tv-detail disney-shorts-program-page looney-tunes-volume-page">
+      ${renderTobyTvTopbar()}
+      <button class="toby-tv-back" type="button" data-action="back-title">Back</button>
+      <section class="toby-tv-program-layout disney-shorts-program-layout">
+        <aside class="toby-tv-program-side"><div class="toby-tv-poster-frame">${renderPosterBlock({ ...volume, posterOverrideUrl: volume.posterUrl }, "toby-tv-main-poster")}</div></aside>
+        <main class="toby-tv-program-main">
+          <h1>${escapeHtml(volume.title)}</h1>
+          <p class="toby-tv-meta">Looney Tunes Golden Collection / ${shorts.length} cartoons / four discs</p>
+          <p class="toby-tv-overview">${escapeHtml(volume.summary)}</p>
+          <div class="toby-tv-actions">${nextShort ? `<button class="toby-tv-play" type="button" data-action="play-title" data-title-id="${escapeHtml(nextShort.id)}"><span></span>Play</button>` : ""}</div>
+          ${nextShort ? renderDisneyNextShort(nextShort) : ""}
+          ${renderShortCollectionRail("looney", volume.id)}
+        </main>
+      </section>
+      ${sections.map((section, index) => renderDisneyShortWall(section.title, section.items, { toolbar: index === 0 ? renderLooneyTunesSortControl(sort) : "" })).join("")}
+    </div>`;
+}
+
+function renderLooneyTunesSortControl(sort) {
+  return `<label class="looney-sort-control">Sort <select data-action="sort-looney-tunes">
+    <option value="disc" ${sort === "disc" ? "selected" : ""}>By Disc</option>
+    <option value="merrie" ${sort === "merrie" ? "selected" : ""}>Merrie Melodies</option>
+    <option value="looney" ${sort === "looney" ? "selected" : ""}>Looney Tunes</option>
+    <option value="release" ${sort === "release" ? "selected" : ""}>Release date</option>
+    <option value="az" ${sort === "az" ? "selected" : ""}>Title A–Z</option>
+    <option value="za" ${sort === "za" ? "selected" : ""}>Title Z–A</option>
+  </select></label>`;
+}
+
+function renderLooneyTunesShortDetailPage(item) {
+  const volume = getLooneyTunesGoldenItem(item.collectionId);
+  return renderDisneyShortDetailPage({ ...item, collectionId: volume?.id ?? item.collectionId });
+}
+
+function renderDisneyShortsCollectionPage(collection) {
+  const shorts = collection.shorts ?? [];
+  const nextShort = getNextDisneyShort(collection);
+  const sort = state.disneyShortsSort === "az" ? "az" : "release";
+  const sortShorts = (items) => [...items].sort(sort === "az"
+    ? (a, b) => String(a.title ?? "").localeCompare(String(b.title ?? ""))
+    : (a, b) => String(a.releaseDate ?? a.year ?? "").localeCompare(String(b.releaseDate ?? b.year ?? "")) || String(a.title ?? "").localeCompare(String(b.title ?? "")));
+  const sections = (collection.id === "disney-shorts-mickey-mouse"
+    ? [
+        { title: "Black and White", items: shorts.filter((item) => /[\\/]Mickey Mouse in Black and White[\\/]/i.test(item.files?.[0]?.path ?? "")) },
+        { title: "In Colour", items: shorts.filter((item) => /[\\/]Mickey Mouse in Living Color[\\/]/i.test(item.files?.[0]?.path ?? "")) },
+      ]
+    : [{ title: "Short Films", items: shorts }]).map((section) => ({ ...section, items: sortShorts(section.items) }));
+  return `
+    <div class="toby-tv-detail disney-shorts-program-page">
+      ${renderTobyTvTopbar()}
+      <button class="toby-tv-back" type="button" data-action="back-title">Back</button>
+      <section class="toby-tv-program-layout disney-shorts-program-layout">
+        <aside class="toby-tv-program-side">
+          <div class="toby-tv-poster-frame">${renderPosterBlock({ ...collection, posterOverrideUrl: collection.posterUrl }, "toby-tv-main-poster")}</div>
+        </aside>
+        <main class="toby-tv-program-main">
+          <h1>${escapeHtml(collection.title)}</h1>
+          <p class="toby-tv-meta">Disney animated shorts / ${shorts.length} films in library</p>
+          ${renderMovieRatings(collection)}
+          <p class="toby-tv-overview">${escapeHtml(collection.summary || "A chronological collection of Disney animated shorts.")}</p>
+          <div class="toby-tv-actions">
+            ${nextShort ? `<button class="toby-tv-play" type="button" data-action="play-title" data-title-id="${escapeHtml(nextShort.id)}"><span></span>Play</button>` : ""}
+          </div>
+          ${nextShort ? renderDisneyNextShort(nextShort) : ""}
+          ${renderShortCollectionRail("disney", collection.id)}
+        </main>
+      </section>
+      ${sections.map((section, index) => renderDisneyShortWall(section.title, section.items, {
+        toolbar: index === 0 ? renderDisneyShortsSortControl(sort) : "",
+        orderLabel: sort === "az" ? "alphabetical order" : "release order",
+      })).join("")}
+    </div>
+  `;
+}
+
+function renderDisneyShortsSortControl(sort) {
+  return `<label class="looney-sort-control disney-shorts-sort-control">Sort <select data-action="sort-disney-shorts">
+    <option value="release" ${sort === "release" ? "selected" : ""}>Release date</option>
+    <option value="az" ${sort === "az" ? "selected" : ""}>Title A–Z</option>
+  </select></label>`;
+}
+
+function getNextDisneyShort(collection) {
+  return getNextShortInCollection(collection);
+}
+
+function getNextShortInCollection(collection) {
+  const shorts = collection?.shorts ?? [];
+  const resumable = getStoredResumeEntries()
+    .filter((entry) => entry.kind === "movie")
+    .map((entry) => shorts.find((item) => item.id === entry.itemId))
+    .find(Boolean);
+  return resumable ?? shorts.find((item) => !isItemCompleted(item)) ?? shorts[0] ?? null;
+}
+
+function getShortCollections(kind) {
+  return kind === "looney" ? (looneyTunesGoldenIndex.volumes ?? []) : (disneyShortsIndex.collections ?? []);
+}
+
+function getIndividualShortsForSearch() {
+  return [
+    ...(disneyShortsIndex.collections ?? []),
+    ...(looneyTunesGoldenIndex.volumes ?? []),
+  ].flatMap((collection) => (collection.shorts ?? []).map((short) => ({
+    ...short,
+    collectionTitle: collection.title,
+  })));
+}
+
+function getAnimationShortCollections() {
+  const disneyOrder = [
+    "disney-shorts-mickey-mouse",
+    "disney-shorts-the-chronological-donald-duck",
+    "disney-shorts-the-complete-goofy",
+    "disney-shorts-the-complete-pluto",
+    "disney-shorts-silly-symphonies",
+    "disney-shorts-disney-rarities",
+  ];
+  const disneyById = new Map((disneyShortsIndex.collections ?? []).map((collection) => [collection.id, collection]));
+  const disney = [
+    ...disneyOrder.map((id) => disneyById.get(id)).filter(Boolean),
+    ...(disneyShortsIndex.collections ?? []).filter((collection) => !disneyOrder.includes(collection.id)),
+  ];
+  const looney = [...(looneyTunesGoldenIndex.volumes ?? [])].sort((a, b) => Number(a.volumeNumber ?? a.id?.match(/(\d+)$/)?.[1] ?? 0) - Number(b.volumeNumber ?? b.id?.match(/(\d+)$/)?.[1] ?? 0));
+  return [...disney, ...looney];
+}
+
+function getShortPoolIds(kind) {
+  return getShortCollections(kind).flatMap((collection) => (collection.shorts ?? []).map((short) => short.id));
+}
+
+function renderShortCollectionRail(kind, activeCollectionId) {
+  const collections = getShortCollections(kind).filter((collection) => collection.id !== activeCollectionId);
+  const title = kind === "looney" ? "Other Golden Collection Volumes" : "Other Disney Shorts Collections";
+  const randomLabel = kind === "looney" ? "Random Looney Tune" : "Random Disney Short";
+  return `<section class="toby-tv-shelf short-collection-switcher">
+    <div class="toby-tv-section-title">${escapeHtml(title)}</div>
+    <div class="toby-tv-season-carousel short-collection-carousel">
+      ${collections.map((collection) => `<article class="toby-season-card short-collection-card" data-title-id="${escapeHtml(collection.id)}" tabindex="0">${renderPosterBlock({ ...collection, posterOverrideUrl: collection.posterUrl })}<strong>${escapeHtml(collection.title)}</strong><span>${collection.shortCount ?? collection.shorts?.length ?? 0} shorts</span></article>`).join("")}
+      <button class="toby-season-card short-pool-randomizer" type="button" data-action="random-shorts-pool" data-shorts-pool-kind="${escapeHtml(kind)}"><span aria-hidden="true">⤨</span><strong>${escapeHtml(randomLabel)}</strong><small>Keep shuffling until exit</small></button>
+    </div>
+  </section>`;
+}
+
+function renderDisneyNextShort(item) {
+  return `
+    <button class="toby-next-episode disney-next-short" type="button" data-title-id="${escapeHtml(item.id)}">
+      <span class="toby-next-label">Play Next</span>
+      <div class="disney-next-short-art">${renderPosterBlock(item)}</div>
+      <span><b>${escapeHtml(item.title)}</b><small>${escapeHtml(truncateText(item.summary || "Short-film synopsis pending.", 90))}</small><em>${escapeHtml([item.year, item.runtime ? `${item.runtime} min` : null].filter(Boolean).join(" / ") || "Details pending")}</em></span>
+    </button>
+  `;
+}
+
+function renderDisneyShortWall(title, shorts, options = {}) {
+  return `
+    <section class="lane disney-shorts-wall-section">
+      <div class="lane-head"><h2>${escapeHtml(title)}</h2><div class="disney-short-wall-meta">${options.toolbar ?? ""}<span class="muted">${shorts.length} films / ${escapeHtml(options.orderLabel ?? "release order")}</span></div></div>
+      <div class="library-grid criterion-wall disney-shorts-wall">${shorts.map(renderDisneyShortWallCard).join("")}</div>
+    </section>
+  `;
+}
+
+function renderDisneyShortWallCard(item) {
+  return `
+    <article class="media-card library-card disney-short-card" data-title-id="${escapeHtml(item.id)}" tabindex="0">
+      ${renderPosterBlock(item)}
+      <div class="card-body"><div class="card-title">${escapeHtml(item.title)}</div><div class="card-meta">${escapeHtml(String(item.year ?? "Year pending"))}</div></div>
+    </article>
+  `;
+}
+
+function renderDisneyShortDetailPage(item) {
+  const collection = getDisneyShortsItem(item.collectionId) ?? getLooneyTunesGoldenItem(item.collectionId);
+  const shorts = collection?.shorts ?? [];
+  const movieItem = { ...item, mediaType: "movie" };
+  const details = getTitleDetails(movieItem);
+  const releaseIndex = shorts.findIndex((entry) => entry.id === item.id);
+  return `
+    <div class="toby-tv-detail toby-movie-detail movie-title-screen disney-short-detail-page">
+      ${renderTobyMovieTopbar()}
+      <button class="toby-tv-back" type="button" data-action="back-title">Back</button>
+      <section class="toby-movie-layout disney-short-movie-layout">
+        <aside class="toby-movie-side">
+          <div class="toby-movie-poster-frame">${renderTitlePosterBlock(movieItem)}${renderMediaStoplightButton(item, "gear")}</div>
+          <div class="toby-found toby-movie-found"><h2>Found In</h2><div class="toby-found-list toby-movie-found-list"><button class="toby-found-button animation" type="button" data-title-id="${escapeHtml(collection?.id ?? "")}">${escapeHtml(collection?.title ?? "Disney Shorts")}</button></div></div>
+        </aside>
+        <main class="toby-movie-main">
+          <h1>${escapeHtml(item.title)}</h1>
+          <p class="toby-movie-meta">${escapeHtml(renderMovieHeroMetaLine(item, details))}</p>
+          ${renderMovieRatings(details)}
+          <div class="toby-movie-actions"><button class="toby-tv-play toby-movie-play" type="button" data-action="play-title" data-title-id="${escapeHtml(item.id)}"><span></span>Play Short</button>${renderCompletionCheck(item)}</div>
+          <p class="toby-movie-overview">${escapeHtml(details.summary || item.summary || "Synopsis pending.")}</p>
+          ${renderMediaStreamControls(`movie:${item.id}`, item.files ?? [], "movie")}
+        </main>
+      </section>
+      <section class="toby-tv-episodes disney-short-release-row">
+        <div class="toby-tv-section-title">More ${escapeHtml(collection?.title ?? "Disney Shorts")}</div>
+        <div class="episode-carousel">${shorts.map((short, index) => `<article class="episode-card disney-short-release-card ${index === releaseIndex ? "current" : ""}" data-title-id="${escapeHtml(short.id)}" tabindex="0"><div class="episode-still criterion-film-poster">${renderPosterBlock(short)}</div><div class="episode-card-copy"><div class="card-title">${escapeHtml(short.title)}</div><p>${escapeHtml(String(short.year ?? ""))}</p></div></article>`).join("")}</div>
+      </section>
+      ${renderTobyMovieCastShelf(details.cast ?? [], item)}
+    </div>
+  `;
 }
 
 function resolveStaleTitleId(id) {
@@ -11763,7 +14705,19 @@ function resolveStaleTitleId(id) {
 }
 
 function isItemDeleted(itemId) {
-  return Boolean(getItemOverride(itemId).deleted?.deletedAt);
+  const deleted = getItemOverride(itemId).deleted;
+  if (!deleted?.deletedAt) return false;
+  // Older title-level removals retain their prior behavior. New removals are
+  // scoped to the file incarnation that was removed, so a copy discovered at
+  // a different path can return to the live catalogue.
+  if (!Array.isArray(deleted.paths) || !deleted.paths.length) return true;
+  const item = metadataIndex[itemId]
+    ?? (generatedMetadata.records ?? []).find((record) => record.id === itemId)
+    ?? movies.find((entry) => entry.id === itemId)
+    ?? tvShows.find((entry) => entry.id === itemId);
+  const currentPaths = getItemMediaFiles(item).map((file) => String(file.path ?? "").toLowerCase()).filter(Boolean);
+  const removedPaths = new Set(deleted.paths.map((filePath) => String(filePath ?? "").toLowerCase()));
+  return currentPaths.length > 0 && currentPaths.every((filePath) => removedPaths.has(filePath));
 }
 
 function findCuratedManifestTitleItem(id) {
@@ -12158,6 +15112,7 @@ function renderPosterBlock(item, extraClass = "") {
 }
 
 function getMetadataRecordForItem(item) {
+  if (!item) return null;
   const candidates = [
     item.metadataId,
     item.scannedRecordId,
@@ -12175,8 +15130,13 @@ function getPrimaryGenreFromRecord(record) {
 
 function normalizeDisplayGenre(value) {
   const genre = cleanDisplayText(value);
-  if (!genre || /^(unsorted|collection|american)$/i.test(genre)) return null;
+  if (!genre || /^(unsorted|library|collection|american)$/i.test(genre)) return null;
   return genre;
+}
+
+function libraryDisplayLabel(value, fallback = "Library") {
+  const label = cleanDisplayText(value);
+  return !label || /^(unsorted|library)$/i.test(label) ? fallback : label;
 }
 
 function getPrimaryGenreForItem(item) {
@@ -12204,24 +15164,40 @@ function renderEpisodeChips(episodes) {
 }
 
 function renderWrestlingHome() {
-  const availablePromotions = getWrestlingPromotionsForMode();
+  const selectedDirectory = state.wrestlingLandingView ?? "major";
+
+  const directoryLabels = { major: "Major Promotions", active: "Active Promotions", inactive: "Inactive Promotions" };
+  const homeSection = selectedDirectory === "inactive" ? "defunct" : selectedDirectory;
+  const availablePromotions = promotions.filter((promotion) => promotion.homeSection === homeSection);
   const filtered = availablePromotions.filter((promotion) =>
     [promotion.name, promotion.cardName, promotion.sortName]
       .filter(Boolean)
       .some((name) => name.toLowerCase().includes(state.query.toLowerCase())),
   );
-  const sections = buildPromotionHomeSections(filtered);
+  const groups = selectedDirectory === "major"
+    ? [{ title: null, promotions: filtered }]
+    : groupedPromotions(homeSection)
+        .map((group) => ({ ...group, promotions: group.promotions.filter((promotion) => filtered.some((entry) => entry.id === promotion.id)) }))
+        .filter((group) => group.promotions.length);
 
   return `
-    <div class="section-heading">
-      <div>
-        <h1 class="metropolis-title" data-text="Wrestling">Wrestling</h1>
-        <p class="muted">${state.wrestlingMode === "media" ? "Only scanned wrestling files are shown." : "Full database archive for checking metadata coverage."}</p>
+    <section class="wrestling-landing wrestling-landing-directory" aria-labelledby="wrestling-landing-title">
+      <div class="wrestling-landing-banner">
+        <div class="wrestling-landing-copy">
+          <h1 id="wrestling-landing-title">Wrestling</h1>
+        </div>
+        <nav class="wrestling-landing-nav" aria-label="Browse wrestling promotions">
+          <button type="button" data-wrestling-landing="major" class="${selectedDirectory === "major" ? "active" : ""}" aria-current="${selectedDirectory === "major" ? "page" : "false"}">Major Promotions</button>
+          <button type="button" data-wrestling-landing="active" class="${selectedDirectory === "active" ? "active" : ""}" aria-current="${selectedDirectory === "active" ? "page" : "false"}">Active Promotions</button>
+          <button type="button" data-wrestling-landing="inactive" class="${selectedDirectory === "inactive" ? "active" : ""}" aria-current="${selectedDirectory === "inactive" ? "page" : "false"}">Inactive Promotions</button>
+        </nav>
       </div>
+    </section>
+    <div class="wrestling-directory-controls">
       ${renderWrestlingModeToggle()}
     </div>
-    <div class="promotion-home-sections">
-      ${sections.map(renderPromotionHomeSection).join("") || `<div class="empty">No scanned wrestling media found yet.</div>`}
+    <div class="promotion-home-sections wrestling-directory wrestling-directory-${selectedDirectory}">
+      ${groups.map((group) => renderPromotionGroup(group, directoryLabels[selectedDirectory])).join("") || `<div class="empty">No promotions found.</div>`}
     </div>
   `;
 }
@@ -12229,7 +15205,7 @@ function renderWrestlingHome() {
 function renderWrestlingModeToggle() {
   return `
     <div class="segmented" aria-label="Wrestling mode">
-      <button type="button" data-wrestling-mode="media" class="${state.wrestlingMode === "media" ? "active" : ""}">Media</button>
+      <button type="button" data-wrestling-mode="media" class="${state.wrestlingMode === "media" ? "active" : ""}">Live</button>
       <button type="button" data-wrestling-mode="archive" class="${state.wrestlingMode === "archive" ? "active" : ""}">Archive</button>
     </div>
   `;
@@ -13203,6 +16179,7 @@ function findChampionshipEventTarget(reign, promotionId = "aew") {
 
 function renderOverview(promotion, specials) {
   if (["njpw", "ajpw"].includes(promotion.id)) return renderJapaneseTourOverview(promotion, specials);
+  if (getVisibleShowLanes(promotion, state.selectedYear).length) return renderWeeklyPromotionOverview(promotion, specials);
   const deferredWweWorld = promotion.id === "wwe" ? specials.filter(isWweWorldAtWrestleMania) : [];
   const columnSpecials = promotion.id === "wwe" ? specials.filter((item) => !isWweWorldAtWrestleMania(item)) : specials;
   const showLanes = getVisibleShowLanes(promotion, state.selectedYear);
@@ -13229,6 +16206,58 @@ function renderOverview(promotion, specials) {
       </aside>
     </div>
     ${deferredWweWorld.length ? `<div class="shelf-stack wwe-world-shelf">${renderPosterShelf("WWE World at WrestleMania", chronologicalNjpwItems(deferredWweWorld), "title", renderEventArchiveCard)}</div>` : ""}
+  `;
+}
+
+function renderWeeklyPromotionOverview(promotion, specials) {
+  const shows = getVisibleShowLanes(promotion, state.selectedYear)
+    .map((show) => ({
+      ...show,
+      key: slugify(show.name),
+      episodes: filterEvents(getVisibleShowEpisodes(promotion, show, state.selectedYear))
+        .sort((left, right) => getArchiveDateKey(right).localeCompare(getArchiveDateKey(left))),
+    }))
+    .filter((show) => show.episodes.length);
+  const selected = shows.find((show) => show.key === state.selectedWrestlingShowKey) ?? shows[0] ?? null;
+  const events = [...specials].sort((left, right) => getArchiveDateKey(right).localeCompare(getArchiveDateKey(left)));
+  return `
+    <section class="lane aew-show-picker">
+      <div class="lane-head">
+        <h2>Weekly Shows</h2>
+        <span class="muted">${state.selectedYear}</span>
+      </div>
+      <div class="carousel wrestling-show-selector">
+        ${shows.map((show) => renderWrestlingShowSelector(show, selected?.key)).join("") || `<div class="empty">No weekly shows found for this year.</div>`}
+      </div>
+    </section>
+    <div class="layout-two aew-promotion-columns">
+      <section class="lane aew-show-browser">
+        ${selected ? `
+          <div class="lane-head">
+            <h3>${escapeHtml(selected.name)}</h3>
+            <span class="muted">${selected.episodes.length} episode${selected.episodes.length === 1 ? "" : "s"} · newest first</span>
+          </div>
+          ${renderVerticalEventCarousel(selected.episodes, `weekly-${promotion.id}-${state.selectedYear}-${selected.key}`, "No episodes found for this show.")}
+        ` : `<div class="empty">Choose a weekly show.</div>`}
+      </section>
+      <section class="lane aew-event-browser">
+        <div class="lane-head">
+          <h3>Events &amp; Specials</h3>
+          <span class="muted">${events.length} item${events.length === 1 ? "" : "s"} · newest first</span>
+        </div>
+        ${renderVerticalEventCarousel(events, `events-${promotion.id}-${state.selectedYear}`, "No events or specials found for this year.")}
+      </section>
+    </div>
+  `;
+}
+
+function renderWrestlingShowSelector(show, selectedKey) {
+  const artwork = show.episodes.find((episode) => episode.posterUrl || episode.posterImage || episode.imageUrl) ?? show.episodes[0];
+  return `
+    <button class="wrestling-show-card ${show.key === selectedKey ? "active" : ""}" type="button" data-wrestling-show="${escapeHtml(show.key)}" aria-label="Show ${escapeHtml(show.name)} episodes" aria-pressed="${show.key === selectedKey}">
+      ${renderPosterBlock(artwork, "wrestling-show-card-art")}
+      <small>${show.episodes.length} episode${show.episodes.length === 1 ? "" : "s"}</small>
+    </button>
   `;
 }
 
@@ -13302,6 +16331,7 @@ function isNjpwStrongItem(item) {
 function renderEventArchive(promotion) {
   const events = sortEventArchiveItems(filterEvents(getVisiblePromotionArchiveItems(promotion)));
   if (promotion.id === "njpw") return renderNjpwEventArchive(events);
+  if (promotion.id === "pwg") return renderPwgEventArchive(events);
   return `
     <section class="lane event-archive">
       <div class="lane-head event-archive-head">
@@ -13313,6 +16343,52 @@ function renderEventArchive(promotion) {
       </div>
       <div class="library-grid event-archive-grid">
         ${events.map(renderEventArchiveCard).join("") || `<div class="empty">No events match your search.</div>`}
+      </div>
+    </section>
+  `;
+}
+
+function renderPwgEventArchive(events) {
+  const groups = new Map();
+  const undated = [];
+  events.forEach((event) => {
+    const year = Number(String(event.date ?? event.listedYear ?? event.year ?? "").match(/\b(?:19|20)\d{2}\b/)?.[0]);
+    if (!year) {
+      undated.push(event);
+      return;
+    }
+    if (!groups.has(year)) groups.set(year, []);
+    groups.get(year).push(event);
+  });
+  const years = [...groups.keys()].sort((a, b) => b - a);
+  const newestFirst = (items) => [...items].sort((a, b) => getArchiveDateKey(b).localeCompare(getArchiveDateKey(a)) || a.title.localeCompare(b.title));
+  return `
+    <section class="lane event-archive pwg-event-archive">
+      <div class="lane-head event-archive-head">
+        <div>
+          <h2>Events</h2>
+          <span class="muted">${events.length} ${events.length === 1 ? "event" : "events"} · newest to oldest</span>
+        </div>
+      </div>
+      <div class="pwg-year-groups">
+        ${years.map((year) => `
+          <section class="pwg-year-group" id="pwg-events-${year}">
+            <div class="pwg-year-heading">
+              <h3>${year}</h3>
+              <span>${groups.get(year).length} ${groups.get(year).length === 1 ? "event" : "events"}</span>
+            </div>
+            <div class="library-grid event-archive-grid">
+              ${newestFirst(groups.get(year)).map(renderEventArchiveCard).join("")}
+            </div>
+          </section>
+        `).join("")}
+        ${undated.length ? `
+          <section class="pwg-year-group pwg-undated-group">
+            <div class="pwg-year-heading"><h3>Date TBD</h3><span>${undated.length} ${undated.length === 1 ? "event" : "events"}</span></div>
+            <div class="library-grid event-archive-grid">${newestFirst(undated).map(renderEventArchiveCard).join("")}</div>
+          </section>
+        ` : ""}
+        ${!events.length ? `<div class="empty">No events match your search.</div>` : ""}
       </div>
     </section>
   `;
@@ -13423,17 +16499,28 @@ function renderMediaCard(item) {
 }
 
 function renderEventRow(item) {
+  const showNumber = item.episodeNumber ? `#${item.episodeNumber}` : item.releaseCode ?? "";
+  const place = [item.venue, item.location].filter(Boolean).filter((value, index, values) => values.indexOf(value) === index).join(" · ");
+  const mainEvent = getWrestlingMainEvent(item);
   return `
     <article class="event-row" data-title-id="${item.id}" tabindex="0" role="button">
       ${renderPosterBlock(item, "event-thumb")}
-      <div class="event-date">${formatShortDate(item.date)}</div>
-      <div>
+      <div class="event-row-copy">
+        <div class="event-row-kicker"><span>${formatShortDate(item.date)}</span>${showNumber ? `<span>${escapeHtml(showNumber)}</span>` : ""}</div>
         <div class="event-name">${escapeHtml(getDisplayTitle(item))}</div>
-        <div class="card-meta">${item.eventLabel ?? item.metadataSource}</div>
+        ${place ? `<div class="card-meta">${escapeHtml(place)}</div>` : ""}
+        ${mainEvent ? `<div class="event-main"><strong>Main event</strong><span>${escapeHtml(mainEvent)}</span></div>` : ""}
       </div>
       ${renderMediaStoplightButton(item)}
     </article>
   `;
+}
+
+function getWrestlingMainEvent(item) {
+  if (item.mainEvent) return item.mainEvent;
+  const matches = (getWrestlingMatchesForItem(item) ?? []).filter((match) => match?.match);
+  if (!matches.length) return "";
+  return [...matches].sort((left, right) => Number(right.order ?? 0) - Number(left.order ?? 0))[0].match;
 }
 
 function renderVerticalEventCarousel(items, id, emptyMessage) {
@@ -13538,6 +16625,7 @@ function bindEvents() {
       state.selectedCriterionSubCollectionId = null;
       state.titleCardView = "full";
       state.query = "";
+      state.searchActive = false;
       state.castOverlay = null;
       state.subView = button.dataset.targetSubview ?? "home";
       render();
@@ -13586,12 +16674,22 @@ function bindEvents() {
     });
   });
 
+  document.querySelectorAll("[data-wrestling-landing]").forEach((button) => {
+    button.addEventListener("click", () => {
+      state.wrestlingLandingView = button.dataset.wrestlingLanding;
+      state.promotionId = null;
+      state.selectedWrestlingShowKey = null;
+      render();
+    });
+  });
+
   document.querySelectorAll("[data-promotion]").forEach((button) => {
     button.addEventListener("click", (event) => {
       event.preventDefault();
       event.stopPropagation();
       state.view = "overview";
       state.promotionId = button.dataset.promotion;
+      state.selectedWrestlingShowKey = null;
       pendingPromotionId = state.promotionId;
       state.navigationStack = [];
       state.selectedChampionshipId = null;
@@ -13619,20 +16717,23 @@ function bindEvents() {
         render();
       }
 
-      if (state.wrestlingMode === "archive" && !isPromotionLibraryReady(promotion.id)) {
-        ensureGeneratedPromotionLibrary(promotion.id, state.selectedYear).then(() => {
+      if (state.wrestlingMode === "archive") {
+        (async () => {
+          if (!isPromotionLibraryReady(promotion.id)) await ensureGeneratedPromotionLibrary(promotion.id, state.selectedYear);
           if (state.section !== "wrestling" || pendingPromotionId !== promotion.id) return;
           try {
             state.promotionId = promotion.id;
             const availableYears = getVisiblePromotionYears(promotion);
             if (!availableYears.includes(Number(state.selectedYear))) state.selectedYear = getDefaultPromotionYear(promotion);
+            await ensureWrestlingMatchDetails({ promotionId: promotion.id, year: state.selectedYear });
+            if (state.section !== "wrestling" || pendingPromotionId !== promotion.id) return;
             rememberPromotionYear(promotion.id, state.selectedYear);
             if (state.metadataMenu || state.metadataOverlay) preservePageScrollForNextRender();
             render();
           } catch (error) {
             console.error(`Promotion hydration render failed for ${promotion.id}`, error);
           }
-        });
+        })();
       }
     });
   });
@@ -13674,11 +16775,6 @@ function bindEvents() {
     });
   });
 
-  document.querySelector("[data-action='toggle-library-mode']")?.addEventListener("click", () => {
-    state.libraryMode = state.libraryMode === "media" ? "archive" : "media";
-    state.wrestlingMode = state.libraryMode;
-    render();
-  });
   document.querySelectorAll("[data-action='rescan']").forEach((button) => {
     button.addEventListener("click", async () => {
       if (metadataStatus?.state === "scanning") return;
@@ -13697,6 +16793,32 @@ function bindEvents() {
     startTeebeeShuffle();
   });
 
+  document.querySelector("[data-animation-randomizer-movies]")?.addEventListener("change", (event) => {
+    writeAnimationRandomizerMoviesEnabled(Boolean(event.currentTarget.checked));
+  });
+
+  document.querySelector("[data-action='start-animation-randomizer']")?.addEventListener("click", async () => {
+    await Promise.all([ensureTvDetailIndex(), ensureMovieDetailIndex()]);
+    startAnimationRandomizer();
+  });
+
+  document.querySelector("[data-action='options']")?.addEventListener("click", () => {
+    pushNavigationState();
+    clearTitleSelection();
+    state.section = "options";
+    state.subView = "home";
+    render();
+  });
+  document.querySelectorAll("[data-control-binding]").forEach((button) => button.addEventListener("click", () => {
+    state.controlsListeningFor = button.dataset.controlBinding;
+    render();
+  }));
+  document.querySelector("[data-action='reset-playback-controls']")?.addEventListener("click", () => {
+    writePlaybackControls({ ...DEFAULT_PLAYBACK_CONTROLS });
+    state.controlsListeningFor = null;
+    render();
+  });
+
   document.querySelector("[data-action='doan-watch-teebee']")?.addEventListener("click", () => {
     powerOffTeebee();
   });
@@ -13706,12 +16828,59 @@ function bindEvents() {
     render();
   });
 
-  document.querySelectorAll("[data-action='random-tv-episode']").forEach((button) => {
+  document.querySelectorAll("[data-action='open-tv-program-parent']").forEach((button) => {
     button.addEventListener("click", () => {
-      const located = getRandomTvEpisodeLocationForShow(button.dataset.tvShowId);
-      if (!located) return;
-      pushNavigationState();
-      launchTvEpisodePlayback(located.episode.id);
+      const show = getTvTitleItem(button.dataset.tvShowId);
+      if (!show) return;
+      state.section = "tv";
+      state.subView = "home";
+      state.selectedTitleId = show.id;
+      state.selectedTvSeason = null;
+      state.selectedTvEpisodeId = null;
+      state.selectedTvSubcollection = null;
+      state.castOverlay = null;
+      render();
+    });
+  });
+
+  document.querySelectorAll("[data-action='open-tv-season-parent']").forEach((button) => {
+    button.addEventListener("click", () => {
+      const show = getTvTitleItem(button.dataset.tvShowId);
+      const seasonNumber = Number(button.dataset.tvSeasonNumber);
+      if (!show || !Number.isFinite(seasonNumber)) return;
+      state.section = "tv";
+      state.subView = "home";
+      state.selectedTitleId = show.id;
+      state.selectedTvSeason = { showId: show.id, seasonNumber };
+      state.selectedTvEpisodeId = null;
+      state.selectedTvSubcollection = null;
+      state.castOverlay = null;
+      render();
+    });
+  });
+
+  document.querySelectorAll("[data-action='random-shorts-pool']").forEach((button) => {
+    button.addEventListener("click", () => {
+      const poolKind = button.dataset.shortsPoolKind === "looney" ? "looney" : "disney";
+      const poolIds = getShortPoolIds(poolKind);
+      const randomId = selectRandomShortId(poolIds);
+      const randomShort = randomId ? getTitleItem(randomId) : null;
+      if (!randomShort) return;
+      launchTitlePlayback(randomShort, { startOver: true, shortPlaybackMode: SHORT_PLAYBACK_RANDOM_POOL, randomShortPoolIds: poolIds });
+    });
+  });
+
+  document.querySelectorAll("[data-action='sort-looney-tunes']").forEach((select) => {
+    select.addEventListener("change", () => {
+      state.looneyTunesSort = select.value;
+      render();
+    });
+  });
+
+  document.querySelectorAll("[data-action='sort-disney-shorts']").forEach((select) => {
+    select.addEventListener("change", () => {
+      state.disneyShortsSort = select.value === "az" ? "az" : "release";
+      render();
     });
   });
 
@@ -13719,6 +16888,28 @@ function bindEvents() {
     button.addEventListener("click", () => {
       const item = getTitleItem(button.dataset.titleId);
       launchTitlePlayback(item, { startOver: button.dataset.startOver === "true" });
+    });
+  });
+
+  document.querySelectorAll("[data-action='open-library-title']").forEach((button) => {
+    button.addEventListener("click", async () => {
+      let item = getTitleItem(button.dataset.titleId);
+      if (!item) return showMetadataToast("error", "That library title is no longer available.");
+      if (item.mediaType === "movie") await ensureMovieDetailIndex();
+      if (item.mediaType === "tv") await ensureTvDetailIndex();
+      item = getTitleItem(button.dataset.titleId) ?? item;
+      pushNavigationState();
+      state.section = item.mediaType === "tv" ? "tv" : "movies";
+      state.subView = "home";
+      state.selectedTitleId = item.id;
+      state.selectedPersonId = null;
+      state.selectedCollectionId = null;
+      state.selectedChampionshipId = null;
+      state.selectedTvSeason = null;
+      state.selectedTvEpisodeId = null;
+      state.selectedTvSubcollection = null;
+      state.titleCardView = "full";
+      render();
     });
   });
 
@@ -13751,6 +16942,7 @@ function bindEvents() {
 
   document.querySelectorAll("[data-action='open-notes-overlay']").forEach((button) => {
     button.addEventListener("click", () => {
+      preservePageScrollForNextRender();
       state.notesOverlay = { title: button.dataset.notesTitle ?? "Notes", notes: button.dataset.notes ?? "" };
       render();
     });
@@ -13759,6 +16951,7 @@ function bindEvents() {
   document.querySelectorAll("[data-action='close-notes-overlay']").forEach((button) => {
     button.addEventListener("click", (event) => {
       if (event.target.closest(".notes-overlay-panel") && event.target.dataset.action !== "close-notes-overlay") return;
+      preservePageScrollForNextRender();
       state.notesOverlay = null;
       render();
     });
@@ -13858,18 +17051,45 @@ function bindEvents() {
   document.querySelector("[data-action='year']")?.addEventListener("change", async (event) => {
     const requestedYear = Number(event.target.value);
     state.selectedYear = requestedYear;
+    state.selectedWrestlingShowKey = null;
     if (state.wrestlingMode === "archive" && state.promotionId) {
       await ensureGeneratedPromotionLibrary(state.promotionId, requestedYear);
+      await ensureWrestlingMatchDetails({ promotionId: state.promotionId, year: requestedYear });
     }
     state.selectedYear = requestedYear;
     rememberPromotionYear(state.promotionId, requestedYear);
     render();
   });
 
+  document.querySelectorAll("[data-wrestling-show]").forEach((button) => {
+    button.addEventListener("click", () => {
+      state.selectedWrestlingShowKey = button.dataset.wrestlingShow;
+      preservePageScrollForNextRender();
+      render();
+    });
+  });
+
   document.querySelector("[data-action='refresh-promotion-year']")?.addEventListener("click", async () => {
     const promotionId = state.promotionId;
     const year = state.selectedYear;
     if (!promotionId || !year) return;
+    if (!["wwe", "aew", "tna"].includes(promotionId)) {
+      showMetadataToast("error", `${promotionId.toUpperCase()} does not have a live refresh adapter yet.`);
+      return;
+    }
+    if (!window.confirm(`Refresh ${promotionId.toUpperCase()} ${year} from authorised sources? Manual corrections and artwork will be preserved; invalid data will be rolled back.`)) return;
+    showMetadataToast("success", `Refreshing ${promotionId.toUpperCase()} ${year} from source...`);
+    const refreshResponse = await fetch("./api/twdb/refresh", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ promotion: promotionId, year }) });
+    const refreshPayload = await refreshResponse.json();
+    if (!refreshResponse.ok) return showMetadataToast("error", refreshPayload.error ?? "TWDB refresh could not start");
+    const refreshResult = await waitForTwdbRefresh();
+    if (refreshResult.state !== "ready") return showMetadataToast("error", `TWDB refresh failed and was rolled back: ${refreshResult.error ?? "validation failed"}`);
+    removeGeneratedPromotionYear(promotionId, year);
+    await ensureGeneratedPromotionLibrary(promotionId, year);
+    showMetadataToast("success", `${promotionId.toUpperCase()} ${year} refreshed and validated`);
+    state.preserveScrollOnRender = true;
+    render();
+    return;
     removeGeneratedPromotionYear(promotionId, year);
     showMetadataToast("success", `Reloading ${year} from TWDB…`);
     state.preserveScrollOnRender = true;
@@ -13917,10 +17137,40 @@ function bindEvents() {
   });
 
   document.querySelectorAll("[data-batcave-view]").forEach((button) => {
-    button.addEventListener("click", () => {
+    button.addEventListener("click", async () => {
       state.batcaveView = button.dataset.batcaveView;
       render();
+      if (state.batcaveView === "users" && !state.batcaveUsers) await loadBatcaveUsers();
     });
+  });
+  document.querySelectorAll("[data-batcave-user]").forEach((button) => button.addEventListener("click", () => {
+    state.batcaveSelectedUserId = button.dataset.batcaveUser;
+    render();
+  }));
+  document.querySelector("[data-batcave-new-user]")?.addEventListener("click", () => {
+    state.batcaveSelectedUserId = "__new";
+    render();
+  });
+  document.querySelector("[data-batcave-user-form]")?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const data = new FormData(form);
+    const user = {
+      id: form.dataset.userId || undefined,
+      displayName: data.get("displayName"), role: data.get("role"), enabled: data.get("enabled") === "true", accessMode: data.get("accessMode"),
+      allowedCollections: parseBatcaveUserList(data.get("allowedCollections")), blockedRatings: parseBatcaveUserList(data.get("blockedRatings")),
+      blockedItemIds: parseBatcaveUserList(data.get("blockedItemIds")), blockedFranchiseIds: parseBatcaveUserList(data.get("blockedFranchiseIds")),
+      blockedPathRules: parseBatcaveUserList(data.get("blockedPathRules")), notes: data.get("notes"),
+    };
+    try {
+      const response = await fetch("./api/users", { method: "PUT", headers: { "content-type": "application/json" }, body: JSON.stringify({ user }) });
+      const payload = await response.json();
+      if (!response.ok) throw new Error(payload.error ?? `User could not be saved (${response.status})`);
+      state.batcaveUsers = payload.data;
+      state.batcaveSelectedUserId = payload.user.id;
+      showMetadataToast("success", "User controls saved");
+    } catch (error) { showMetadataToast("error", error.message); }
+    render();
   });
   document.querySelectorAll("[data-batcave-wrestling-mode]").forEach((button) => {
     button.addEventListener("click", () => {
@@ -14019,6 +17269,7 @@ function bindEvents() {
     if (details.dataset.metadataTagger === "collections") state.metadataOverlay.collectionsTaggerOpen = details.open;
     if (details.dataset.metadataTagger === "tv-guide") state.metadataOverlay.tvGuideTaggerOpen = details.open;
     if (details.dataset.metadataTagger === "franchise") state.metadataOverlay.franchiseTaggerOpen = details.open;
+    if (details.dataset.metadataTagger === "collection-template") state.metadataOverlay.collectionTemplateOpen = details.open;
   }));
   document.querySelectorAll("[data-remove-franchise-member]").forEach((button) => button.addEventListener("click", () => {
     captureBatcaveMetadataDraft();
@@ -14092,7 +17343,7 @@ function bindEvents() {
           const existing = getItemMetadataOverride(memberId);
           const franchiseIds = new Set(existing.franchiseIds ?? []);
           if (memberIds.includes(memberId)) franchiseIds.add(draft.franchiseId); else franchiseIds.delete(draft.franchiseId);
-          overrides[memberId] = { ...(overrides[memberId] ?? {}), metadata: { ...existing, ...(overrides[memberId]?.metadata ?? {}), franchiseIds: [...franchiseIds] } };
+          overrides[memberId] = { ...(overrides[memberId] ?? {}), metadata: { ...(overrides[memberId]?.metadata ?? {}), franchiseIds: [...franchiseIds] } };
         });
       }
       await persistMetadataOverridesBatch(overrides);
@@ -14386,6 +17637,8 @@ function bindEvents() {
       state.selectedCriterionSubCollectionId = null;
       state.selectedIndiaView = card.dataset.collectionId === "cinema-of-india" ? "home" : state.selectedIndiaView;
       state.selectedIndiaLanguageId = null;
+      state.selectedJapanView = card.dataset.collectionId === "cinema-of-japan" ? "home" : state.selectedJapanView;
+      state.selectedHolidayChaosView = card.dataset.collectionId === "holiday-chaos" ? "theatre" : state.selectedHolidayChaosView;
       render();
       requestAnimationFrame(scrollPageTop);
       setTimeout(scrollPageTop, 80);
@@ -14452,7 +17705,9 @@ function bindEvents() {
   document.querySelectorAll("[data-curated-jump]").forEach((button) => {
     button.addEventListener("click", () => {
       const target = document.querySelector(`#curated-${button.dataset.curatedJump}`) ?? document.querySelector("#curated-continue");
-      target?.scrollIntoView({ behavior: "smooth", block: "start" });
+      if (!target) return;
+      target.style.contentVisibility = "visible";
+      target.scrollIntoView({ behavior: "auto", block: "start" });
     });
   });
   document.querySelectorAll("[data-curated-view-all]").forEach((button) => {
@@ -14503,6 +17758,34 @@ function bindEvents() {
     state.selectedCollectionId = "cinema-of-india";
     state.selectedIndiaView = "languages";
     state.selectedIndiaLanguageId = null;
+    render();
+  });
+
+  document.querySelectorAll("[data-japan-view]").forEach((button) => {
+    button.addEventListener("click", () => {
+      pushNavigationState();
+      state.selectedCollectionId = "cinema-of-japan";
+      state.selectedJapanView = button.dataset.japanView;
+      render();
+    });
+  });
+
+  document.querySelectorAll("[data-holiday-chaos-view]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const nextView = button.dataset.holidayChaosView;
+      if (!nextView || nextView === state.selectedHolidayChaosView) return;
+      pushNavigationState();
+      state.selectedCollectionId = "holiday-chaos";
+      state.selectedHolidayChaosView = nextView;
+      render();
+      requestAnimationFrame(scrollPageTop);
+    });
+  });
+
+  document.querySelector("[data-action='japan-home']")?.addEventListener("click", () => {
+    pushNavigationState();
+    state.selectedCollectionId = "cinema-of-japan";
+    state.selectedJapanView = "home";
     render();
   });
 
@@ -14608,10 +17891,22 @@ function bindEvents() {
     const openEpisode = () => {
       const episodeId = card.dataset.tvEpisodeId;
       if (!episodeId) return;
-      const located = findTvEpisode(episodeId);
+      const located = findAvailableTvEpisode(episodeId);
+      if (!located) {
+        showMetadataToast("error", "That episode is no longer available in the live library.");
+        render();
+        return;
+      }
       pushNavigationState();
-      state.selectedTitleId = located?.show?.id ?? state.selectedTitleId;
-      state.selectedTvSeason = located ? { showId: located.show.id, seasonNumber: located.season.seasonNumber } : state.selectedTvSeason;
+      state.playbackOriginCollectionId = state.section === "collections" ? state.selectedCollectionId : null;
+      state.selectedCollectionId = null;
+      state.selectedCuratedShelfId = null;
+      state.selectedMcuSeasonId = null;
+      state.selectedMcuShowId = null;
+      state.selectedCriterionEclipseId = null;
+      state.selectedCriterionSubCollectionId = null;
+      state.selectedTitleId = located.show.id;
+      state.selectedTvSeason = { showId: located.show.id, seasonNumber: located.season.seasonNumber };
       state.selectedTvSubcollection = null;
       state.selectedTvEpisodeId = episodeId;
       state.castOverlay = null;
@@ -14654,13 +17949,48 @@ function bindEvents() {
     });
   });
 
-  document.querySelector(".search")?.addEventListener("input", (event) => {
-    state.query = event.target.value;
-    render();
-    const search = document.querySelector(".search");
-    search?.focus();
-    search?.setSelectionRange?.(state.query.length, state.query.length);
+  const globalSearch = document.querySelector(".nav-search .search");
+  globalSearch?.addEventListener("focus", () => {
+    state.searchActive = true;
+    document.documentElement.classList.add("global-search-active");
+    document.querySelector(".app-shell")?.classList.add("search-active");
+    if (!searchDetailHydrationRequested) {
+      searchDetailHydrationRequested = true;
+      Promise.all([ensureMovieDetailIndex(), ensureTvDetailIndex()]).then(() => {
+        if (!state.searchActive || !state.query.trim()) return;
+        preservePageScrollForNextRender();
+        render();
+      });
+    }
   });
+  globalSearch?.addEventListener("input", (event) => {
+    state.searchActive = true;
+    state.query = event.target.value;
+    const selectionStart = event.target.selectionStart ?? state.query.length;
+    const selectionEnd = event.target.selectionEnd ?? selectionStart;
+    document.documentElement.classList.add("global-search-active");
+    document.querySelector(".app-shell")?.classList.add("search-active");
+    if (searchRenderTimer) clearTimeout(searchRenderTimer);
+    searchRenderTimer = setTimeout(() => {
+      searchRenderTimer = null;
+      render();
+      const search = document.querySelector(".nav-search .search");
+      if (search) search.value = state.query;
+      search?.focus();
+      search?.setSelectionRange?.(Math.min(selectionStart, state.query.length), Math.min(selectionEnd, state.query.length));
+    }, 140);
+  });
+  const dismissSearchBeforeNavigation = () => {
+    if (!state.searchActive) return;
+    state.searchActive = false;
+    state.query = "";
+    if (searchRenderTimer) clearTimeout(searchRenderTimer);
+    searchRenderTimer = null;
+  };
+  document.querySelector(".search-results")?.addEventListener("click", dismissSearchBeforeNavigation, { capture: true });
+  document.querySelector(".search-results")?.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" || event.key === " ") dismissSearchBeforeNavigation();
+  }, { capture: true });
 }
 
 function renderExtremeFancamArchive(promotion) {
@@ -14719,6 +18049,10 @@ function goBackOnePage() {
       state.selectedIndiaLanguageId = null;
     } else if (state.selectedCollectionId === "cinema-of-india" && state.selectedIndiaView !== "home") {
       state.selectedIndiaView = "home";
+    } else if (state.selectedCollectionId === "cinema-of-japan" && state.selectedJapanView !== "home") {
+      state.selectedJapanView = "home";
+    } else if (state.selectedCollectionId === "holiday-chaos" && state.selectedHolidayChaosView !== "theatre") {
+      state.selectedHolidayChaosView = "theatre";
     } else if (state.returnPage) {
       restoreReturnPage();
     } else {
@@ -14726,6 +18060,8 @@ function goBackOnePage() {
       state.selectedCriterionView = "home";
       state.selectedIndiaView = "home";
       state.selectedIndiaLanguageId = null;
+      state.selectedJapanView = "home";
+      state.selectedHolidayChaosView = "theatre";
     }
   } else if (state.promotionId) {
     pendingPromotionId = null;
@@ -14743,8 +18079,8 @@ function goBackOnePage() {
 function pushNavigationState() {
   const snapshot = captureNavigationState();
   const previous = state.navigationStack.at(-1);
-  const comparableSnapshot = { ...snapshot, scrollX: 0, scrollY: 0 };
-  const comparablePrevious = previous ? { ...previous, scrollX: 0, scrollY: 0 } : null;
+  const comparableSnapshot = { ...snapshot, scrollX: 0, scrollY: 0, scrollContainers: [], scrollSnapshot: null };
+  const comparablePrevious = previous ? { ...previous, scrollX: 0, scrollY: 0, scrollContainers: [], scrollSnapshot: null } : null;
   if (comparablePrevious && JSON.stringify(comparablePrevious) === JSON.stringify(comparableSnapshot)) return;
   state.navigationStack.push(snapshot);
   if (state.navigationStack.length > 60) state.navigationStack.shift();
@@ -14770,6 +18106,8 @@ function captureNavigationState() {
     selectedCriterionSubCollectionId: state.selectedCriterionSubCollectionId,
     selectedIndiaView: state.selectedIndiaView,
     selectedIndiaLanguageId: state.selectedIndiaLanguageId,
+    selectedJapanView: state.selectedJapanView,
+    selectedHolidayChaosView: state.selectedHolidayChaosView,
     selectedYear: state.selectedYear,
     view: state.view,
     subView: state.subView,
@@ -14785,6 +18123,7 @@ function captureNavigationState() {
     scrollX: globalThis.window?.scrollX ?? 0,
     scrollY: globalThis.window?.scrollY ?? 0,
     scrollContainers: captureScrollContainers(),
+    scrollSnapshot: capturePreservedPageScroll(),
   };
 }
 
@@ -14811,6 +18150,8 @@ function restoreNavigationState() {
     selectedCriterionSubCollectionId: previous.selectedCriterionSubCollectionId ?? null,
     selectedIndiaView: previous.selectedIndiaView ?? "home",
     selectedIndiaLanguageId: previous.selectedIndiaLanguageId ?? null,
+    selectedJapanView: previous.selectedJapanView ?? "home",
+    selectedHolidayChaosView: previous.selectedHolidayChaosView ?? "theatre",
     selectedYear: previous.selectedYear ?? state.selectedYear,
     view: previous.view ?? "overview",
     subView: previous.subView ?? "home",
@@ -14824,14 +18165,16 @@ function restoreNavigationState() {
     returnPage: previous.returnPage ? { ...previous.returnPage } : null,
     tvGuideTheaterMode: Boolean(previous.tvGuideTheaterMode),
     castOverlay: null,
-  preserveScrollOnRender: false,
+    preserveScrollOnRender: true,
+    pendingScrollRestore: previous.scrollSnapshot ?? {
+      scrollX: previous.scrollX ?? 0,
+      scrollY: previous.scrollY ?? 0,
+      containers: previous.scrollContainers ?? [],
+      scrollables: [],
+    },
   });
 
   render();
-  requestAnimationFrame(() => {
-    globalThis.window?.scrollTo(previous.scrollX ?? 0, previous.scrollY ?? 0);
-    restoreScrollContainers(previous.scrollContainers);
-  });
   return true;
 }
 
@@ -14901,6 +18244,8 @@ function captureReturnPage() {
     selectedCriterionSubCollectionId: state.selectedCriterionSubCollectionId,
     selectedIndiaView: state.selectedIndiaView,
     selectedIndiaLanguageId: state.selectedIndiaLanguageId,
+    selectedJapanView: state.selectedJapanView,
+    selectedHolidayChaosView: state.selectedHolidayChaosView,
   };
 }
 
@@ -14915,6 +18260,8 @@ function restoreReturnPage() {
   state.selectedCriterionSubCollectionId = previous.selectedCriterionSubCollectionId ?? null;
   state.selectedIndiaView = previous.selectedIndiaView ?? "home";
   state.selectedIndiaLanguageId = previous.selectedIndiaLanguageId ?? null;
+  state.selectedJapanView = previous.selectedJapanView ?? "home";
+  state.selectedHolidayChaosView = previous.selectedHolidayChaosView ?? "theatre";
   state.selectedTitleId = null;
   state.selectedPersonId = null;
   state.selectedTvSeason = null;
@@ -14922,6 +18269,16 @@ function restoreReturnPage() {
   state.selectedTvGuideItemId = null;
   state.selectedMcuSeasonId = null;
   state.selectedMcuShowId = null;
+}
+
+async function waitForTwdbRefresh() {
+  for (let attempt = 0; attempt < 180; attempt += 1) {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    const response = await fetch("./api/twdb/refresh/status", { cache: "no-store" });
+    const job = await response.json();
+    if (job.state !== "running") return job;
+  }
+  return { state: "error", error: "Refresh timed out after three minutes" };
 }
 
 async function refreshMetadataStatus() {
@@ -14940,15 +18297,39 @@ async function refreshMetadataStatus() {
 }
 
 async function loadGeneratedMetadata(shouldRender = true) {
-  const response = await fetch("./src/metadata.generated.json", { cache: "no-store" }).catch(() => null);
-  if (!response?.ok) return;
-  const data = await response.json();
-  generatedMetadata = data;
-  metadataIndex = Object.fromEntries((data.records ?? []).map((record) => [record.id, record]));
+  try {
+    if (!initialCatalogReady) updateInitialCatalogProgress(2, "Connecting to the live library");
+    const response = await fetch("./src/metadata.generated.json", { cache: "no-cache" });
+    if (!response.ok) throw new Error(`Catalog request failed (${response.status})`);
+    const data = initialCatalogReady ? await response.json() : await readJsonResponseWithProgress(response);
+    if (!initialCatalogReady) {
+      updateInitialCatalogProgress(90, "Building the live shelves");
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+    }
+    generatedMetadata = data;
+    metadataIndex = Object.fromEntries((data.records ?? []).map((record) => [record.id, record]));
     invalidateMediaCaches();
-  ensureMediaPreflightIndex();
-  getGeneratedCollectionFolderEntries.cache = null;
-  if (shouldRender) scheduleHydrationRender();
+    ensureMediaPreflightIndex();
+    getGeneratedCollectionFolderEntries.cache = null;
+    const wasInitialLoad = !initialCatalogReady;
+    if (wasInitialLoad) updateInitialCatalogProgress(98, "Opening Tobytube");
+    initialCatalogReady = true;
+    if (initialCatalogRetryTimer) clearTimeout(initialCatalogRetryTimer);
+    initialCatalogRetryTimer = null;
+    if (wasInitialLoad || shouldRender) {
+      if (state.player) backgroundRenderDeferredForPlayback = true;
+      else render();
+    }
+  } catch (error) {
+    console.warn("Live catalog is not ready; retrying.", error);
+    if (!initialCatalogReady) updateInitialCatalogProgress(0, "Live catalog unavailable — retrying");
+    if (!initialCatalogReady && !initialCatalogRetryTimer) {
+      initialCatalogRetryTimer = setTimeout(() => {
+        initialCatalogRetryTimer = null;
+        loadGeneratedMetadata(true);
+      }, 2000);
+    }
+  }
 }
 
 async function loadMetadataOverrides(shouldRender = true) {
@@ -14964,15 +18345,67 @@ async function loadCollectionOverrides(shouldRender = true) {
   collectionOverrides = await response.json();
   if (shouldRender) scheduleHydrationRender();
 }
-function filterLibraryItems(items) {
-  const query = state.query.trim().toLowerCase();
-  if (!query) return items;
+function searchValueNames(value) {
+  if (Array.isArray(value)) return value.flatMap(searchValueNames);
+  if (value && typeof value === "object") return [value.name, value.title, value.character, value.role].filter(Boolean);
+  return value == null ? [] : [value];
+}
 
-  return items.filter((item) =>
-    [item.title, item.country, item.genre, item.status, item.years]
-      .filter(Boolean)
-      .some((value) => String(value).toLowerCase().includes(query)),
-  );
+function normalizeSearchText(value) {
+  return String(value ?? "").toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, "");
+}
+
+function buildSearchDetailsIdentityIndex(index) {
+  const identities = new Map();
+  Object.values(index ?? {}).forEach((details) => {
+    const title = normalizeSearchText(details?.title).replace(/[^a-z0-9]+/g, " ").trim();
+    if (!title) return;
+    const year = Number(details?.year ?? String(details?.releaseDate ?? details?.firstAirDate ?? "").slice(0, 4)) || "";
+    if (year) identities.set(`${title}|${year}`, details);
+    if (!identities.has(`${title}|`)) identities.set(`${title}|`, details);
+  });
+  return identities;
+}
+
+function getSearchDetails(item) {
+  const isTv = item.mediaType === "tv";
+  const index = isTv ? tvDetailIndex : movieDetailIndex;
+  const identities = isTv ? searchTvDetailsByIdentity : searchMovieDetailsByIdentity;
+  const direct = index[item.id] ?? index[item.metadataId];
+  if (direct) return direct;
+  const title = normalizeSearchText(item.title).replace(/[^a-z0-9]+/g, " ").trim();
+  const year = Number(item.year ?? item.startYear) || "";
+  return identities.get(`${title}|${year}`) ?? identities.get(`${title}|`) ?? item.details ?? {};
+}
+
+function getLibraryItemSearchText(item) {
+  const cacheKey = `${item.mediaType ?? "media"}:${item.id ?? item.title}`;
+  if (searchTextCache.has(cacheKey)) return searchTextCache.get(cacheKey);
+  const record = getMetadataRecordForItem(item) ?? {};
+  const recordMetadata = record.metadata ?? {};
+  const override = getItemMetadataOverride(item.id);
+  const details = getSearchDetails(item);
+  const values = [
+    item.title, item.country, item.genre, item.status, item.years, item.year, item.releaseDate, item.series, item.collectionTitle,
+    details?.title, details?.director, details?.directors, details?.creator, details?.createdBy,
+    record.title, record.director, record.directors, record.creator, record.createdBy,
+    recordMetadata.director, recordMetadata.directors, recordMetadata.creator, recordMetadata.createdBy,
+    override.director, override.directors, override.creator, override.createdBy,
+    ...searchValueNames(item.cast), ...searchValueNames(item.performers), ...searchValueNames(item.actors),
+    ...searchValueNames(details?.cast), ...searchValueNames(details?.performers), ...searchValueNames(details?.actors),
+    ...searchValueNames(record.cast), ...searchValueNames(record.performers), ...searchValueNames(record.actors),
+    ...searchValueNames(recordMetadata.cast), ...searchValueNames(recordMetadata.performers), ...searchValueNames(recordMetadata.actors),
+    ...searchValueNames(override.cast), ...searchValueNames(override.performers), ...searchValueNames(override.actors),
+  ];
+  const text = normalizeSearchText(values.flatMap(searchValueNames).filter(Boolean).join(" "));
+  searchTextCache.set(cacheKey, text);
+  return text;
+}
+
+function filterLibraryItems(items) {
+  const query = normalizeSearchText(state.query.trim());
+  if (!query) return items;
+  return items.filter((item) => getLibraryItemSearchText(item).includes(query));
 }
 
 function groupBy(items, key) {
@@ -15000,7 +18433,9 @@ function renderCyberFightHub() {
 }
 
 function renderCollectionShelfCard(collection) {
-  const items = collection.itemIds.map(getCollectionItem).filter(Boolean);
+  // Artwork-backed collection cards do not need their entire collection
+  // hydrated just to draw one button on the home page.
+  const items = collection.buttonImage ? [] : (collection.itemIds ?? []).map(getCollectionItem).filter(Boolean);
   return `
     <article class="collection-shelf-card" style="--poster-a:${collection.posterA};--poster-b:${collection.posterB}" aria-label="${escapeHtml(collection.title)}" data-collection-id="${collection.id}" tabindex="0">
       ${
@@ -15188,7 +18623,13 @@ function getGeneratedWrestlingRecords(promotionId, year = null) {
 }
 
 function sortByDate(items) {
-  return [...items].sort((a, b) => String(b.addedAt ?? "").localeCompare(String(a.addedAt ?? "")));
+  return [...items].sort((a, b) => {
+    const aDate = getLatestLibraryActivityFromFiles(a.files ?? getMetadataRecordForItem(a)?.files ?? []) ?? a.libraryUpdatedAt ?? a.addedAt ?? "";
+    const bDate = getLatestLibraryActivityFromFiles(b.files ?? getMetadataRecordForItem(b)?.files ?? []) ?? b.libraryUpdatedAt ?? b.addedAt ?? "";
+    return String(bDate).localeCompare(String(aDate))
+      || String(getDisplayTitle(a)).localeCompare(String(getDisplayTitle(b)))
+      || String(a.id).localeCompare(String(b.id));
+  });
 }
 
 function prioritizeItems(items, priorityIds = []) {
@@ -15202,7 +18643,16 @@ function prioritizeItems(items, priorityIds = []) {
 }
 
 function getCollectionItem(id, options = {}) {
-  const liveItem = [...getMovieLibraryItems(), ...getTvLibraryItems()].find((item) => item.id === id);
+  const cacheKey = getMetadataCacheKey();
+  if (getCollectionItem.cache?.key !== cacheKey) {
+    const byId = new Map();
+    [...getMovieLibraryItems(), ...getTvLibraryItems()].forEach((item) => {
+      byId.set(item.id, item);
+      (item.duplicateItemIds ?? []).forEach((duplicateId) => byId.set(duplicateId, item));
+    });
+    getCollectionItem.cache = { key: cacheKey, byId };
+  }
+  const liveItem = getCollectionItem.cache.byId.get(id) ?? null;
   if (liveItem || options.mediaOnly || state.libraryMode === "media") return liveItem ?? null;
   return movieDetailIndex[id] ?? mcuDetailIndex[id] ?? criterionDetailIndex[id];
 }
@@ -15260,14 +18710,20 @@ const cinemaOfIndiaPageSpecs = [
     id: "gateway",
     title: "Gateway Collections",
     description: "Starting points for new routes through Indian cinema.",
-    heroImage: "./assets/collections/cinema-of-india/gateway-hero.png",
+    heroImage: "./assets/collections/cinema-of-india/gateway-hero-v2.webp",
     posterA: "#071923",
     posterB: "#80cce2",
-    menuRows: [
-      ["essential-films", "first-steps", "beyond-bollywood"],
-      ["parallel-cinema", "family-friendly", "great-mythologies"],
-      ["action-starter", "musicals-starter", "award-winners"],
-    ],
+    menuRows: [[
+      "essential-films",
+      "first-steps",
+      "beyond-bollywood",
+      "parallel-cinema",
+      "family-friendly",
+      "great-mythologies",
+      "action-starter",
+      "musicals-starter",
+      "award-winners",
+    ]],
     sections: [
       curatedSection("25 Essential Indian Films", [curatedItem("Pather Panchali", 1955, "movie", "Indian Cinema")], { id: "essential-films", menuLabel: "25 Essential\nIndian Films" }),
       curatedSection("First Steps Into Indian Cinema", [curatedItem("Monsoon Wedding", 2001, "movie", "Indian Cinema")], { id: "first-steps", menuLabel: "First Steps Into\nIndian Cinema" }),
@@ -15284,7 +18740,7 @@ const cinemaOfIndiaPageSpecs = [
     id: "languages",
     title: "Languages",
     description: "Language pathways through Indian cinema.",
-    heroImage: "./assets/collections/cinema-of-india/languages-hero.png",
+    heroImage: "./assets/collections/cinema-of-india/languages-hero-compact.webp",
     posterA: "#102823",
     posterB: "#f1ae4f",
     menuRows: [cinemaOfIndiaLanguages.map(([id]) => id)],
@@ -15296,12 +18752,16 @@ const cinemaOfIndiaPageSpecs = [
     id: "genres",
     title: "Genres",
     description: "Genre routes from mythology to modern crime stories.",
-    heroImage: "./assets/collections/cinema-of-india/genres-hero.png",
+    heroImage: "./assets/collections/cinema-of-india/genres-hero-v2.webp",
     posterA: "#071629",
     posterB: "#9cc9f4",
+    menuRows: [
+      ["historical", "mythology-fantasy", "musical", "action", "crime", "thriller"],
+      ["family", "devotional", "art-house-parallel-cinema", "romance", "comedy", "drama"],
+    ],
     sections: [
       curatedSection("Historical", [curatedItem("Mughal-e-Azam", 1960, "movie", "Historical")]),
-      curatedSection("Mythology & Fantasy", [curatedItem("BÃƒÆ’Ã¢â‚¬Å¾Ãƒâ€šÃ‚Âhubali 2: The Conclusion", 2017, "movie", "Fantasy")]),
+      curatedSection("Mythology & Fantasy", [curatedItem("BÃƒÆ’Ã¢â‚¬Å¾Ãƒâ€šÃ‚Âhubali 2: The Conclusion", 2017, "movie", "Fantasy")], { id: "mythology-fantasy" }),
       curatedSection("Musical", [curatedItem("Lagaan", 2001, "movie", "Musical")]),
       curatedSection("Action", [curatedItem("RRR", 2022, "movie", "Action")]),
       curatedSection("Crime", [curatedItem("Gangs of Wasseypur", 2012, "movie", "Crime")]),
@@ -15318,9 +18778,13 @@ const cinemaOfIndiaPageSpecs = [
     id: "box-office-smash",
     title: "Box Office Smash",
     description: "Crowd-pleasers, record breakers, and mega-hit pathways.",
-    heroImage: "./assets/collections/cinema-of-india/box-office-smash-hero.png",
+    heroImage: "./assets/collections/cinema-of-india/box-office-smash-hero-v2.webp",
     posterA: "#142a22",
     posterB: "#f0a151",
+    menuRows: [
+      ["highest-grossing-indian-films", "highest-grossing-hindi", "highest-grossing-telugu", "highest-grossing-tamil", "highest-grossing-kannada", "highest-grossing-malayalam"],
+      ["highest-grossing-marathi", "highest-grossing-punjabi", "highest-grossing-bengali", "highest-grossing-gujarati", "highest-grossing-other-languages", "highest-grossing-by-decade"],
+    ],
     sections: [
       curatedSection("Highest Grossing Indian Films", [curatedItem("Dangal", 2016, "movie", "Box Office")]),
       curatedSection("Highest Grossing Hindi", [curatedItem("Pathaan", 2023, "movie", "Box Office")]),
@@ -15340,7 +18804,7 @@ const cinemaOfIndiaPageSpecs = [
     id: "cultural-legacy",
     title: "Cultural Legacy",
     description: "Milestones, movements, and living memory.",
-    heroImage: "./assets/collections/cinema-of-india/cultural-legacy-hero.png",
+    heroImage: "./assets/collections/cinema-of-india/cultural-legacy-hero-v2.webp",
     posterA: "#102112",
     posterB: "#d7a45a",
     sections: [
@@ -15357,6 +18821,46 @@ const cinemaOfIndiaPageSpecs = [
     ],
   },
 ];
+
+const cinemaOfJapanGenreSpecs = [
+  ["action", "Action", "Crime & Yakuza", ["action", "crime", "yakuza"], "Battle Royale", 2000],
+  ["anime", "Anime", "", ["anime", "animation"], "Spirited Away", 2001],
+  ["chanbara", "Chanbara", "Samurai, Ninja, & Martial Arts", ["chanbara", "samurai", "ninja", "martial art"], "Seven Samurai", 1954],
+  ["comedy", "Comedy", "", ["comedy"], "Tampopo", 1985],
+  ["documentary", "Documentary", "", ["documentary"], "Tokyo Olympiad", 1965],
+  ["drama", "Drama", "", ["drama"], "Tokyo Story", 1953],
+  ["fantasy", "Fantasy", "", ["fantasy"], "Ugetsu", 1953],
+  ["horror", "Horror", "", ["horror"], "House", 1977],
+  ["romance", "Romance", "", ["romance"], "Love Letter", 1995],
+  ["sci-fi", "Sci-Fi", "", ["science fiction", "sci-fi", "sci fi"], "Akira", 1988],
+  ["tokusatsu", "Tokusatsu", "Kaiju & Mecha", ["tokusatsu", "kaiju", "mecha", "giant monster"], "Godzilla", 1954],
+].map(([id, title, subtitle, matchTerms, seedTitle, seedYear]) => ({
+  id,
+  title,
+  subtitle,
+  matchTerms,
+  items: [curatedItem(seedTitle, seedYear, "movie", `${title} / Japanese Cinema`)],
+}));
+
+const cinemaOfJapanPageSpecs = [
+  ["jidaigeki", "Jidaigeki", "Period Films", "時代劇", "#9f3d2f", "Seven Samurai", 1954],
+  ["gendaigeki", "Gendaigeki", "Modern Films", "現代劇", "#355c78", "Tokyo Story", 1953],
+  ["shomingeki", "Shomingeki", "Kitchen Films", "庶民劇", "#6d7650", "The Flavor of Green Tea over Rice", 1952],
+  ["tendency", "Tendency", "Political Films", "傾向映画", "#814a3f", "No Regrets for Our Youth", 1946],
+  ["masters", "Masters", "Director Collections", "巨匠", "#695577", "Rashomon", 1950],
+  ["genres", "Genres", "Genre Collections", "ジャンル", "#4a5260", "House", 1977],
+  ["sagas", "Sagas", "Film Series", "映画シリーズ", "#866433", "Zatoichi", 1962],
+].map(([id, title, subtitle, japaneseTitle, accent, seedTitle, seedYear]) => ({
+  id,
+  title,
+  subtitle,
+  japaneseTitle,
+  accent,
+  heroImage: "./assets/collections/cinema-of-japan/subpage-template-v1.png",
+  sections: id === "genres"
+    ? cinemaOfJapanGenreSpecs.map((genre) => ({ ...genre }))
+    : [curatedSection(title, [curatedItem(seedTitle, seedYear, "movie", `${title} / Japanese Cinema`)], { id })],
+}));
 
 function buildCinemaOfIndiaCollection() {
   return {
@@ -15379,7 +18883,25 @@ function buildCinemaOfIndiaCollection() {
   };
 }
 
+function buildCinemaOfJapanCollection() {
+  return {
+    id: "cinema-of-japan",
+    title: "Cinema of Japan",
+    description: "Japanese cinema organized by form, period, movement, genre, directors, animation, and long-running series.",
+    heroImage: "./assets/collections/cinema-of-japan/hero-v1.png",
+    buttonImage: "./assets/collections/cinema-of-japan/button-v1.png",
+    showHeroText: false,
+    continueTitle: "Continue Watching",
+    posterA: "#ede0c3",
+    posterB: "#254a63",
+    menuRows: [cinemaOfJapanPageSpecs.map((page) => page.id)],
+    sections: cinemaOfJapanPageSpecs.map((page) => curatedSection(page.title, page.sections[0].items, { id: page.id, menuLabel: `${page.title}\n${page.subtitle}` })),
+    japanPages: cinemaOfJapanPageSpecs,
+  };
+}
+
 curatedCollectionPages.splice(movieGenreCollectionSpecs.length, 0, buildCinemaOfIndiaCollection());
+curatedCollectionPages.splice(movieGenreCollectionSpecs.length + 1, 0, buildCinemaOfJapanCollection());
 
 function buildMovieGenreCollections() {
   return movieGenreCollectionSpecs.map((spec) => buildCuratedSpecCollection(spec, {
@@ -15575,17 +19097,24 @@ function getHomeWrestlingItems() {
 }
 
 function getVisiblePromotionEvents(promotion, year) {
+  const hydrate = (items) => items.map((item) => ({
+    ...item,
+    mediaType: "wrestling",
+    promotionId: item.promotionId ?? promotion.id,
+    promotionName: item.promotionName ?? promotion.name,
+    matches: getWrestlingMatchesForItem(item),
+  }));
   if (state.wrestlingMode === "media") {
-    return getLocalWrestlingRecordsForPromotion(promotion)
+    return hydrate(getLocalWrestlingRecordsForPromotion(promotion)
       .filter((item) => item.year === year)
-      .map(metadataRecordToTimelineItem)
+      .map(metadataRecordToTimelineItem))
       .sort((a, b) => String(a.date ?? "").localeCompare(String(b.date ?? "")));
   }
 
   const generated = getGeneratedWrestlingRecords(promotion.id, year).map(libraryRecordToTimelineItem);
   const seeded = getYearEvents(promotion, year);
-  if (!generated.length) return seeded;
-  return dedupeTimelineItems(generated).sort((a, b) => String(a.date ?? "").localeCompare(String(b.date ?? "")));
+  if (!generated.length) return hydrate(seeded);
+  return hydrate(dedupeTimelineItems(generated)).sort((a, b) => String(a.date ?? "").localeCompare(String(b.date ?? "")));
 }
 
 function getVisiblePromotionArchiveItems(promotion) {
@@ -15706,7 +19235,6 @@ function getDocumentaryFolderFromPath(filePath) {
 
 function parseWrestlingMatches(summary = "") {
   const text = String(summary).replace(/\s+/g, " ").trim();
-  if (!/^\d+\.\s+/.test(text)) return null;
   const matches = [...text.matchAll(/(?:^|\s)(\d+)\.\s+(.+?)(?=\s+\d+\.\s+|$)/g)].map((match) => ({
     order: Number(match[1]),
     match: match[2].trim(),
@@ -16152,10 +19680,19 @@ function filterEvents(events) {
 }
 
 function formatShortDate(isoDate) {
+  const rawDate = String(isoDate ?? "").trim();
+  if (!rawDate) return "Date TBD";
+
+  const parsedDate = new Date(/^\d{4}-\d{2}-\d{2}$/.test(rawDate) ? `${rawDate}T00:00:00` : rawDate);
+  if (Number.isNaN(parsedDate.getTime())) {
+    const year = rawDate.match(/^\d{4}/)?.[0];
+    return year ?? "Date TBD";
+  }
+
   return new Intl.DateTimeFormat("en", {
     month: "short",
     day: "numeric",
-  }).format(new Date(`${isoDate}T00:00:00`));
+  }).format(parsedDate);
 }
 
 function escapeHtml(value) {

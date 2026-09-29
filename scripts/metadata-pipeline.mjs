@@ -1,9 +1,17 @@
 ﻿import { readdir, readFile, stat, writeFile } from "node:fs/promises";
 import { spawn } from "node:child_process";
+import { copyFile, rename, unlink } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadEnvFile } from "./env.mjs";
 import { resolveMediaBinary } from "./media-runtime.mjs";
+import {
+  canonicalizeWrestlingSeries,
+  inferWrestlingDate,
+  inferWrestlingSeriesFromParts,
+  isGenericWrestlingDirectory,
+  narrowNumberedWrestlingEventCandidates,
+} from "./wrestling-scan-logic.mjs";
 
 loadEnvFile();
 
@@ -34,18 +42,26 @@ const weeklyProviderQueries = {
 const wrestlingMatchesByReferenceCache = new WeakMap();
 const args = parseArgs(process.argv.slice(2));
 
-if (!args.mediaRoots.length) {
+if (!args.mediaSources.length && !args.mediaRoots.length) {
   const sharedConfig = await readJson(path.join(root, "config", "tobytube.config.json"), {});
   const localConfig = await readJson(path.join(root, "config", "tobytube.local.json"), {});
-  args.mediaRoots = localConfig.mediaRoots?.length ? localConfig.mediaRoots : (sharedConfig.mediaRoots ?? []);
+  const activeConfig = localConfig.mediaSources?.length || localConfig.mediaRoots?.length ? localConfig : sharedConfig;
+  args.mediaSources = normalizeMediaSources(activeConfig.mediaSources, activeConfig.mediaRoots);
 }
-if (!args.mediaRoots.length) {
-  throw new Error("No media roots configured. Add mediaRoots to config/tobytube.local.json or pass --media-root.");
+if (!args.mediaSources.length) args.mediaSources = normalizeMediaSources([], args.mediaRoots);
+if (!args.mediaSources.length) {
+  throw new Error("No media sources configured. Add mediaSources to config/tobytube.local.json or pass --media-source.");
 }
+await validateMediaSources(args.mediaSources);
+args.mediaRoots = args.mediaSources.map((source) => source.path);
 
 const posterCache = await readJson(args.posterOut ?? defaults.posterOut, {});
 const wrestlingReference = await readJson(args.referenceDb ?? defaults.referenceDb, {});
 const previousMetadata = await readJson(args.metadataOut ?? defaults.metadataOut, { records: [], unmatchedFiles: [] });
+const previousFilesByPath = new Map([
+  ...(previousMetadata.records ?? []).flatMap((record) => record.files ?? []),
+  ...(previousMetadata.unmatchedFiles ?? []),
+].filter((file) => file?.path).map((file) => [normalizeFileIdentity(file.path), file]));
 const metadataOverrides = await readJson(path.join(root, "config", "metadata-overrides.json"), { items: {} });
 const previousFilePaths = new Set([
   ...(previousMetadata.records ?? []).flatMap((record) => (record.files ?? []).map((file) => file.path)),
@@ -53,12 +69,20 @@ const previousFilePaths = new Set([
 ]);
 let posterCacheDirty = false;
 const streamProbeCache = buildStreamProbeCache(previousMetadata);
-const scannedFiles = (
-  await Promise.all(args.mediaRoots.map((mediaRoot) => scanMediaRoot(mediaRoot)))
-).flat();
+const sourceScanResults = await Promise.all(args.mediaSources.map(async (source) => ({
+  source,
+  files: await scanMediaRoot(source),
+})));
+for (const result of sourceScanResults) {
+  if (!result.files.length) throw new Error(`Media source contains no supported video files; catalog was not changed: ${result.source.id} (${result.source.path})`);
+}
+const scannedFiles = sourceScanResults.flatMap((result) => result.files).filter((file) => !isSeparatelyCataloguedOrAuxiliary(file.path));
+const observedAt = new Date().toISOString();
 const parsedFiles = await mapWithConcurrency(scannedFiles, 8, async (file) => ({
   ...parseMediaFile(file),
-  streams: getCachedMediaStreams(file, streamProbeCache) ?? await probeMediaStreams(file.path),
+  ...resolveLibraryActivity(file, previousFilesByPath, observedAt),
+  streams: getCachedMediaStreams(file, streamProbeCache)
+    ?? (args.skipStreamProbe ? defaultStreamInfo(file.path) : await probeMediaStreams(file.path)),
 }));
 assignMissingTvEpisodeNumbers(parsedFiles);
 const seedRecords = buildSeedRecords(posterCache);
@@ -70,8 +94,11 @@ const seededRecords = seedRecords.map((record) => {
     .filter((match) => match.record.id === record.id)
     .map((match) => ({
       path: match.file.path,
+      mediaSourceId: match.file.mediaSourceId,
       size: match.file.size,
       modifiedAt: match.file.modifiedAt,
+      addedAt: match.file.addedAt,
+      libraryUpdatedAt: match.file.libraryUpdatedAt,
       streams: match.file.streams,
       confidence: match.confidence,
       parsed: match.file.parsed,
@@ -86,9 +113,13 @@ const seededRecords = seedRecords.map((record) => {
 });
 // A newly added movie must exist in the local catalogue immediately, even
 // before a provider-artwork pass has had a chance to create a seed record.
-const records = [...seededRecords, ...unmatchedProviderRecords];
+const records = consolidateWrestlingRecords([...seededRecords, ...unmatchedProviderRecords]);
 preservePreviousProviderMatches(records, previousMetadata);
-applyManualMetadataMatches(records, metadataOverrides);
+const relocatedOverrideCount = applyManualMetadataMatches(records, metadataOverrides);
+if (relocatedOverrideCount > 0) {
+  metadataOverrides.updatedAt = new Date().toISOString();
+  await writeFile(path.join(root, "config", "metadata-overrides.json"), `${JSON.stringify(metadataOverrides, null, 2)}\n`, "utf8");
+}
 
 if (args.refreshProviders) {
   await hydrateProviders(records, posterCache);
@@ -119,6 +150,7 @@ const unresolvedFiles = unmatchedFiles.filter((file) => !providerMatchedPaths.ha
 
 const output = {
   generatedAt: new Date().toISOString(),
+  mediaSources: args.mediaSources.map((source) => ({ ...source, path: path.resolve(source.path) })),
   mediaRoots: args.mediaRoots.map((mediaRoot) => path.resolve(mediaRoot)),
   mediaRoot: args.mediaRoots[0] ? path.resolve(args.mediaRoots[0]) : null,
   stats: {
@@ -126,13 +158,17 @@ const output = {
     filesScanned: parsedFiles.length,
     filesMatched: matches.length,
     filesUnmatched: unresolvedFiles.length,
+    filesBySource: Object.fromEntries(sourceScanResults.map(({ source, files }) => [source.id, files.length])),
     posters: Object.keys(posterCache).length,
   },
   records,
   unmatchedFiles: unresolvedFiles.map((file) => ({
     path: file.path,
+    mediaSourceId: file.mediaSourceId,
     size: file.size,
     modifiedAt: file.modifiedAt,
+    addedAt: file.addedAt,
+    libraryUpdatedAt: file.libraryUpdatedAt,
     streams: file.streams,
     parsed: file.parsed,
     provider: unmatchedProviderRecords.find((record) => record.id === providerRecordIdForFile(file))?.provider ?? null,
@@ -140,7 +176,7 @@ const output = {
   })),
 };
 
-await writeFile(args.metadataOut ?? defaults.metadataOut, `${JSON.stringify(output, null, 2)}\n`);
+await publishMetadataSafely(args.metadataOut ?? defaults.metadataOut, output);
 console.log(
   `Metadata: ${output.stats.records} records, ${output.stats.filesMatched}/${output.stats.filesScanned} files matched, ${output.stats.posters} posters.`,
 );
@@ -267,8 +303,11 @@ function buildUnmatchedProviderRecords(files, referenceDb) {
       art: buildArt({ id, title: first.parsed.title, year: first.parsed.year }, posterCache),
       files: group.map((file) => ({
         path: file.path,
+        mediaSourceId: file.mediaSourceId,
         size: file.size,
         modifiedAt: file.modifiedAt,
+        addedAt: file.addedAt,
+        libraryUpdatedAt: file.libraryUpdatedAt,
         streams: file.streams,
         confidence: 0.5,
         parsed: file.parsed,
@@ -307,8 +346,11 @@ function buildUnmatchedProviderRecords(files, referenceDb) {
       art: buildArt({ id, title, year: years[0] ?? null }, posterCache),
       files: group.map((file) => ({
         path: file.path,
+        mediaSourceId: file.mediaSourceId,
         size: file.size,
         modifiedAt: file.modifiedAt,
+        addedAt: file.addedAt,
+        libraryUpdatedAt: file.libraryUpdatedAt,
         streams: file.streams,
         confidence: 0.5,
         parsed: file.parsed,
@@ -332,20 +374,23 @@ function buildUnmatchedProviderRecords(files, referenceDb) {
         year: parsed.year,
         promotion: parsed.promotion,
         promotionId: canonicalPromotion(parsed.promotion),
-        series: parsed.series ?? null,
+        series: canonicalizeWrestlingSeries(parsed.series, canonicalPromotion(parsed.promotion)),
         season: parsed.season,
         episodeNumber: parsed.episode,
         eventType: parsed.series ? "weekly" : "event",
         providerQuery: {
           tmdbType: parsed.series ? "tv" : "movie",
-          title: parsed.series ?? parsed.aliasTitle ?? parsed.title,
+          title: canonicalizeWrestlingSeries(parsed.series, canonicalPromotion(parsed.promotion)) ?? parsed.aliasTitle ?? parsed.title,
           year: parsed.year,
         },
         art: { posterUrl: null, source: "fallback" },
         files: [{
           path: file.path,
+          mediaSourceId: file.mediaSourceId,
           size: file.size,
           modifiedAt: file.modifiedAt,
+          addedAt: file.addedAt,
+          libraryUpdatedAt: file.libraryUpdatedAt,
           streams: file.streams,
           confidence: 1,
           parsed,
@@ -357,6 +402,38 @@ function buildUnmatchedProviderRecords(files, referenceDb) {
     });
 
   return [...movieRecords, ...tvRecords, ...wrestlingRecords];
+}
+
+function consolidateWrestlingRecords(records) {
+  const output = [];
+  const grouped = new Map();
+  for (const record of records) {
+    if (record.mediaType !== "wrestling" || !(record.files?.length)) {
+      output.push(record);
+      continue;
+    }
+    const key = record.referenceId
+      ? `reference:${record.referenceId}`
+      : record.series && record.date
+        ? `weekly:${record.promotionId}:${normalize(record.series)}:${record.date}`
+        : null;
+    if (!key) {
+      output.push(record);
+      continue;
+    }
+    const existing = grouped.get(key);
+    if (!existing) {
+      grouped.set(key, record);
+      output.push(record);
+      continue;
+    }
+    existing.files = [...new Map([...(existing.files ?? []), ...(record.files ?? [])].map((file) => [normalizeFileIdentity(file.path), file])).values()];
+    if ((!existing.matches?.length) && record.matches?.length) {
+      existing.matches = record.matches;
+      existing.matchCount = record.matchCount;
+    }
+  }
+  return output;
 }
 
 function buildStreamProbeCache(metadata) {
@@ -403,7 +480,8 @@ function preservePreviousProviderMatches(records, previousMetadata) {
 
 function applyManualMetadataMatches(records, overrides) {
   const matchedOverrides = Object.values(overrides?.items ?? {}).filter((override) => override?.match?.providerId);
-  if (!matchedOverrides.length) return;
+  if (!matchedOverrides.length) return 0;
+  let relocated = 0;
   const overrideByPath = new Map();
   matchedOverrides.forEach((override) => {
     (override.matchedFilePaths ?? []).forEach((filePath) => {
@@ -417,6 +495,14 @@ function applyManualMetadataMatches(records, overrides) {
       .find(Boolean);
     const identityOverride = fileOverride ?? matchedOverrides.find((override) => manualOverrideMatchesRecord(override, record));
     if (!identityOverride) return;
+    const knownPaths = new Set((identityOverride.matchedFilePaths ?? []).map(normalizeFileIdentity));
+    const currentPaths = (record.files ?? []).map((file) => file.path).filter(Boolean);
+    const newlyLearnedPaths = currentPaths.filter((filePath) => !knownPaths.has(normalizeFileIdentity(filePath)));
+    if (newlyLearnedPaths.length) {
+      identityOverride.matchedFilePaths = [...new Set([...(identityOverride.matchedFilePaths ?? []), ...newlyLearnedPaths])];
+      identityOverride.lastRelocatedAt = new Date().toISOString();
+      relocated += 1;
+    }
     const metadata = identityOverride.metadata ?? {};
     record.matchState = "provider-matched";
     record.provider = {
@@ -432,12 +518,14 @@ function applyManualMetadataMatches(records, overrides) {
       source: String(identityOverride.match.provider ?? "provider").toLowerCase(),
     };
   });
+  return relocated;
 }
 
 function manualOverrideMatchesRecord(override, record) {
   const identity = override.identity ?? {};
   if (!identity.title || normalize(identity.title) !== normalize(record.title)) return false;
-  if (identity.mediaType && record.mediaType && identity.mediaType !== record.mediaType) return false;
+  const providerMediaType = override.metadata?.mediaType ?? override.match?.mediaType ?? identity.mediaType;
+  if (providerMediaType && record.mediaType && providerMediaType !== record.mediaType) return false;
   const identityYear = Number(identity.year);
   const recordYear = Number(record.year);
   return !identityYear || !recordYear || identityYear === recordYear;
@@ -445,6 +533,25 @@ function manualOverrideMatchesRecord(override, record) {
 
 function normalizeFileIdentity(filePath) {
   return path.resolve(String(filePath ?? "")).replace(/\\/g, "/").toLowerCase();
+}
+
+function resolveLibraryActivity(file, previousFilesByPath, observedAt) {
+  const previous = previousFilesByPath.get(normalizeFileIdentity(file.path));
+  const activityCandidates = [file.createdAt, file.modifiedAt]
+    .map((value) => Date.parse(value))
+    .filter((value) => Number.isFinite(value) && value <= Date.parse(observedAt) + 300_000);
+  const fileActivityAt = activityCandidates.length
+    ? new Date(Math.max(...activityCandidates)).toISOString()
+    : observedAt;
+  if (!previous) return { addedAt: fileActivityAt, libraryUpdatedAt: fileActivityAt };
+  const addedAt = previous.addedAt ?? previous.createdAt ?? previous.modifiedAt ?? fileActivityAt;
+  return {
+    addedAt,
+    // Use the filesystem event time, not the scan completion time. A stalled
+    // scan may discover hundreds of arrivals together, but they must retain
+    // their actual arrival order in New Releases.
+    libraryUpdatedAt: fileActivityAt,
+  };
 }
 
 function getCachedMediaStreams(file, cache) {
@@ -537,21 +644,25 @@ function applyWrestlingReference(record, referenceDb) {
   const cachedPoster = resolveWrestlingPoster(reference, record, posterCache);
   const recordPoster = ["fallback", "promotion-logo"].includes(record.art?.source) ? null : record.art?.posterUrl;
   const posterUrl = reference.art?.posterUrl ?? reference.posterUrl ?? dataReference.art?.posterUrl ?? dataReference.posterUrl ?? cachedPoster?.posterUrl ?? recordPoster ?? record.art?.posterUrl ?? null;
-  const isEpisode = reference.recordType === "episode" || /tv show|weekly|episode/i.test(reference.eventType ?? "");
+  const isEpisode = Boolean(record.series) || reference.recordType === "episode" || /tv show|weekly|episode/i.test(reference.eventType ?? "");
+  const promotionId = canonicalPromotion(reference.promotionId ?? reference.promotion ?? record.promotion);
+  const resolvedSeries = isEpisode
+    ? canonicalizeWrestlingSeries(reference.seriesName ?? reference.displayTitle ?? record.series ?? reference.title, promotionId)
+    : null;
 
   return {
     ...record,
     title: reference.title ?? reference.name ?? record.title,
-    displayTitle: reference.displayTitle ?? reference.seriesName ?? reference.title ?? record.title,
+    displayTitle: resolvedSeries ?? reference.displayTitle ?? reference.seriesName ?? reference.title ?? record.title,
     date: reference.date ?? reference.broadcastDate ?? record.date,
     year: reference.year ?? (Number(String(reference.date ?? record.date ?? "").slice(0, 4)) || record.year),
-    promotionId: canonicalPromotion(reference.promotionId ?? reference.promotion ?? record.promotion),
+    promotionId,
     promotion: reference.promotion ?? record.promotion,
-    series: isEpisode ? (reference.seriesName ?? reference.displayTitle ?? record.series) : (record.series ?? null),
+    series: resolvedSeries,
     seriesId: reference.seriesId ?? record.seriesId ?? null,
     season: reference.season ?? record.season,
     episodeNumber: reference.episodeNumber ?? record.episodeNumber,
-    eventType: reference.eventType ?? record.eventType,
+    eventType: isEpisode ? "weekly" : (reference.eventType ?? record.eventType),
     referenceId: reference.id,
     venue: dataReference.venue ?? reference.venue ?? record.venue ?? null,
     location: dataReference.location ?? reference.location ?? record.location ?? null,
@@ -640,8 +751,11 @@ function findReferenceEvent(record, events) {
   if (!promotionId) return null;
   const recordTitle = normalizeWrestlingName(record.aliasTitle ?? record.title);
   let candidates = events.filter((event) => canonicalPromotion(event.promotionId ?? event.promotion) === promotionId);
-  if (record.date) candidates = candidates.filter((event) => event.date === record.date);
-  else if (record.year) candidates = candidates.filter((event) => Number(event.year ?? String(event.date ?? "").slice(0, 4)) === Number(record.year));
+  const numberedCandidates = narrowNumberedWrestlingEventCandidates(recordTitle, candidates);
+  const matchedExplicitNumber = numberedCandidates.length < candidates.length;
+  candidates = numberedCandidates;
+  if (!matchedExplicitNumber && record.date) candidates = candidates.filter((event) => event.date === record.date);
+  else if (!matchedExplicitNumber && record.year) candidates = candidates.filter((event) => Number(event.year ?? String(event.date ?? "").slice(0, 4)) === Number(record.year));
   return chooseReferenceByName(candidates, recordTitle, (event) => event.title ?? event.name);
 }
 
@@ -707,13 +821,15 @@ async function hydrateProviders(records, posters) {
 
   const queryCache = new Map();
   for (const record of records) {
-    if (!["movie", "tv", "wrestling"].includes(record.mediaType) || posters[record.id]?.source === "tmdb") continue;
+    if (!["movie", "tv", "wrestling"].includes(record.mediaType)) continue;
     const key = JSON.stringify(record.providerQuery);
     const cached = queryCache.get(key);
     let tmdb = cached;
     if (!tmdb) {
       try {
-        tmdb = await searchTmdb(record.providerQuery);
+        tmdb = posters[record.id]?.tmdbId
+          ? { id: posters[record.id].tmdbId, poster_path: String(posters[record.id].posterUrl ?? "").match(/\/w\d+(.+)$/)?.[1] ?? null }
+          : await searchTmdb(record.providerQuery);
       } catch (error) {
         console.warn(`Provider refresh failed for ${record.title}: ${error.message}`);
         queryCache.set(key, null);
@@ -733,7 +849,56 @@ async function hydrateProviders(records, posters) {
     };
     record.provider = posters[record.id];
     record.art = buildArt(record, posters);
+    if (record.mediaType === "movie") {
+      try {
+        const details = await fetchTmdbMovieDetails(tmdb.id);
+        const director = details.credits?.crew?.find((person) => person.job === "Director");
+        const certification = details.release_dates?.results
+          ?.find((entry) => entry.iso_3166_1 === "US")?.release_dates
+          ?.find((release) => release.certification)?.certification;
+        Object.assign(record, {
+          title: details.title ?? record.title,
+          year: Number(String(details.release_date ?? "").slice(0, 4)) || record.year,
+          summary: details.overview ?? "",
+          tagline: details.tagline ?? "",
+          releaseDate: details.release_date ?? null,
+          runtime: details.runtime ?? null,
+          rating: certification || "NR",
+          director: director?.name ?? null,
+          country: details.production_countries?.map((country) => country.name).join(", ") || null,
+          language: details.original_language?.toUpperCase() ?? null,
+          genres: details.genres?.map((genre) => genre.name) ?? [],
+          ratings: { tmdb: details.vote_average ?? null },
+          tmdbId: details.id,
+          imdbId: details.external_ids?.imdb_id ?? null,
+          posterUrl: details.poster_path ? `https://image.tmdb.org/t/p/w342${details.poster_path}` : record.art?.posterUrl ?? null,
+          backdropUrl: details.backdrop_path ? `https://image.tmdb.org/t/p/w780${details.backdrop_path}` : null,
+          cast: (details.credits?.cast ?? []).slice(0, 40).map((person) => ({
+            id: `tmdb-person-${person.id}`,
+            tmdbId: person.id,
+            name: person.name,
+            role: person.character ?? "Cast",
+            character: person.character ?? "Cast",
+            imageUrl: person.profile_path ? `https://image.tmdb.org/t/p/w185${person.profile_path}` : null,
+            profileUrl: person.profile_path ? `https://image.tmdb.org/t/p/w185${person.profile_path}` : null,
+          })),
+          hydratedAt: new Date().toISOString(),
+        });
+      } catch (error) {
+        console.warn(`TMDB details refresh failed for ${record.title}: ${error.message}`);
+      }
+    }
   }
+}
+
+async function fetchTmdbMovieDetails(id) {
+  const url = new URL(`https://api.themoviedb.org/3/movie/${id}`);
+  const headers = tmdbHeaders();
+  if (!headers.Authorization) url.searchParams.set("api_key", process.env.TMDB_API_KEY);
+  url.searchParams.set("append_to_response", "credits,release_dates,external_ids");
+  const response = await fetch(url, { headers, signal: AbortSignal.timeout(8_000) });
+  if (!response.ok) throw new Error(`TMDB movie details returned ${response.status}`);
+  return response.json();
 }
 
 async function searchTmdb(query) {
@@ -744,7 +909,7 @@ async function searchTmdb(query) {
   if (query.year && query.tmdbType === "movie") url.searchParams.set("year", query.year);
   if (query.year && query.tmdbType === "tv") url.searchParams.set("first_air_date_year", query.year);
 
-  const response = await fetch(url, { headers });
+  const response = await fetch(url, { headers, signal: AbortSignal.timeout(8_000) });
   if (!response.ok) {
     console.warn(`TMDB ${query.tmdbType} search failed for ${query.title}: ${response.status}`);
     return null;
@@ -801,14 +966,26 @@ function tmdbHeaders() {
   return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
-async function scanMediaRoot(mediaRoot) {
-  const absoluteRoot = path.resolve(mediaRoot);
+async function scanMediaRoot(source) {
+  const absoluteRoot = path.resolve(source.path);
   const found = [];
+  const ignoredRootDirectories = new Set(["$recycle.bin", "system volume information", "recovery"]);
 
   async function visit(directory) {
-    for (const entry of await readdir(directory, { withFileTypes: true })) {
+    let entries;
+    try {
+      entries = await readdir(directory, { withFileTypes: true });
+    } catch (error) {
+      if (["EACCES", "EPERM"].includes(error?.code)) {
+        console.warn(`Skipping unreadable directory: ${directory}`);
+        return;
+      }
+      throw error;
+    }
+    for (const entry of entries) {
       const fullPath = path.join(directory, entry.name);
       if (entry.isDirectory()) {
+        if (path.dirname(fullPath) === absoluteRoot && ignoredRootDirectories.has(entry.name.toLowerCase())) continue;
         await visit(fullPath);
         continue;
       }
@@ -818,7 +995,10 @@ async function scanMediaRoot(mediaRoot) {
       found.push({
         path: fullPath,
         relativePath: path.relative(absoluteRoot, fullPath),
+        mediaSourceId: source.id,
+        configuredMediaType: source.type === "mixed" ? null : source.type,
         size: details.size,
+        createdAt: details.birthtime.toISOString(),
         modifiedAt: details.mtime.toISOString(),
       });
     }
@@ -843,25 +1023,30 @@ function parseMediaFile(file) {
     : null;
   const folderSeason = parts.map((part) => part.match(/(?:season|series|s)\s*(\d{1,2})/i)?.[1]).find(Boolean);
   const pathText = file.relativePath ?? file.path;
-  const date = pathText.match(/(19|20)\d{2}[ ._-]\d{2}[ ._-]\d{2}/)?.[0]?.replace(/[ ._]/g, "-");
+  const exactDate = pathText.match(/(19|20)\d{2}[ ._-]\d{2}[ ._-]\d{2}/)?.[0]?.replace(/[ ._]/g, "-");
   const year = Number(parsedPath.name.match(/\b(19|20)\d{2}\b/)?.[0] ?? pathText.match(/\b(19|20)\d{2}\b/)?.[0]);
 
-  let mediaType = "movie";
+  let mediaType = file.configuredMediaType ?? "movie";
   const isTvRoot = /^tv$/i.test(parts[0]);
   const isTvCollection = parts.some((part) => /^(animated\s+tv|television|tv\s+shows?)$/i.test(part));
   const isWrestlingRoot = /^(wrestling|wrestling shows?|wrestling events?)$/i.test(parts[0]);
   const isWrestlingPath = /(?:^|[\\/])wrestling(?:[\\/]|$)/i.test(file.path);
   const movieFolder = /\bmovie\b/i.test(file.relativePath ?? file.path) && /\b(19|20)\d{2}\b/.test(file.relativePath ?? file.path);
-  if (seasonEpisode || episodeOnly) mediaType = "tv";
-  if (multipartMiniseries && /\bmini[- ]?series\b/i.test(pathText)) mediaType = "tv";
-  if (isTvRoot && !movieFolder) mediaType = "tv";
-  if (isTvCollection && !movieFolder) mediaType = "tv";
-  if (isWrestlingRoot || isWrestlingPath || date || parts.some((part) => /\b(wwe|wwf|wcw|ecw|aew|njpw|roh|tna|impact|pwg|shimmer)\b/i.test(part))) {
+  const explicitlyTv = /\[(?:tv|television)\]/i.test(pathText);
+  // A collection drive can be configured primarily for movies while still
+  // containing boxed television folders. Episode syntax and an explicit [tv]
+  // marker are stronger evidence than the source default.
+  if (file.configuredMediaType !== "wrestling" && (seasonEpisode || episodeOnly || explicitlyTv)) mediaType = "tv";
+  if (!file.configuredMediaType && multipartMiniseries && /\bmini[- ]?series\b/i.test(pathText)) mediaType = "tv";
+  if (!file.configuredMediaType && isTvRoot && !movieFolder) mediaType = "tv";
+  if (!file.configuredMediaType && isTvCollection && !movieFolder) mediaType = "tv";
+  if (file.configuredMediaType === "wrestling" || (!file.configuredMediaType && (isWrestlingRoot || isWrestlingPath || exactDate || parts.some((part) => /\b(wwe|wwf|wcw|ecw|aew|njpw|roh|tna|impact|pwg|shimmer)\b/i.test(part))))) {
     mediaType = "wrestling";
   }
 
   const inferredTitle = inferTitle(parts, cleanName, mediaType, year);
   const promotion = inferPromotion(parts);
+  const date = mediaType === "wrestling" ? (inferWrestlingDate(pathText, year) ?? exactDate ?? null) : (exactDate ?? null);
 
   return {
     ...file,
@@ -880,6 +1065,15 @@ function parseMediaFile(file) {
       series: inferWrestlingSeries(parts, mediaType),
     },
   };
+}
+
+function isSeparatelyCataloguedOrAuxiliary(filePath) {
+  const normalized = String(filePath ?? "").replace(/\//g, "\\");
+  // Disney shorts have their own richer catalogue and must not also appear as
+  // unidentified general-library objects. Download samples are never titles.
+  return /\\Vaults\\Disney\\Shorts\\/i.test(normalized)
+    || /\\Boxed Sets\\Animation\\Shorts\\Looney Tunes Golden Collection\\/i.test(normalized)
+    || /\\(?:samples?|sample clips?)\\/i.test(normalized);
 }
 
 function matchFiles(files, records) {
@@ -911,7 +1105,18 @@ function scoreMatch(parsed, record) {
   if (parsed.mediaType === "wrestling" && parsed.date && record.date && parsed.date !== record.date) return 0;
   if (parsed.mediaType === "wrestling" && parsed.year && record.year && parsed.year !== record.year) return 0;
   const normalizeName = parsed.mediaType === "wrestling" ? normalizeWrestlingName : normalize;
-  const titleScore = Math.max(similarity(normalizeName(parsed.title), normalizeName(record.title)), parsed.aliasTitle ? similarity(normalizeName(parsed.aliasTitle), normalizeName(record.title)) : 0);
+  const parsedTitle = normalizeName(parsed.title);
+  const recordTitle = normalizeName(record.title);
+  // A regional edition or named spinoff is a separate programme, not a fuzzy
+  // variation of its shorter parent title (Little Britain USA, The Office US,
+  // and similar cases).
+  if (parsed.mediaType === "tv" && parsedTitle !== recordTitle) {
+    const longer = parsedTitle.length > recordTitle.length ? parsedTitle : recordTitle;
+    const shorter = parsedTitle.length > recordTitle.length ? recordTitle : parsedTitle;
+    if (longer.startsWith(`${shorter} `)) return 0;
+  }
+  if (parsed.mediaType === "tv" && parsed.year && record.year && parsed.year !== record.year) return 0;
+  const titleScore = Math.max(similarity(parsedTitle, recordTitle), parsed.aliasTitle ? similarity(normalizeName(parsed.aliasTitle), recordTitle) : 0);
   if (parsed.mediaType === "wrestling" && titleScore < 0.35) return 0;
   const yearScore = parsed.year && record.year ? (parsed.year === record.year ? 0.25 : -0.2) : 0;
   const dateScore = parsed.date && record.date ? (parsed.date === record.date ? 0.3 : -0.25) : 0;
@@ -934,11 +1139,13 @@ function scoreMatch(parsed, record) {
 function inferTitle(parts, fileName, mediaType, year) {
   if (mediaType === "tv") {
     const showFolder = inferTvShowFolder(parts);
-    return cleanTvShowTitle(showFolder ?? fileName);
+    const folderTitle = cleanTvShowTitle(showFolder ?? "");
+    if (folderTitle) return folderTitle;
+    return cleanTvShowTitle(fileName.split(/\bS\d{1,2}\s*[-_. ]?\s*E\d{1,3}/i)[0].replace(/[\s._-]+$/, ""));
   }
   if (mediaType === "wrestling") {
     return stripDate(fileName)
-      .replace(/\b(wwe|wwf|wwfe|wcw|ecw|aew|njpw|roh|tna|impact|pwg|shimmer)\b/gi, "")
+      .replace(/\b(wwe|wwf|wwfe|wcw|ecw|aew|njpw|roh|tna|pwg|shimmer)\b/gi, "")
       .replace(/\b(?:720p|1080p|2160p|bluray|webrip|vhsrip|xvid|x26[45]|h26[45]|aac|dts)\b/gi, "")
       .replace(/\s+/g, " ")
       .trim();
@@ -951,7 +1158,7 @@ function cleanTvShowTitle(value) {
   return stripYear(value)
     .replace(/\bS\d{1,2}\s*[-\u2013]\s*S?\d{1,2}\b/gi, "")
     .replace(/\bS\d{1,2}\b/gi, "")
-    .replace(/\bSeason\s+\d+(\s*[-\u2013]\s*\d+)?\b/gi, "")
+    .replace(/\bSeasons?\s+\d+(\s*[-\u2013]?\s*\d+)?\b/gi, "")
     .replace(/\b(?:10bit|8bit|x26[45]|h\.?26[45]|hevc|avc|web[- ]?rip|web[- ]?dl|bluray|bdrip|dvdrip|720p|1080p|2160p|4k)\b/gi, "")
     .replace(/\s+/g, " ")
     .trim();
@@ -966,9 +1173,9 @@ function assignMissingTvEpisodeNumbers(files) {
     groups.set(key, group);
   });
   groups.forEach((group) => {
-    const used = new Set(group.filter((file) => file.parsed.season && file.parsed.episode).map((file) => `${file.parsed.season}:${file.parsed.episode}`));
+    const used = new Set(group.filter((file) => file.parsed.season != null && file.parsed.episode != null).map((file) => `${file.parsed.season}:${file.parsed.episode}`));
     let candidate = 1;
-    group.filter((file) => !file.parsed.episode).sort((a, b) => a.path.localeCompare(b.path)).forEach((file) => {
+    group.filter((file) => file.parsed.episode == null).sort((a, b) => a.path.localeCompare(b.path)).forEach((file) => {
       const season = Number(file.parsed.season ?? 1);
       while (used.has(`${season}:${candidate}`)) candidate += 1;
       file.parsed.season = season;
@@ -979,7 +1186,7 @@ function assignMissingTvEpisodeNumbers(files) {
   });
 }
 function buildEpisodeId(showId, season, episode) {
-  if (!season || !episode) return null;
+  if (season == null || episode == null) return null;
   return `${showId}-s${String(season).padStart(2, "0")}e${String(episode).padStart(2, "0")}`;
 }
 function inferAliasTitle(parts, rawParts, mediaType, year) {
@@ -987,7 +1194,7 @@ function inferAliasTitle(parts, rawParts, mediaType, year) {
     const directories = parts.slice(0, -1).filter(Boolean);
     for (let index = directories.length - 1; index >= 0; index -= 1) {
       const candidate = directories[index];
-      if (!candidate || /^(wrestling|major promotions|active promotions|defunct promotions|inactive|dump|re c dub(?: pre 96)?|events?|shows?|specials?|weekly shows?|tours?|wwe|wwf|wwfe|wcw|ecw|aew|njpw|roh|tna|pro wrestling guerrilla|world wrestling entertainment|all elite wrestling|\d{4})$/i.test(candidate)) continue;
+      if (!candidate || isGenericWrestlingDirectory(candidate) || /^s\d{1,2}e\d{1,3}\b/i.test(candidate)) continue;
       return candidate;
     }
     return null;
@@ -1006,7 +1213,12 @@ function inferMovieTitle(parts, fileName, year) {
 
 function inferTvShowFolder(parts) {
   const directories = parts.slice(0, -1).filter(Boolean);
-  const isSeasonFolder = (part) => /(?:^|\b)(?:season|series)\s*\d{1,2}\b/i.test(part) || /^s\d{1,2}$/i.test(part) || /^\d{1,2}$/i.test(part) || /^pilot$/i.test(part);
+  const isSeasonFolder = (part) =>
+    /^(?:seasons?|series)[ ._-]*\d{1,2}(?:\s*(?:[-\u2013]\s*)?\d{1,2})?$/i.test(part) ||
+    /^s(?:e)?\d{1,2}$/i.test(part) ||
+    /^\d{1,2}$/i.test(part) ||
+    /^(?:specials?|season\s*0|series\s*0)$/i.test(part) ||
+    /^pilot$/i.test(part);
   const isGenericTvFolder = (part) =>
     /^(tv|television|shows?|series|seasons?|movies?|films?|media|collections?|aisles?|vaults?|worlds?|profiles?|sagas?|boxed sets?|genre sections?|animated tv|animation|phase \d+|marvel phases?|disney|pixar|shorts?|extras?|bonus)$/i.test(part);
 
@@ -1039,11 +1251,7 @@ function inferPromotion(parts) {
 }
 
 function inferWrestlingSeries(parts, mediaType) {
-  if (mediaType !== "wrestling") return null;
-  const marker = parts.findIndex((part) => /^(shows?|weekly shows?)$/i.test(part));
-  if (marker < 0) return null;
-  const candidate = parts.slice(marker + 1, -1).find((part) => part && !/^\d{4}$/.test(part) && !/^(season|series)\s*\d+$/i.test(part));
-  return candidate ?? null;
+  return inferWrestlingSeriesFromParts(parts, mediaType);
 }
 
 async function probeMediaStreams(filePath) {
@@ -1060,7 +1268,7 @@ async function probeMediaStreams(filePath) {
     filePath,
   ];
   return new Promise((resolve) => {
-    const child = spawn(ffprobePath, args, { stdio: ["ignore", "pipe", "pipe"] });
+    const child = spawn(ffprobePath, args, { stdio: ["ignore", "pipe", "pipe"], windowsHide: true });
     let stdout = "";
     let settled = false;
     const finish = (value) => {
@@ -1241,23 +1449,102 @@ function parseArgs(rawArgs) {
     posterOut: defaults.posterOut,
     referenceDb: defaults.referenceDb,
     mediaRoots: [],
+    mediaSources: [],
     refreshProviders: false,
     refreshNewProviders: false,
     providerBackfillLimit: 25,
+    skipStreamProbe: false,
   };
 
   for (let index = 0; index < rawArgs.length; index += 1) {
     const arg = rawArgs[index];
     if (arg === "--media-root") parsed.mediaRoots.push(rawArgs[++index]);
+    if (arg === "--media-source") {
+      const sourceSpec = String(rawArgs[++index] ?? "");
+      const [sourceId, rawType] = sourceSpec.includes("|") ? sourceSpec.split("|", 2) : [null, sourceSpec];
+      const type = rawType.toLowerCase();
+      const sourcePath = rawArgs[++index];
+      parsed.mediaSources.push({ id: sourceId || `${type}-${parsed.mediaSources.length + 1}`, type, path: sourcePath });
+    }
     if (arg === "--out") parsed.metadataOut = path.resolve(rawArgs[++index]);
     if (arg === "--posters-out") parsed.posterOut = path.resolve(rawArgs[++index]);
     if (arg === "--reference-db") parsed.referenceDb = path.resolve(rawArgs[++index]);
     if (arg === "--refresh-providers") parsed.refreshProviders = true;
     if (arg === "--refresh-new-providers") parsed.refreshNewProviders = true;
     if (arg === "--provider-backfill-limit") parsed.providerBackfillLimit = Math.max(0, Number(rawArgs[++index]) || 0);
+    if (arg === "--skip-stream-probe") parsed.skipStreamProbe = true;
   }
 
   return parsed;
+}
+
+function normalizeMediaSources(mediaSources = [], mediaRoots = []) {
+  const allowedTypes = new Set(["movie", "tv", "wrestling", "mixed"]);
+  if (mediaSources?.length) return mediaSources.filter((source) => source?.enabled !== false).map((source, index) => {
+    const type = String(source.type ?? "mixed").toLowerCase();
+    if (!allowedTypes.has(type)) throw new Error(`Invalid media source type: ${source.type}`);
+    if (!source.path) throw new Error(`Media source ${source.id ?? index + 1} has no path.`);
+    if (String(source.id ?? "").includes("|")) throw new Error(`Media source id cannot contain |: ${source.id}`);
+    return { id: String(source.id ?? `${type}-${index + 1}`), type, path: String(source.path) };
+  });
+  return (mediaRoots ?? []).map((sourcePath, index) => ({ id: `legacy-${index + 1}`, type: "mixed", path: String(sourcePath) }));
+}
+
+async function validateMediaSources(mediaSources) {
+  const ids = new Set();
+  for (const source of mediaSources) {
+    if (ids.has(source.id)) throw new Error(`Duplicate media source id: ${source.id}`);
+    ids.add(source.id);
+    const details = await stat(path.resolve(source.path)).catch(() => null);
+    if (!details?.isDirectory()) throw new Error(`Media source is missing or unavailable: ${source.id} (${source.path})`);
+  }
+}
+
+async function publishMetadataSafely(outputPath, output) {
+  const candidatePath = `${outputPath}.candidate`;
+  const backupPath = `${outputPath}.previous`;
+  const serialized = `${JSON.stringify(output, null, 2)}\n`;
+  await writeFile(candidatePath, serialized, "utf8");
+  // Never replace the live catalogue with an incomplete/corrupt candidate.
+  // This matters especially when Windows is interrupted during a large scan.
+  JSON.parse(await readFile(candidatePath, "utf8"));
+  const current = await stat(outputPath).catch(() => null);
+  if (current?.isFile()) {
+    const currentText = await readFile(outputPath, "utf8").catch(() => null);
+    if (currentText) {
+      try {
+        JSON.parse(currentText);
+        await copyFile(outputPath, backupPath);
+      } catch {
+        console.warn("Existing live catalogue is corrupt; preserving the last valid backup instead.");
+      }
+    }
+  }
+  await renameWithWindowsRetry(candidatePath, outputPath);
+}
+
+async function renameWithWindowsRetry(sourcePath, destinationPath) {
+  const retryableCodes = new Set(["EBUSY", "EACCES", "EPERM"]);
+  let lastError = null;
+  for (let attempt = 0; attempt < 8; attempt += 1) {
+    try {
+      await rename(sourcePath, destinationPath);
+      return;
+    } catch (error) {
+      lastError = error;
+      if (!retryableCodes.has(error?.code)) throw error;
+      await delay(250 * (attempt + 1));
+    }
+  }
+  try {
+    await unlink(destinationPath);
+    await rename(sourcePath, destinationPath);
+  } catch (error) {
+    if (!(await stat(destinationPath).catch(() => null))) {
+      await copyFile(`${destinationPath}.previous`, destinationPath).catch(() => null);
+    }
+    throw error ?? lastError;
+  }
 }
 
 function delay(ms) {

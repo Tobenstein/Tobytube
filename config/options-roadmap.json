@@ -1,0 +1,27 @@
+{
+  "sections": {
+    "appearance": [
+      "Theme selector (TobyTube and Pseudo-Plex)",
+      "Interface density",
+      "Text and subtitle scale"
+    ],
+    "playback": [
+      "Current Rentals click behavior: open queued episode or play immediately",
+      "Autoplay next episode",
+      "Remember subtitles across episodes",
+      "Remember audio track/language",
+      "Stay fullscreen between episodes",
+      "Resume threshold and watched thresholds"
+    ],
+    "library": [
+      "Startup scan and automatic matching",
+      "Metadata provider priorities",
+      "Current Rentals retention"
+    ],
+    "accessibility": [
+      "Context-menu keyboard shortcut",
+      "Touch long-press duration",
+      "Reduced motion and glow"
+    ]
+  }
+}

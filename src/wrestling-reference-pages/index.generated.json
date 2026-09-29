@@ -1,0 +1,1987 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-15T12:57:27.516Z",
+  "source": "wrestling-reference.generated.json",
+  "shared": "./wrestling-reference-pages/shared.generated.json",
+  "promotions": {
+    "aaa": [
+      {
+        "year": 2026,
+        "path": "./wrestling-reference-pages/aaa/2026.generated.json",
+        "counts": {
+          "events": 42,
+          "matches": 3
+        }
+      }
+    ],
+    "aew": [
+      {
+        "year": 2019,
+        "path": "./wrestling-reference-pages/aew/2019.generated.json",
+        "counts": {
+          "events": 8,
+          "episodes": 72,
+          "matches": 111
+        }
+      },
+      {
+        "year": 2020,
+        "path": "./wrestling-reference-pages/aew/2020.generated.json",
+        "counts": {
+          "events": 46,
+          "episodes": 282,
+          "matches": 805
+        }
+      },
+      {
+        "year": 2021,
+        "path": "./wrestling-reference-pages/aew/2021.generated.json",
+        "counts": {
+          "events": 94,
+          "episodes": 423,
+          "matches": 1595
+        }
+      },
+      {
+        "year": 2022,
+        "path": "./wrestling-reference-pages/aew/2022.generated.json",
+        "counts": {
+          "events": 101,
+          "episodes": 534,
+          "matches": 1533
+        }
+      },
+      {
+        "year": 2023,
+        "path": "./wrestling-reference-pages/aew/2023.generated.json",
+        "counts": {
+          "events": 107,
+          "episodes": 399,
+          "matches": 1079
+        }
+      },
+      {
+        "year": 2024,
+        "path": "./wrestling-reference-pages/aew/2024.generated.json",
+        "counts": {
+          "events": 75,
+          "episodes": 384,
+          "matches": 917
+        }
+      },
+      {
+        "year": 2025,
+        "path": "./wrestling-reference-pages/aew/2025.generated.json",
+        "counts": {
+          "events": 114,
+          "episodes": 216,
+          "matches": 787
+        }
+      },
+      {
+        "year": 2026,
+        "path": "./wrestling-reference-pages/aew/2026.generated.json",
+        "counts": {
+          "events": 142,
+          "episodes": 161,
+          "matches": 517
+        }
+      },
+      {
+        "year": 2027,
+        "path": "./wrestling-reference-pages/aew/2027.generated.json",
+        "counts": {
+          "events": 1,
+          "matches": 1
+        }
+      }
+    ],
+    "ajpw": [
+      {
+        "year": 2002,
+        "path": "./wrestling-reference-pages/ajpw/2002.generated.json",
+        "counts": {
+          "events": 4
+        }
+      },
+      {
+        "year": 2003,
+        "path": "./wrestling-reference-pages/ajpw/2003.generated.json",
+        "counts": {
+          "events": 3
+        }
+      },
+      {
+        "year": 2004,
+        "path": "./wrestling-reference-pages/ajpw/2004.generated.json",
+        "counts": {
+          "events": 6
+        }
+      },
+      {
+        "year": 2005,
+        "path": "./wrestling-reference-pages/ajpw/2005.generated.json",
+        "counts": {
+          "events": 7
+        }
+      },
+      {
+        "year": 2006,
+        "path": "./wrestling-reference-pages/ajpw/2006.generated.json",
+        "counts": {
+          "events": 1
+        }
+      },
+      {
+        "year": 2007,
+        "path": "./wrestling-reference-pages/ajpw/2007.generated.json",
+        "counts": {
+          "events": 1
+        }
+      },
+      {
+        "year": 2008,
+        "path": "./wrestling-reference-pages/ajpw/2008.generated.json",
+        "counts": {
+          "events": 1
+        }
+      },
+      {
+        "year": 2009,
+        "path": "./wrestling-reference-pages/ajpw/2009.generated.json",
+        "counts": {
+          "events": 1
+        }
+      },
+      {
+        "year": 2010,
+        "path": "./wrestling-reference-pages/ajpw/2010.generated.json",
+        "counts": {
+          "events": 116,
+          "matches": 738
+        }
+      },
+      {
+        "year": 2011,
+        "path": "./wrestling-reference-pages/ajpw/2011.generated.json",
+        "counts": {
+          "events": 107,
+          "matches": 698
+        }
+      },
+      {
+        "year": 2012,
+        "path": "./wrestling-reference-pages/ajpw/2012.generated.json",
+        "counts": {
+          "events": 108,
+          "matches": 698
+        }
+      },
+      {
+        "year": 2013,
+        "path": "./wrestling-reference-pages/ajpw/2013.generated.json",
+        "counts": {
+          "events": 112,
+          "matches": 690
+        }
+      },
+      {
+        "year": 2014,
+        "path": "./wrestling-reference-pages/ajpw/2014.generated.json",
+        "counts": {
+          "events": 92,
+          "matches": 610
+        }
+      },
+      {
+        "year": 2015,
+        "path": "./wrestling-reference-pages/ajpw/2015.generated.json",
+        "counts": {
+          "events": 89,
+          "matches": 547
+        }
+      },
+      {
+        "year": 2016,
+        "path": "./wrestling-reference-pages/ajpw/2016.generated.json",
+        "counts": {
+          "events": 93,
+          "matches": 625
+        }
+      },
+      {
+        "year": 2017,
+        "path": "./wrestling-reference-pages/ajpw/2017.generated.json",
+        "counts": {
+          "events": 127,
+          "matches": 816
+        }
+      },
+      {
+        "year": 2018,
+        "path": "./wrestling-reference-pages/ajpw/2018.generated.json",
+        "counts": {
+          "events": 136,
+          "matches": 859
+        }
+      },
+      {
+        "year": 2019,
+        "path": "./wrestling-reference-pages/ajpw/2019.generated.json",
+        "counts": {
+          "events": 131,
+          "matches": 843
+        }
+      },
+      {
+        "year": 2020,
+        "path": "./wrestling-reference-pages/ajpw/2020.generated.json",
+        "counts": {
+          "events": 68,
+          "matches": 399
+        }
+      },
+      {
+        "year": 2021,
+        "path": "./wrestling-reference-pages/ajpw/2021.generated.json",
+        "counts": {
+          "events": 63,
+          "matches": 428
+        }
+      },
+      {
+        "year": 2022,
+        "path": "./wrestling-reference-pages/ajpw/2022.generated.json",
+        "counts": {
+          "events": 62,
+          "matches": 445
+        }
+      },
+      {
+        "year": 2023,
+        "path": "./wrestling-reference-pages/ajpw/2023.generated.json",
+        "counts": {
+          "events": 73,
+          "matches": 549
+        }
+      },
+      {
+        "year": 2024,
+        "path": "./wrestling-reference-pages/ajpw/2024.generated.json",
+        "counts": {
+          "events": 76,
+          "matches": 506
+        }
+      },
+      {
+        "year": 2025,
+        "path": "./wrestling-reference-pages/ajpw/2025.generated.json",
+        "counts": {
+          "events": 67,
+          "matches": 438
+        }
+      },
+      {
+        "year": 2026,
+        "path": "./wrestling-reference-pages/ajpw/2026.generated.json",
+        "counts": {
+          "events": 27,
+          "matches": 197
+        }
+      }
+    ],
+    "ecw": [
+      {
+        "year": 1989,
+        "path": "./wrestling-reference-pages/ecw/1989.generated.json",
+        "counts": {
+          "episodes": 1,
+          "matches": 3
+        }
+      },
+      {
+        "year": 1990,
+        "path": "./wrestling-reference-pages/ecw/1990.generated.json",
+        "counts": {
+          "episodes": 4,
+          "matches": 30
+        }
+      },
+      {
+        "year": 1991,
+        "path": "./wrestling-reference-pages/ecw/1991.generated.json",
+        "counts": {
+          "episodes": 10,
+          "matches": 63
+        }
+      },
+      {
+        "year": 1992,
+        "path": "./wrestling-reference-pages/ecw/1992.generated.json",
+        "counts": {
+          "events": 2,
+          "matches": 9
+        }
+      },
+      {
+        "year": 1993,
+        "path": "./wrestling-reference-pages/ecw/1993.generated.json",
+        "counts": {
+          "events": 9,
+          "episodes": 46,
+          "matches": 218
+        }
+      },
+      {
+        "year": 1994,
+        "path": "./wrestling-reference-pages/ecw/1994.generated.json",
+        "counts": {
+          "events": 9,
+          "episodes": 56,
+          "matches": 220
+        }
+      },
+      {
+        "year": 1995,
+        "path": "./wrestling-reference-pages/ecw/1995.generated.json",
+        "counts": {
+          "events": 13,
+          "episodes": 63,
+          "matches": 120
+        }
+      },
+      {
+        "year": 1996,
+        "path": "./wrestling-reference-pages/ecw/1996.generated.json",
+        "counts": {
+          "events": 17,
+          "episodes": 70,
+          "matches": 169
+        }
+      },
+      {
+        "year": 1997,
+        "path": "./wrestling-reference-pages/ecw/1997.generated.json",
+        "counts": {
+          "events": 25,
+          "episodes": 104,
+          "matches": 186
+        }
+      },
+      {
+        "year": 1998,
+        "path": "./wrestling-reference-pages/ecw/1998.generated.json",
+        "counts": {
+          "events": 14,
+          "episodes": 97,
+          "matches": 181
+        }
+      },
+      {
+        "year": 1999,
+        "path": "./wrestling-reference-pages/ecw/1999.generated.json",
+        "counts": {
+          "events": 15,
+          "episodes": 124,
+          "matches": 201
+        }
+      },
+      {
+        "year": 2000,
+        "path": "./wrestling-reference-pages/ecw/2000.generated.json",
+        "counts": {
+          "events": 14,
+          "episodes": 146,
+          "matches": 305
+        }
+      },
+      {
+        "year": 2001,
+        "path": "./wrestling-reference-pages/ecw/2001.generated.json",
+        "counts": {
+          "events": 6,
+          "matches": 45
+        }
+      },
+      {
+        "year": 2005,
+        "path": "./wrestling-reference-pages/ecw/2005.generated.json",
+        "counts": {
+          "events": 5,
+          "matches": 40
+        }
+      },
+      {
+        "year": 2009,
+        "path": "./wrestling-reference-pages/ecw/2009.generated.json",
+        "counts": {
+          "events": 1,
+          "matches": 8
+        }
+      },
+      {
+        "year": 2012,
+        "path": "./wrestling-reference-pages/ecw/2012.generated.json",
+        "counts": {
+          "events": 5,
+          "matches": 41
+        }
+      },
+      {
+        "year": 2013,
+        "path": "./wrestling-reference-pages/ecw/2013.generated.json",
+        "counts": {
+          "events": 1,
+          "matches": 9
+        }
+      }
+    ],
+    "evolve": [
+      {
+        "year": 2025,
+        "path": "./wrestling-reference-pages/evolve/2025.generated.json",
+        "counts": {
+          "events": 1,
+          "matches": 3
+        }
+      },
+      {
+        "year": 2026,
+        "path": "./wrestling-reference-pages/evolve/2026.generated.json",
+        "counts": {
+          "events": 2,
+          "matches": 6
+        }
+      }
+    ],
+    "njpw": [
+      {
+        "year": 1973,
+        "path": "./wrestling-reference-pages/njpw/1973.generated.json",
+        "counts": {
+          "events": 4
+        }
+      },
+      {
+        "year": 1974,
+        "path": "./wrestling-reference-pages/njpw/1974.generated.json",
+        "counts": {
+          "events": 6
+        }
+      },
+      {
+        "year": 1975,
+        "path": "./wrestling-reference-pages/njpw/1975.generated.json",
+        "counts": {
+          "events": 6
+        }
+      },
+      {
+        "year": 1976,
+        "path": "./wrestling-reference-pages/njpw/1976.generated.json",
+        "counts": {
+          "events": 5
+        }
+      },
+      {
+        "year": 1977,
+        "path": "./wrestling-reference-pages/njpw/1977.generated.json",
+        "counts": {
+          "events": 4
+        }
+      },
+      {
+        "year": 1978,
+        "path": "./wrestling-reference-pages/njpw/1978.generated.json",
+        "counts": {
+          "events": 5
+        }
+      },
+      {
+        "year": 1979,
+        "path": "./wrestling-reference-pages/njpw/1979.generated.json",
+        "counts": {
+          "events": 6
+        }
+      },
+      {
+        "year": 1980,
+        "path": "./wrestling-reference-pages/njpw/1980.generated.json",
+        "counts": {
+          "events": 7
+        }
+      },
+      {
+        "year": 1981,
+        "path": "./wrestling-reference-pages/njpw/1981.generated.json",
+        "counts": {
+          "events": 9
+        }
+      },
+      {
+        "year": 1982,
+        "path": "./wrestling-reference-pages/njpw/1982.generated.json",
+        "counts": {
+          "events": 8
+        }
+      },
+      {
+        "year": 1983,
+        "path": "./wrestling-reference-pages/njpw/1983.generated.json",
+        "counts": {
+          "events": 8
+        }
+      },
+      {
+        "year": 1984,
+        "path": "./wrestling-reference-pages/njpw/1984.generated.json",
+        "counts": {
+          "events": 8
+        }
+      },
+      {
+        "year": 1985,
+        "path": "./wrestling-reference-pages/njpw/1985.generated.json",
+        "counts": {
+          "events": 5
+        }
+      },
+      {
+        "year": 1986,
+        "path": "./wrestling-reference-pages/njpw/1986.generated.json",
+        "counts": {
+          "events": 6
+        }
+      },
+      {
+        "year": 1987,
+        "path": "./wrestling-reference-pages/njpw/1987.generated.json",
+        "counts": {
+          "events": 6
+        }
+      },
+      {
+        "year": 1988,
+        "path": "./wrestling-reference-pages/njpw/1988.generated.json",
+        "counts": {
+          "events": 4
+        }
+      },
+      {
+        "year": 1989,
+        "path": "./wrestling-reference-pages/njpw/1989.generated.json",
+        "counts": {
+          "events": 7
+        }
+      },
+      {
+        "year": 1990,
+        "path": "./wrestling-reference-pages/njpw/1990.generated.json",
+        "counts": {
+          "events": 2
+        }
+      },
+      {
+        "year": 1991,
+        "path": "./wrestling-reference-pages/njpw/1991.generated.json",
+        "counts": {
+          "events": 6
+        }
+      },
+      {
+        "year": 1992,
+        "path": "./wrestling-reference-pages/njpw/1992.generated.json",
+        "counts": {
+          "events": 7
+        }
+      },
+      {
+        "year": 1993,
+        "path": "./wrestling-reference-pages/njpw/1993.generated.json",
+        "counts": {
+          "events": 8
+        }
+      },
+      {
+        "year": 1994,
+        "path": "./wrestling-reference-pages/njpw/1994.generated.json",
+        "counts": {
+          "events": 10
+        }
+      },
+      {
+        "year": 1995,
+        "path": "./wrestling-reference-pages/njpw/1995.generated.json",
+        "counts": {
+          "events": 8
+        }
+      },
+      {
+        "year": 1996,
+        "path": "./wrestling-reference-pages/njpw/1996.generated.json",
+        "counts": {
+          "events": 7
+        }
+      },
+      {
+        "year": 1997,
+        "path": "./wrestling-reference-pages/njpw/1997.generated.json",
+        "counts": {
+          "events": 7
+        }
+      },
+      {
+        "year": 1998,
+        "path": "./wrestling-reference-pages/njpw/1998.generated.json",
+        "counts": {
+          "events": 6
+        }
+      },
+      {
+        "year": 1999,
+        "path": "./wrestling-reference-pages/njpw/1999.generated.json",
+        "counts": {
+          "events": 6
+        }
+      },
+      {
+        "year": 2000,
+        "path": "./wrestling-reference-pages/njpw/2000.generated.json",
+        "counts": {
+          "events": 8
+        }
+      },
+      {
+        "year": 2001,
+        "path": "./wrestling-reference-pages/njpw/2001.generated.json",
+        "counts": {
+          "events": 7
+        }
+      },
+      {
+        "year": 2002,
+        "path": "./wrestling-reference-pages/njpw/2002.generated.json",
+        "counts": {
+          "events": 11
+        }
+      },
+      {
+        "year": 2003,
+        "path": "./wrestling-reference-pages/njpw/2003.generated.json",
+        "counts": {
+          "events": 12
+        }
+      },
+      {
+        "year": 2004,
+        "path": "./wrestling-reference-pages/njpw/2004.generated.json",
+        "counts": {
+          "events": 19
+        }
+      },
+      {
+        "year": 2005,
+        "path": "./wrestling-reference-pages/njpw/2005.generated.json",
+        "counts": {
+          "events": 15
+        }
+      },
+      {
+        "year": 2006,
+        "path": "./wrestling-reference-pages/njpw/2006.generated.json",
+        "counts": {
+          "events": 11
+        }
+      },
+      {
+        "year": 2007,
+        "path": "./wrestling-reference-pages/njpw/2007.generated.json",
+        "counts": {
+          "events": 15
+        }
+      },
+      {
+        "year": 2008,
+        "path": "./wrestling-reference-pages/njpw/2008.generated.json",
+        "counts": {
+          "events": 10
+        }
+      },
+      {
+        "year": 2009,
+        "path": "./wrestling-reference-pages/njpw/2009.generated.json",
+        "counts": {
+          "events": 22
+        }
+      },
+      {
+        "year": 2010,
+        "path": "./wrestling-reference-pages/njpw/2010.generated.json",
+        "counts": {
+          "events": 147,
+          "matches": 859
+        }
+      },
+      {
+        "year": 2011,
+        "path": "./wrestling-reference-pages/njpw/2011.generated.json",
+        "counts": {
+          "events": 143,
+          "matches": 953
+        }
+      },
+      {
+        "year": 2012,
+        "path": "./wrestling-reference-pages/njpw/2012.generated.json",
+        "counts": {
+          "events": 142,
+          "matches": 867
+        }
+      },
+      {
+        "year": 2013,
+        "path": "./wrestling-reference-pages/njpw/2013.generated.json",
+        "counts": {
+          "events": 130,
+          "matches": 849
+        }
+      },
+      {
+        "year": 2014,
+        "path": "./wrestling-reference-pages/njpw/2014.generated.json",
+        "counts": {
+          "events": 137,
+          "matches": 901
+        }
+      },
+      {
+        "year": 2015,
+        "path": "./wrestling-reference-pages/njpw/2015.generated.json",
+        "counts": {
+          "events": 186,
+          "matches": 1110
+        }
+      },
+      {
+        "year": 2016,
+        "path": "./wrestling-reference-pages/njpw/2016.generated.json",
+        "counts": {
+          "events": 225,
+          "matches": 1264
+        }
+      },
+      {
+        "year": 2017,
+        "path": "./wrestling-reference-pages/njpw/2017.generated.json",
+        "counts": {
+          "events": 250,
+          "matches": 1434
+        }
+      },
+      {
+        "year": 2018,
+        "path": "./wrestling-reference-pages/njpw/2018.generated.json",
+        "counts": {
+          "events": 250,
+          "matches": 1453
+        }
+      },
+      {
+        "year": 2019,
+        "path": "./wrestling-reference-pages/njpw/2019.generated.json",
+        "counts": {
+          "events": 210,
+          "matches": 1415
+        }
+      },
+      {
+        "year": 2020,
+        "path": "./wrestling-reference-pages/njpw/2020.generated.json",
+        "counts": {
+          "events": 161,
+          "matches": 835
+        }
+      },
+      {
+        "year": 2021,
+        "path": "./wrestling-reference-pages/njpw/2021.generated.json",
+        "counts": {
+          "events": 275,
+          "matches": 1157
+        }
+      },
+      {
+        "year": 2022,
+        "path": "./wrestling-reference-pages/njpw/2022.generated.json",
+        "counts": {
+          "events": 246,
+          "matches": 1400
+        }
+      },
+      {
+        "year": 2023,
+        "path": "./wrestling-reference-pages/njpw/2023.generated.json",
+        "counts": {
+          "events": 206,
+          "matches": 1319
+        }
+      },
+      {
+        "year": 2024,
+        "path": "./wrestling-reference-pages/njpw/2024.generated.json",
+        "counts": {
+          "events": 176,
+          "matches": 1374
+        }
+      },
+      {
+        "year": 2025,
+        "path": "./wrestling-reference-pages/njpw/2025.generated.json",
+        "counts": {
+          "events": 170,
+          "matches": 1293
+        }
+      },
+      {
+        "year": 2026,
+        "path": "./wrestling-reference-pages/njpw/2026.generated.json",
+        "counts": {
+          "events": 147,
+          "matches": 804
+        }
+      }
+    ],
+    "nwa": [
+      {
+        "year": 2026,
+        "path": "./wrestling-reference-pages/nwa/2026.generated.json",
+        "counts": {
+          "events": 1,
+          "matches": 8
+        }
+      }
+    ],
+    "roh": [
+      {
+        "year": 2002,
+        "path": "./wrestling-reference-pages/roh/2002.generated.json",
+        "counts": {
+          "events": 9,
+          "episodes": 4
+        }
+      },
+      {
+        "year": 2003,
+        "path": "./wrestling-reference-pages/roh/2003.generated.json",
+        "counts": {
+          "events": 13
+        }
+      },
+      {
+        "year": 2004,
+        "path": "./wrestling-reference-pages/roh/2004.generated.json",
+        "counts": {
+          "events": 12
+        }
+      },
+      {
+        "year": 2005,
+        "path": "./wrestling-reference-pages/roh/2005.generated.json",
+        "counts": {
+          "events": 22
+        }
+      },
+      {
+        "year": 2006,
+        "path": "./wrestling-reference-pages/roh/2006.generated.json",
+        "counts": {
+          "events": 43
+        }
+      },
+      {
+        "year": 2007,
+        "path": "./wrestling-reference-pages/roh/2007.generated.json",
+        "counts": {
+          "events": 41,
+          "episodes": 2
+        }
+      },
+      {
+        "year": 2008,
+        "path": "./wrestling-reference-pages/roh/2008.generated.json",
+        "counts": {
+          "events": 43,
+          "episodes": 2
+        }
+      },
+      {
+        "year": 2009,
+        "path": "./wrestling-reference-pages/roh/2009.generated.json",
+        "counts": {
+          "events": 38,
+          "episodes": 39
+        }
+      },
+      {
+        "year": 2010,
+        "path": "./wrestling-reference-pages/roh/2010.generated.json",
+        "counts": {
+          "events": 25,
+          "episodes": 51
+        }
+      },
+      {
+        "year": 2011,
+        "path": "./wrestling-reference-pages/roh/2011.generated.json",
+        "counts": {
+          "events": 22,
+          "episodes": 23
+        }
+      },
+      {
+        "year": 2012,
+        "path": "./wrestling-reference-pages/roh/2012.generated.json",
+        "counts": {
+          "events": 20,
+          "episodes": 52
+        }
+      },
+      {
+        "year": 2013,
+        "path": "./wrestling-reference-pages/roh/2013.generated.json",
+        "counts": {
+          "events": 27,
+          "episodes": 51
+        }
+      },
+      {
+        "year": 2014,
+        "path": "./wrestling-reference-pages/roh/2014.generated.json",
+        "counts": {
+          "events": 29,
+          "episodes": 51
+        }
+      },
+      {
+        "year": 2015,
+        "path": "./wrestling-reference-pages/roh/2015.generated.json",
+        "counts": {
+          "events": 38,
+          "episodes": 54
+        }
+      },
+      {
+        "year": 2016,
+        "path": "./wrestling-reference-pages/roh/2016.generated.json",
+        "counts": {
+          "events": 44,
+          "episodes": 53
+        }
+      },
+      {
+        "year": 2017,
+        "path": "./wrestling-reference-pages/roh/2017.generated.json",
+        "counts": {
+          "events": 49,
+          "episodes": 53
+        }
+      },
+      {
+        "year": 2018,
+        "path": "./wrestling-reference-pages/roh/2018.generated.json",
+        "counts": {
+          "events": 45,
+          "episodes": 52
+        }
+      },
+      {
+        "year": 2019,
+        "path": "./wrestling-reference-pages/roh/2019.generated.json",
+        "counts": {
+          "events": 44,
+          "episodes": 51
+        }
+      },
+      {
+        "year": 2020,
+        "path": "./wrestling-reference-pages/roh/2020.generated.json",
+        "counts": {
+          "events": 10,
+          "episodes": 49
+        }
+      },
+      {
+        "year": 2021,
+        "path": "./wrestling-reference-pages/roh/2021.generated.json",
+        "counts": {
+          "events": 90,
+          "episodes": 55
+        }
+      },
+      {
+        "year": 2022,
+        "path": "./wrestling-reference-pages/roh/2022.generated.json",
+        "counts": {
+          "events": 7,
+          "episodes": 11
+        }
+      },
+      {
+        "year": 2023,
+        "path": "./wrestling-reference-pages/roh/2023.generated.json",
+        "counts": {
+          "events": 7,
+          "episodes": 45
+        }
+      },
+      {
+        "year": 2024,
+        "path": "./wrestling-reference-pages/roh/2024.generated.json",
+        "counts": {
+          "events": 6,
+          "episodes": 52
+        }
+      },
+      {
+        "year": 2025,
+        "path": "./wrestling-reference-pages/roh/2025.generated.json",
+        "counts": {
+          "events": 16,
+          "episodes": 51
+        }
+      },
+      {
+        "year": 2026,
+        "path": "./wrestling-reference-pages/roh/2026.generated.json",
+        "counts": {
+          "events": 14,
+          "episodes": 26,
+          "matches": 283
+        }
+      }
+    ],
+    "tna": [
+      {
+        "year": 2002,
+        "path": "./wrestling-reference-pages/tna/2002.generated.json",
+        "counts": {
+          "events": 1,
+          "episodes": 75,
+          "matches": 185
+        }
+      },
+      {
+        "year": 2003,
+        "path": "./wrestling-reference-pages/tna/2003.generated.json",
+        "counts": {
+          "events": 5,
+          "episodes": 194,
+          "matches": 487
+        }
+      },
+      {
+        "year": 2004,
+        "path": "./wrestling-reference-pages/tna/2004.generated.json",
+        "counts": {
+          "events": 10,
+          "episodes": 207,
+          "matches": 532
+        }
+      },
+      {
+        "year": 2005,
+        "path": "./wrestling-reference-pages/tna/2005.generated.json",
+        "counts": {
+          "events": 42,
+          "episodes": 108,
+          "matches": 334
+        }
+      },
+      {
+        "year": 2006,
+        "path": "./wrestling-reference-pages/tna/2006.generated.json",
+        "counts": {
+          "events": 42,
+          "episodes": 202,
+          "matches": 337
+        }
+      },
+      {
+        "year": 2007,
+        "path": "./wrestling-reference-pages/tna/2007.generated.json",
+        "counts": {
+          "events": 42,
+          "episodes": 200,
+          "matches": 341
+        }
+      },
+      {
+        "year": 2008,
+        "path": "./wrestling-reference-pages/tna/2008.generated.json",
+        "counts": {
+          "events": 38,
+          "episodes": 120,
+          "matches": 388
+        }
+      },
+      {
+        "year": 2009,
+        "path": "./wrestling-reference-pages/tna/2009.generated.json",
+        "counts": {
+          "events": 38,
+          "episodes": 198,
+          "matches": 441
+        }
+      },
+      {
+        "year": 2010,
+        "path": "./wrestling-reference-pages/tna/2010.generated.json",
+        "counts": {
+          "events": 47,
+          "episodes": 92,
+          "matches": 393
+        }
+      },
+      {
+        "year": 2011,
+        "path": "./wrestling-reference-pages/tna/2011.generated.json",
+        "counts": {
+          "events": 38,
+          "episodes": 206,
+          "matches": 421
+        }
+      },
+      {
+        "year": 2012,
+        "path": "./wrestling-reference-pages/tna/2012.generated.json",
+        "counts": {
+          "events": 56,
+          "episodes": 188,
+          "matches": 401
+        }
+      },
+      {
+        "year": 2013,
+        "path": "./wrestling-reference-pages/tna/2013.generated.json",
+        "counts": {
+          "events": 67,
+          "episodes": 190,
+          "matches": 399
+        }
+      },
+      {
+        "year": 2014,
+        "path": "./wrestling-reference-pages/tna/2014.generated.json",
+        "counts": {
+          "events": 73,
+          "episodes": 190,
+          "matches": 416
+        }
+      },
+      {
+        "year": 2015,
+        "path": "./wrestling-reference-pages/tna/2015.generated.json",
+        "counts": {
+          "events": 85,
+          "episodes": 172,
+          "matches": 439
+        }
+      },
+      {
+        "year": 2016,
+        "path": "./wrestling-reference-pages/tna/2016.generated.json",
+        "counts": {
+          "events": 75,
+          "episodes": 182,
+          "matches": 409
+        }
+      },
+      {
+        "year": 2017,
+        "path": "./wrestling-reference-pages/tna/2017.generated.json",
+        "counts": {
+          "events": 72,
+          "episodes": 184,
+          "matches": 409
+        }
+      },
+      {
+        "year": 2018,
+        "path": "./wrestling-reference-pages/tna/2018.generated.json",
+        "counts": {
+          "events": 58,
+          "episodes": 194,
+          "matches": 448
+        }
+      },
+      {
+        "year": 2019,
+        "path": "./wrestling-reference-pages/tna/2019.generated.json",
+        "counts": {
+          "events": 80,
+          "episodes": 192,
+          "matches": 572
+        }
+      },
+      {
+        "year": 2020,
+        "path": "./wrestling-reference-pages/tna/2020.generated.json",
+        "counts": {
+          "events": 51,
+          "episodes": 194,
+          "matches": 414
+        }
+      },
+      {
+        "year": 2021,
+        "path": "./wrestling-reference-pages/tna/2021.generated.json",
+        "counts": {
+          "events": 67,
+          "episodes": 206,
+          "matches": 463
+        }
+      },
+      {
+        "year": 2022,
+        "path": "./wrestling-reference-pages/tna/2022.generated.json",
+        "counts": {
+          "events": 51,
+          "episodes": 200,
+          "matches": 437
+        }
+      },
+      {
+        "year": 2023,
+        "path": "./wrestling-reference-pages/tna/2023.generated.json",
+        "counts": {
+          "events": 65,
+          "episodes": 172,
+          "matches": 458
+        }
+      },
+      {
+        "year": 2024,
+        "path": "./wrestling-reference-pages/tna/2024.generated.json",
+        "counts": {
+          "events": 62,
+          "episodes": 184,
+          "matches": 436
+        }
+      },
+      {
+        "year": 2025,
+        "path": "./wrestling-reference-pages/tna/2025.generated.json",
+        "counts": {
+          "events": 58,
+          "episodes": 196,
+          "matches": 416
+        }
+      },
+      {
+        "year": 2026,
+        "path": "./wrestling-reference-pages/tna/2026.generated.json",
+        "counts": {
+          "events": 67,
+          "episodes": 127,
+          "matches": 343
+        }
+      }
+    ],
+    "wcw": [
+      {
+        "year": 1978,
+        "path": "./wrestling-reference-pages/wcw/1978.generated.json",
+        "counts": {
+          "episodes": 1,
+          "matches": 3
+        }
+      },
+      {
+        "year": 1979,
+        "path": "./wrestling-reference-pages/wcw/1979.generated.json",
+        "counts": {
+          "episodes": 2,
+          "matches": 8
+        }
+      },
+      {
+        "year": 1981,
+        "path": "./wrestling-reference-pages/wcw/1981.generated.json",
+        "counts": {
+          "episodes": 9,
+          "matches": 53
+        }
+      },
+      {
+        "year": 1982,
+        "path": "./wrestling-reference-pages/wcw/1982.generated.json",
+        "counts": {
+          "episodes": 20,
+          "matches": 144
+        }
+      },
+      {
+        "year": 1983,
+        "path": "./wrestling-reference-pages/wcw/1983.generated.json",
+        "counts": {
+          "events": 3,
+          "episodes": 64,
+          "matches": 415
+        }
+      },
+      {
+        "year": 1984,
+        "path": "./wrestling-reference-pages/wcw/1984.generated.json",
+        "counts": {
+          "events": 2,
+          "episodes": 53,
+          "matches": 345
+        }
+      },
+      {
+        "year": 1985,
+        "path": "./wrestling-reference-pages/wcw/1985.generated.json",
+        "counts": {
+          "events": 39,
+          "episodes": 87,
+          "matches": 665
+        }
+      },
+      {
+        "year": 1986,
+        "path": "./wrestling-reference-pages/wcw/1986.generated.json",
+        "counts": {
+          "events": 98,
+          "episodes": 186,
+          "matches": 1478
+        }
+      },
+      {
+        "year": 1987,
+        "path": "./wrestling-reference-pages/wcw/1987.generated.json",
+        "counts": {
+          "events": 90,
+          "episodes": 178,
+          "matches": 1489
+        }
+      },
+      {
+        "year": 1988,
+        "path": "./wrestling-reference-pages/wcw/1988.generated.json",
+        "counts": {
+          "events": 154,
+          "episodes": 206,
+          "matches": 1667
+        }
+      },
+      {
+        "year": 1989,
+        "path": "./wrestling-reference-pages/wcw/1989.generated.json",
+        "counts": {
+          "events": 114,
+          "episodes": 190,
+          "matches": 1289
+        }
+      },
+      {
+        "year": 1990,
+        "path": "./wrestling-reference-pages/wcw/1990.generated.json",
+        "counts": {
+          "events": 108,
+          "episodes": 271,
+          "matches": 1400
+        }
+      },
+      {
+        "year": 1991,
+        "path": "./wrestling-reference-pages/wcw/1991.generated.json",
+        "counts": {
+          "events": 70,
+          "episodes": 220,
+          "matches": 1369
+        }
+      },
+      {
+        "year": 1992,
+        "path": "./wrestling-reference-pages/wcw/1992.generated.json",
+        "counts": {
+          "events": 118,
+          "episodes": 261,
+          "matches": 1352
+        }
+      },
+      {
+        "year": 1993,
+        "path": "./wrestling-reference-pages/wcw/1993.generated.json",
+        "counts": {
+          "events": 65,
+          "episodes": 183,
+          "matches": 933
+        }
+      },
+      {
+        "year": 1994,
+        "path": "./wrestling-reference-pages/wcw/1994.generated.json",
+        "counts": {
+          "events": 110,
+          "episodes": 207,
+          "matches": 1253
+        }
+      },
+      {
+        "year": 1995,
+        "path": "./wrestling-reference-pages/wcw/1995.generated.json",
+        "counts": {
+          "events": 58,
+          "episodes": 136,
+          "matches": 611
+        }
+      },
+      {
+        "year": 1996,
+        "path": "./wrestling-reference-pages/wcw/1996.generated.json",
+        "counts": {
+          "events": 111,
+          "episodes": 329,
+          "matches": 1211
+        }
+      },
+      {
+        "year": 1997,
+        "path": "./wrestling-reference-pages/wcw/1997.generated.json",
+        "counts": {
+          "events": 25,
+          "episodes": 255,
+          "matches": 1521
+        }
+      },
+      {
+        "year": 1998,
+        "path": "./wrestling-reference-pages/wcw/1998.generated.json",
+        "counts": {
+          "events": 67,
+          "episodes": 205,
+          "matches": 1646
+        }
+      },
+      {
+        "year": 1999,
+        "path": "./wrestling-reference-pages/wcw/1999.generated.json",
+        "counts": {
+          "events": 64,
+          "episodes": 233,
+          "matches": 1056
+        }
+      },
+      {
+        "year": 2000,
+        "path": "./wrestling-reference-pages/wcw/2000.generated.json",
+        "counts": {
+          "events": 28,
+          "episodes": 169,
+          "matches": 1180
+        }
+      },
+      {
+        "year": 2001,
+        "path": "./wrestling-reference-pages/wcw/2001.generated.json",
+        "counts": {
+          "events": 3,
+          "episodes": 46,
+          "matches": 192
+        }
+      }
+    ],
+    "wwe": [
+      {
+        "year": 1972,
+        "path": "./wrestling-reference-pages/wwe/1972.generated.json",
+        "counts": {
+          "episodes": 2,
+          "matches": 3
+        }
+      },
+      {
+        "year": 1973,
+        "path": "./wrestling-reference-pages/wwe/1973.generated.json",
+        "counts": {
+          "episodes": 5,
+          "matches": 1
+        }
+      },
+      {
+        "year": 1975,
+        "path": "./wrestling-reference-pages/wwe/1975.generated.json",
+        "counts": {
+          "episodes": 14,
+          "matches": 37
+        }
+      },
+      {
+        "year": 1976,
+        "path": "./wrestling-reference-pages/wwe/1976.generated.json",
+        "counts": {
+          "episodes": 39,
+          "matches": 160
+        }
+      },
+      {
+        "year": 1977,
+        "path": "./wrestling-reference-pages/wwe/1977.generated.json",
+        "counts": {
+          "episodes": 31,
+          "matches": 162
+        }
+      },
+      {
+        "year": 1978,
+        "path": "./wrestling-reference-pages/wwe/1978.generated.json",
+        "counts": {
+          "episodes": 56,
+          "matches": 127
+        }
+      },
+      {
+        "year": 1979,
+        "path": "./wrestling-reference-pages/wwe/1979.generated.json",
+        "counts": {
+          "episodes": 76,
+          "matches": 158
+        }
+      },
+      {
+        "year": 1980,
+        "path": "./wrestling-reference-pages/wwe/1980.generated.json",
+        "counts": {
+          "episodes": 70,
+          "matches": 217
+        }
+      },
+      {
+        "year": 1981,
+        "path": "./wrestling-reference-pages/wwe/1981.generated.json",
+        "counts": {
+          "episodes": 36,
+          "matches": 215
+        }
+      },
+      {
+        "year": 1982,
+        "path": "./wrestling-reference-pages/wwe/1982.generated.json",
+        "counts": {
+          "episodes": 63,
+          "matches": 442
+        }
+      },
+      {
+        "year": 1983,
+        "path": "./wrestling-reference-pages/wwe/1983.generated.json",
+        "counts": {
+          "episodes": 51,
+          "matches": 333
+        }
+      },
+      {
+        "year": 1984,
+        "path": "./wrestling-reference-pages/wwe/1984.generated.json",
+        "counts": {
+          "events": 1,
+          "episodes": 244,
+          "matches": 1190
+        }
+      },
+      {
+        "year": 1985,
+        "path": "./wrestling-reference-pages/wwe/1985.generated.json",
+        "counts": {
+          "events": 18,
+          "episodes": 322,
+          "matches": 1522
+        }
+      },
+      {
+        "year": 1986,
+        "path": "./wrestling-reference-pages/wwe/1986.generated.json",
+        "counts": {
+          "events": 21,
+          "episodes": 329,
+          "matches": 1339
+        }
+      },
+      {
+        "year": 1987,
+        "path": "./wrestling-reference-pages/wwe/1987.generated.json",
+        "counts": {
+          "events": 24,
+          "episodes": 277,
+          "matches": 956
+        }
+      },
+      {
+        "year": 1988,
+        "path": "./wrestling-reference-pages/wwe/1988.generated.json",
+        "counts": {
+          "events": 30,
+          "episodes": 235,
+          "matches": 1100
+        }
+      },
+      {
+        "year": 1989,
+        "path": "./wrestling-reference-pages/wwe/1989.generated.json",
+        "counts": {
+          "events": 35,
+          "episodes": 204,
+          "matches": 1164
+        }
+      },
+      {
+        "year": 1990,
+        "path": "./wrestling-reference-pages/wwe/1990.generated.json",
+        "counts": {
+          "events": 31,
+          "episodes": 348,
+          "matches": 1998
+        }
+      },
+      {
+        "year": 1991,
+        "path": "./wrestling-reference-pages/wwe/1991.generated.json",
+        "counts": {
+          "events": 28,
+          "episodes": 258,
+          "matches": 1097
+        }
+      },
+      {
+        "year": 1992,
+        "path": "./wrestling-reference-pages/wwe/1992.generated.json",
+        "counts": {
+          "events": 19,
+          "episodes": 185,
+          "matches": 1018
+        }
+      },
+      {
+        "year": 1993,
+        "path": "./wrestling-reference-pages/wwe/1993.generated.json",
+        "counts": {
+          "events": 13,
+          "episodes": 388,
+          "matches": 1370
+        }
+      },
+      {
+        "year": 1994,
+        "path": "./wrestling-reference-pages/wwe/1994.generated.json",
+        "counts": {
+          "events": 12,
+          "episodes": 325,
+          "matches": 1130
+        }
+      },
+      {
+        "year": 1995,
+        "path": "./wrestling-reference-pages/wwe/1995.generated.json",
+        "counts": {
+          "events": 21,
+          "episodes": 290,
+          "matches": 941
+        }
+      },
+      {
+        "year": 1996,
+        "path": "./wrestling-reference-pages/wwe/1996.generated.json",
+        "counts": {
+          "events": 29,
+          "episodes": 242,
+          "matches": 588
+        }
+      },
+      {
+        "year": 1997,
+        "path": "./wrestling-reference-pages/wwe/1997.generated.json",
+        "counts": {
+          "events": 28,
+          "episodes": 250,
+          "matches": 1431
+        }
+      },
+      {
+        "year": 1998,
+        "path": "./wrestling-reference-pages/wwe/1998.generated.json",
+        "counts": {
+          "events": 81,
+          "episodes": 346,
+          "matches": 1786
+        }
+      },
+      {
+        "year": 1999,
+        "path": "./wrestling-reference-pages/wwe/1999.generated.json",
+        "counts": {
+          "events": 64,
+          "episodes": 566,
+          "matches": 2994
+        }
+      },
+      {
+        "year": 2000,
+        "path": "./wrestling-reference-pages/wwe/2000.generated.json",
+        "counts": {
+          "events": 28,
+          "episodes": 688,
+          "matches": 4778
+        }
+      },
+      {
+        "year": 2001,
+        "path": "./wrestling-reference-pages/wwe/2001.generated.json",
+        "counts": {
+          "events": 28,
+          "episodes": 682,
+          "matches": 4214
+        }
+      },
+      {
+        "year": 2002,
+        "path": "./wrestling-reference-pages/wwe/2002.generated.json",
+        "counts": {
+          "events": 31,
+          "episodes": 490,
+          "matches": 1738
+        }
+      },
+      {
+        "year": 2003,
+        "path": "./wrestling-reference-pages/wwe/2003.generated.json",
+        "counts": {
+          "events": 27,
+          "episodes": 467,
+          "matches": 1554
+        }
+      },
+      {
+        "year": 2004,
+        "path": "./wrestling-reference-pages/wwe/2004.generated.json",
+        "counts": {
+          "events": 30,
+          "episodes": 493,
+          "matches": 1257
+        }
+      },
+      {
+        "year": 2005,
+        "path": "./wrestling-reference-pages/wwe/2005.generated.json",
+        "counts": {
+          "events": 34,
+          "episodes": 529,
+          "matches": 1646
+        }
+      },
+      {
+        "year": 2006,
+        "path": "./wrestling-reference-pages/wwe/2006.generated.json",
+        "counts": {
+          "events": 44,
+          "episodes": 455,
+          "matches": 1510
+        }
+      },
+      {
+        "year": 2007,
+        "path": "./wrestling-reference-pages/wwe/2007.generated.json",
+        "counts": {
+          "events": 38,
+          "episodes": 464,
+          "matches": 1540
+        }
+      },
+      {
+        "year": 2008,
+        "path": "./wrestling-reference-pages/wwe/2008.generated.json",
+        "counts": {
+          "events": 34,
+          "episodes": 423,
+          "matches": 1692
+        }
+      },
+      {
+        "year": 2009,
+        "path": "./wrestling-reference-pages/wwe/2009.generated.json",
+        "counts": {
+          "events": 30,
+          "episodes": 401,
+          "matches": 1624
+        }
+      },
+      {
+        "year": 2010,
+        "path": "./wrestling-reference-pages/wwe/2010.generated.json",
+        "counts": {
+          "events": 30,
+          "episodes": 372,
+          "matches": 1578
+        }
+      },
+      {
+        "year": 2011,
+        "path": "./wrestling-reference-pages/wwe/2011.generated.json",
+        "counts": {
+          "events": 15,
+          "episodes": 379,
+          "matches": 1595
+        }
+      },
+      {
+        "year": 2012,
+        "path": "./wrestling-reference-pages/wwe/2012.generated.json",
+        "counts": {
+          "events": 17,
+          "episodes": 472,
+          "matches": 2200
+        }
+      },
+      {
+        "year": 2013,
+        "path": "./wrestling-reference-pages/wwe/2013.generated.json",
+        "counts": {
+          "events": 14,
+          "episodes": 560,
+          "matches": 2518
+        }
+      },
+      {
+        "year": 2014,
+        "path": "./wrestling-reference-pages/wwe/2014.generated.json",
+        "counts": {
+          "events": 18,
+          "episodes": 540,
+          "matches": 2583
+        }
+      },
+      {
+        "year": 2015,
+        "path": "./wrestling-reference-pages/wwe/2015.generated.json",
+        "counts": {
+          "events": 23,
+          "episodes": 267,
+          "matches": 1310
+        }
+      },
+      {
+        "year": 2016,
+        "path": "./wrestling-reference-pages/wwe/2016.generated.json",
+        "counts": {
+          "events": 23,
+          "episodes": 264,
+          "matches": 1258
+        }
+      },
+      {
+        "year": 2017,
+        "path": "./wrestling-reference-pages/wwe/2017.generated.json",
+        "counts": {
+          "events": 28,
+          "episodes": 264,
+          "matches": 1224
+        }
+      },
+      {
+        "year": 2018,
+        "path": "./wrestling-reference-pages/wwe/2018.generated.json",
+        "counts": {
+          "events": 27,
+          "episodes": 285,
+          "matches": 1318
+        }
+      },
+      {
+        "year": 2019,
+        "path": "./wrestling-reference-pages/wwe/2019.generated.json",
+        "counts": {
+          "events": 30,
+          "episodes": 315,
+          "matches": 1493
+        }
+      },
+      {
+        "year": 2020,
+        "path": "./wrestling-reference-pages/wwe/2020.generated.json",
+        "counts": {
+          "events": 25,
+          "episodes": 318,
+          "matches": 1443
+        }
+      },
+      {
+        "year": 2021,
+        "path": "./wrestling-reference-pages/wwe/2021.generated.json",
+        "counts": {
+          "events": 31,
+          "episodes": 318,
+          "matches": 1579
+        }
+      },
+      {
+        "year": 2022,
+        "path": "./wrestling-reference-pages/wwe/2022.generated.json",
+        "counts": {
+          "events": 29,
+          "episodes": 249,
+          "matches": 1340
+        }
+      },
+      {
+        "year": 2023,
+        "path": "./wrestling-reference-pages/wwe/2023.generated.json",
+        "counts": {
+          "events": 30,
+          "episodes": 208,
+          "matches": 1149
+        }
+      },
+      {
+        "year": 2024,
+        "path": "./wrestling-reference-pages/wwe/2024.generated.json",
+        "counts": {
+          "events": 30,
+          "episodes": 210,
+          "matches": 1128
+        }
+      },
+      {
+        "year": 2025,
+        "path": "./wrestling-reference-pages/wwe/2025.generated.json",
+        "counts": {
+          "events": 38,
+          "episodes": 208,
+          "matches": 1054
+        }
+      },
+      {
+        "year": 2026,
+        "path": "./wrestling-reference-pages/wwe/2026.generated.json",
+        "counts": {
+          "events": 86,
+          "episodes": 266,
+          "matches": 1562
+        }
+      }
+    ]
+  },
+  "splitCounts": {
+    "events": 10547,
+    "episodes": 27742,
+    "matches": 141832
+  },
+  "sharedCounts": {
+    "sources": 27,
+    "promotions": 153,
+    "series": 363,
+    "people": 722,
+    "championships": 222,
+    "titleReigns": 5429,
+    "tournaments": 12
+  }
+}

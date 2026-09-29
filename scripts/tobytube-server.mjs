@@ -1,27 +1,46 @@
 ﻿import { createServer } from "node:http";
-import { createReadStream, watch } from "node:fs";
+import { createReadStream, readFileSync, watch } from "node:fs";
 import { mkdir, readFile, readdir, stat, writeFile } from "node:fs/promises";
 import { spawn } from "node:child_process";
 import { createHash } from "node:crypto";
+import { networkInterfaces } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadEnvFile } from "./env.mjs";
 import { resolveMediaBinary } from "./media-runtime.mjs";
+import { API_V1_VERSION, apiV1Contract, apiV1Error, apiV1Success, getApiV1Capabilities } from "./api-v1-contract.mjs";
+import { authenticateAccessToken, claimPairingCode, createAttemptLimiter, createAuthState, createPairingCode, revokeSession, rotateRefreshToken } from "./api-v1-auth.mjs";
+import { clearRating, createMixtape, createUserDataState, deleteMixtape, listMixtapes, recentActivity, setMixtapeItem, setProgress, setRating, updateMixtape } from "./api-v1-user-data.mjs";
+import { authorizedCollection, authorizedHome, authorizedItem, authorizedSearch, authorizedSection, buildCatalogueIndex, decodeCursor, resolveAuthorizedMedia } from "./api-v1-catalogue.mjs";
+import { authorizePlaybackStream, createPlaybackState, negotiatePlayback } from "./api-v1-playback.mjs";
 
 loadEnvFile();
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const metadataCatalogPath = path.join(root, "src", "metadata.generated.json");
 const config = await readConfig();
+const mediaSources = normalizeConfiguredMediaSources(config);
 const metadataOverridesPath = path.join(root, "config", "metadata-overrides.json");
 const collectionOverridesPath = path.join(root, "config", "collection-overrides.json");
+const usersPath = path.join(root, "config", "users.json");
+const apiV1AuthPath = path.join(root, "config", "api-v1-auth.json");
+const apiV1UserDataPath = path.join(root, "config", "api-v1-user-data.json");
+const apiV1ServerIdentity = await readJsonFile(path.join(root, "config", "api-v1-server.json"), { serverId: "unconfigured", displayName: "Tobytube Control Centre" });
+const tvSpecialsOverrides = await readJsonFile(path.join(root, "config", "tv-specials-overrides.json"), { shows: {} });
+const apiV1PlaybackState = createPlaybackState();
+const apiV1AttemptLimiter = createAttemptLimiter({ maximum: 8, windowMs: 15 * 60 * 1000 });
 const ffprobePath = await resolveMediaBinary("ffprobe", { configuredPath: process.env.FFPROBE_PATH || config.ffprobePath, root });
 const ffmpegPath = await resolveMediaBinary("ffmpeg", { configuredPath: process.env.FFMPEG_PATH || config.ffmpegPath, root });
 const optimizationJobs = new Map();
+const twdbRefreshStatusPath = path.join(root, "cache", "twdb-refresh-status.json");
+let twdbRefreshJob = { state: "idle", startedAt: null, finishedAt: null, error: null, result: null };
+let apiV1CatalogueCache = { key: null, items: null, curated: null };
 const playbackProbeCache = new Map();
 const playbackProbePending = new Map();
 const subtitleCache = new Map();
 const subtitleCachePending = new Map();
 const subtitleCacheDirectory = path.join(root, "cache", "subtitles");
+let metadataOverridesCache = { mtimeMs: null, size: null, value: null };
 const openSubtitles = {
   apiKey: process.env.OPENSUBTITLES_API_KEY ?? config.openSubtitles?.apiKey ?? null,
   token: process.env.OPENSUBTITLES_TOKEN ?? config.openSubtitles?.token ?? null,
@@ -34,6 +53,9 @@ let tvdbToken = null;
 let tvdbTokenExpiresAt = 0;
 const SERVER_BUILD_ID = "windows-migration-runtime-007";
 const port = Number(process.env.PORT ?? config.port ?? 8088);
+const lanAccessEnabled = process.env.TOBYTUBE_LAN_ACCESS === "true" || process.env.TOBYTUBE_LAN_BETA === "true";
+const lanHost = lanAccessEnabled ? resolvePrivateLanHost(process.env.TOBYTUBE_LAN_HOST) : null;
+const listenHosts = [...new Set(["127.0.0.1", lanHost].filter(Boolean))];
 const jellyfin = {
   url: normalizeBaseUrl(process.env.JELLYFIN_URL ?? config.jellyfin?.url),
   apiKey: process.env.JELLYFIN_API_KEY ?? config.jellyfin?.apiKey ?? null,
@@ -55,15 +77,29 @@ const status = {
   exitCode: null,
   error: null,
   stats: null,
-  mediaRoots: config.mediaRoots ?? [],
+  mediaRoots: mediaSources.map((source) => source.path),
+  mediaSources,
 };
 
-const server = createServer(async (request, response) => {
+const requestHandler = async (request, response) => {
   try {
     const url = new URL(request.url, `http://${request.headers.host}`);
 
+    if (url.pathname === "/api/v1" || url.pathname.startsWith("/api/v1/")) {
+      await handleApiV1(url, request, response);
+      return;
+    }
+
     if (url.pathname === "/api/metadata/status") {
       sendJson(response, status);
+      return;
+    }
+    if (url.pathname === "/api/twdb/refresh/status") {
+      sendJson(response, twdbRefreshJob);
+      return;
+    }
+    if (url.pathname === "/api/twdb/refresh" && request.method === "POST") {
+      await startTwdbRefresh(request, response);
       return;
     }
 
@@ -73,6 +109,10 @@ const server = createServer(async (request, response) => {
     }
     if (url.pathname === "/api/collections") {
       await handleCollections(request, response);
+      return;
+    }
+    if (url.pathname === "/api/users") {
+      await handleUsers(request, response);
       return;
     }
     if (url.pathname === "/api/assets/import" && request.method === "POST") {
@@ -184,15 +224,47 @@ const server = createServer(async (request, response) => {
       response.end(error.stack ?? String(error));
     }
   }
-});
+};
 
-server.listen(port, "127.0.0.1", () => {
-  console.log(`Tobytube preview running at http://127.0.0.1:${port}/`);
+let readyListeners = 0;
+for (const host of listenHosts) {
+  createServer(requestHandler).listen(port, host, () => {
+    console.log(`Tobytube preview running at http://${host}:${port}/`);
+    readyListeners += 1;
+    if (readyListeners === listenHosts.length) startServerServices();
+  });
+}
+
+function startServerServices() {
   startMediaWatchers();
   if (process.env.SCAN_ON_STARTUP !== "false" && config.scanOnStartup !== false) {
     runScan({ refreshNew: config.refreshNewProviders !== false });
   }
-});
+}
+
+function resolvePrivateLanHost(configuredHost) {
+  const explicit = String(configuredHost ?? "").trim();
+  if (explicit) return explicit;
+
+  const candidates = [];
+  for (const [interfaceName, addresses] of Object.entries(networkInterfaces())) {
+    if (/vpn|tunnel|nord|openvpn|wireguard|tailscale|zerotier/i.test(interfaceName)) continue;
+    for (const address of addresses ?? []) {
+      if (address.family !== "IPv4" || address.internal) continue;
+      const value = address.address;
+      const priority = value.startsWith("192.168.") ? 1
+        : /^172\.(1[6-9]|2\d|3[01])\./.test(value) ? 2
+          : value.startsWith("10.") ? 3 : 99;
+      if (priority < 99) candidates.push({ value, priority });
+    }
+  }
+
+  candidates.sort((left, right) => left.priority - right.priority || left.value.localeCompare(right.value));
+  if (!candidates.length) {
+    throw new Error("TTMV LAN access was requested, but no private Ethernet/Wi-Fi IPv4 address was found. Set TOBYTUBE_LAN_HOST to the trusted LAN address.");
+  }
+  return candidates[0].value;
+}
 
 function runScan({ refreshAll = false, refreshNew = config.refreshNewProviders !== false } = {}) {
   if (status.state === "scanning") {
@@ -205,14 +277,17 @@ function runScan({ refreshAll = false, refreshNew = config.refreshNewProviders !
   status.exitCode = null;
   status.error = null;
   status.stats = null;
-  status.mediaRoots = config.mediaRoots ?? [];
+  status.mediaRoots = mediaSources.map((source) => source.path);
+  status.mediaSources = mediaSources;
 
   const args = [path.join(root, "scripts", "metadata-pipeline.mjs")];
-  for (const mediaRoot of config.mediaRoots ?? []) {
-    args.push("--media-root", resolveConfiguredPath(mediaRoot));
+  for (const source of mediaSources) {
+    args.push("--media-source", `${source.id}|${source.type}`, resolveConfiguredPath(source.path));
   }
+  const canRefreshNew = refreshNew && isValidJsonFileSync(metadataCatalogPath);
+  if (refreshNew && !canRefreshNew) console.warn("Live catalogue is unavailable; rebuilding locally before provider hydration.");
   if (refreshAll) args.push("--refresh-providers");
-  else if (refreshNew) {
+  else if (canRefreshNew) {
     args.push("--refresh-new-providers");
     args.push("--provider-backfill-limit", String(config.providerBackfillLimit ?? 25));
   }
@@ -221,6 +296,7 @@ function runScan({ refreshAll = false, refreshNew = config.refreshNewProviders !
     cwd: root,
     env: process.env,
     stdio: ["ignore", "pipe", "pipe"],
+    windowsHide: true,
   });
 
   let stderr = "";
@@ -251,10 +327,19 @@ function runScan({ refreshAll = false, refreshNew = config.refreshNewProviders !
   });
 }
 
+function isValidJsonFileSync(filePath) {
+  try {
+    JSON.parse(readFileSync(filePath, "utf8"));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function startMediaWatchers() {
   if (config.watchMediaRoots === false) return;
-  for (const configuredRoot of config.mediaRoots ?? []) {
-    const mediaRoot = resolveConfiguredPath(configuredRoot);
+  for (const source of mediaSources) {
+    const mediaRoot = resolveConfiguredPath(source.path);
     try {
       const watcher = watch(mediaRoot, { recursive: true }, (_eventType, filename) => {
         if (!isRelevantMediaChange(filename)) return;
@@ -296,7 +381,15 @@ async function handleMetadataOverrides(request, response) {
     const items = { ...(current.items ?? {}) };
     for (const [id, patch] of Object.entries(body.overrides)) {
       if (!String(id).trim() || !patch || typeof patch !== "object") continue;
-      items[id] = { ...(items[id] ?? {}), ...patch, updatedAt: now };
+      const existing = items[id] ?? {};
+      items[id] = {
+        ...existing,
+        ...patch,
+        ...(patch.metadata && typeof patch.metadata === "object"
+          ? { metadata: { ...(existing.metadata ?? {}), ...patch.metadata } }
+          : {}),
+        updatedAt: now,
+      };
     }
     const next = { ...current, updatedAt: now, items };
     await writeMetadataOverrides(next);
@@ -324,6 +417,9 @@ async function updateMetadataOverride(itemId, patch) {
       [itemId]: {
         ...(current.items?.[itemId] ?? {}),
         ...patch,
+        ...(patch.metadata && typeof patch.metadata === "object"
+          ? { metadata: { ...(current.items?.[itemId]?.metadata ?? {}), ...patch.metadata } }
+          : {}),
         updatedAt: now,
       },
     },
@@ -357,6 +453,46 @@ async function handleCollections(request, response) {
   const next = { ...current, version: 1, updatedAt: saved.updatedAt, collections: { ...(current.collections ?? {}), [collectionId]: saved } };
   await writeJsonFile(collectionOverridesPath, next);
   sendJson(response, { ok: true, collection: saved, data: next });
+}
+
+async function handleUsers(request, response) {
+  const fallback = { version: 1, users: [] };
+  if (request.method === "GET") {
+    sendJson(response, await readJsonFile(usersPath, fallback));
+    return;
+  }
+  if (request.method !== "PUT" && request.method !== "POST") return sendApiError(response, 405, "Method not allowed");
+  const body = await readRequestJson(request);
+  const submitted = body.user ?? {};
+  const displayName = String(submitted.displayName ?? "").trim().slice(0, 80);
+  if (!displayName) return sendApiError(response, 400, "Display name is required");
+  const current = await readJsonFile(usersPath, fallback);
+  const id = String(submitted.id ?? "").trim().replace(/[^a-z0-9-]/gi, "-").replace(/-+/g, "-").replace(/^-|-$/g, "").toLowerCase()
+    || `user-${Date.now()}`;
+  const cleanList = (value, limit = 250) => [...new Set((Array.isArray(value) ? value : []).map((entry) => String(entry).trim()).filter(Boolean))].slice(0, limit);
+  const previous = (current.users ?? []).find((user) => user.id === id);
+  const now = new Date().toISOString();
+  const saved = {
+    id,
+    displayName,
+    role: submitted.role === "admin" ? "admin" : "viewer",
+    enabled: submitted.enabled !== false,
+    accessMode: submitted.accessMode === "collections-only" ? "collections-only" : "all-except-blocked",
+    allowedCollections: cleanList(submitted.allowedCollections),
+    blockedRatings: cleanList(submitted.blockedRatings, 50),
+    blockedItemIds: cleanList(submitted.blockedItemIds),
+    blockedFranchiseIds: cleanList(submitted.blockedFranchiseIds),
+    blockedPathRules: cleanList(submitted.blockedPathRules),
+    notes: String(submitted.notes ?? "").trim().slice(0, 1000),
+    createdAt: previous?.createdAt ?? now,
+    updatedAt: now,
+    lastActiveAt: previous?.lastActiveAt ?? null,
+    viewing: previous?.viewing ?? { records: [], favourites: [], totalSeconds: 0 },
+  };
+  const users = [...(current.users ?? []).filter((user) => user.id !== id), saved];
+  const next = { ...current, version: 1, updatedAt: now, users };
+  await writeJsonFile(usersPath, next);
+  sendJson(response, { ok: true, user: saved, data: next });
 }
 
 async function readJsonFile(filePath, fallback) {
@@ -399,7 +535,15 @@ function readRequestBuffer(request, limit) {
 
 async function readMetadataOverrides() {
   try {
-    return JSON.parse(await readFile(metadataOverridesPath, "utf8"));
+    const details = await stat(metadataOverridesPath);
+    if (metadataOverridesCache.value
+      && metadataOverridesCache.mtimeMs === details.mtimeMs
+      && metadataOverridesCache.size === details.size) {
+      return metadataOverridesCache.value;
+    }
+    const value = JSON.parse(await readFile(metadataOverridesPath, "utf8"));
+    metadataOverridesCache = { mtimeMs: details.mtimeMs, size: details.size, value };
+    return value;
   } catch {
     return { version: 1, updatedAt: null, items: {} };
   }
@@ -408,6 +552,8 @@ async function readMetadataOverrides() {
 async function writeMetadataOverrides(overrides) {
   await mkdir(path.dirname(metadataOverridesPath), { recursive: true });
   await writeFile(metadataOverridesPath, `${JSON.stringify(overrides, null, 2)}\n`, "utf8");
+  const details = await stat(metadataOverridesPath);
+  metadataOverridesCache = { mtimeMs: details.mtimeMs, size: details.size, value: overrides };
 }
 
 async function analyzeMedia(request, response) {
@@ -540,6 +686,219 @@ function delay(milliseconds) {
   return new Promise((resolve) => setTimeout(resolve, milliseconds));
 }
 
+async function handleApiV1(url, request, response) {
+  const headers = {
+    "content-type": "application/json; charset=utf-8",
+    "cache-control": "no-store",
+    "x-tobytube-api-version": API_V1_VERSION,
+  };
+  const send = (statusCode, body) => {
+    response.writeHead(statusCode, headers);
+    response.end(JSON.stringify(body, null, 2));
+  };
+  const discoveryPaths = new Set(["/api/v1", "/api/v1/capabilities", "/api/v1/contract"]);
+  if (discoveryPaths.has(url.pathname) && request.method !== "GET") {
+    send(405, apiV1Error("METHOD_NOT_ALLOWED", "This contract-discovery endpoint accepts GET only."));
+    return;
+  }
+  if (url.pathname === "/api/v1") {
+    const fingerprint = createHash("sha256").update(String(apiV1ServerIdentity.serverId)).digest("hex").match(/.{1,4}/g).slice(0, 4).join("-").toUpperCase();
+    send(200, apiV1Success({ name: apiV1Contract.name, version: API_V1_VERSION, stability: apiV1Contract.stability, server: { id: apiV1ServerIdentity.serverId, displayName: apiV1ServerIdentity.displayName, fingerprint }, capabilitiesUrl: "/api/v1/capabilities", contractUrl: "/api/v1/contract" }));
+    return;
+  }
+  if (url.pathname === "/api/v1/capabilities") {
+    send(200, apiV1Success(getApiV1Capabilities()));
+    return;
+  }
+  if (url.pathname === "/api/v1/contract") {
+    send(200, apiV1Success(apiV1Contract));
+    return;
+  }
+  if (url.pathname === "/api/v1/admin/pairing-codes" && request.method === "POST") {
+    if (!isLoopbackRequest(request)) return send(403, apiV1Error("LOCAL_CONTROL_CENTRE_REQUIRED", "Pairing codes can only be created from the local Control Centre."));
+    const body = await readRequestJson(request);
+    const users = await readJsonFile(usersPath, { users: [] });
+    const user = (users.users ?? []).find((entry) => entry.id === body.userId && entry.enabled !== false);
+    if (!user) return send(404, apiV1Error("USER_NOT_AVAILABLE", "The selected account is unavailable."));
+    const state = await readJsonFile(apiV1AuthPath, createAuthState());
+    const result = createPairingCode(state, user.id);
+    await writeJsonFile(apiV1AuthPath, state);
+    return send(201, apiV1Success(result));
+  }
+  if (url.pathname === "/api/v1/pairing/claim" && request.method === "POST") {
+    const throttleKey = `pair:${request.socket.remoteAddress ?? "unknown"}`;
+    if (!apiV1AttemptLimiter.allow(throttleKey)) return send(429, apiV1Error("TOO_MANY_ATTEMPTS", "Try again later."));
+    const state = await readJsonFile(apiV1AuthPath, createAuthState());
+    const result = claimPairingCode(state, await readRequestJson(request));
+    if (!result) { apiV1AttemptLimiter.recordFailure(throttleKey); return send(401, apiV1Error("PAIRING_FAILED", "The pairing code is invalid or expired.")); }
+    if (!(await isEnabledApiUser(result.session.userId))) return send(401, apiV1Error("PAIRING_FAILED", "The pairing code is invalid or expired."));
+    apiV1AttemptLimiter.clear(throttleKey);
+    await writeJsonFile(apiV1AuthPath, state);
+    return send(201, apiV1Success(result));
+  }
+  if (url.pathname === "/api/v1/auth/refresh" && request.method === "POST") {
+    const throttleKey = `refresh:${request.socket.remoteAddress ?? "unknown"}`;
+    if (!apiV1AttemptLimiter.allow(throttleKey)) return send(429, apiV1Error("TOO_MANY_ATTEMPTS", "Try again later."));
+    const state = await readJsonFile(apiV1AuthPath, createAuthState());
+    const result = rotateRefreshToken(state, (await readRequestJson(request)).refreshToken);
+    if (!result) { apiV1AttemptLimiter.recordFailure(throttleKey); return send(401, apiV1Error("REFRESH_FAILED", "The refresh token is invalid or expired.")); }
+    if (!(await isEnabledApiUser(result.session.userId))) return send(401, apiV1Error("REFRESH_FAILED", "The refresh token is invalid or expired."));
+    apiV1AttemptLimiter.clear(throttleKey);
+    await writeJsonFile(apiV1AuthPath, state);
+    return send(200, apiV1Success(result));
+  }
+  if (url.pathname === "/api/v1/auth/me" && request.method === "GET") {
+    const state = await readJsonFile(apiV1AuthPath, createAuthState());
+    const session = authenticateAccessToken(state, readBearerToken(request));
+    return session && await isEnabledApiUser(session.userId) ? send(200, apiV1Success({ session })) : send(401, apiV1Error("AUTHENTICATION_REQUIRED", "A valid access token is required."));
+  }
+  if (url.pathname === "/api/v1/auth/logout" && request.method === "POST") {
+    const state = await readJsonFile(apiV1AuthPath, createAuthState());
+    const session = authenticateAccessToken(state, readBearerToken(request));
+    if (!session) return send(401, apiV1Error("AUTHENTICATION_REQUIRED", "A valid access token is required."));
+    revokeSession(state, session.id);
+    await writeJsonFile(apiV1AuthPath, state);
+    return send(200, apiV1Success({ revoked: true }));
+  }
+  if (["/api/v1/home", "/api/v1/search"].includes(url.pathname) || /^\/api\/v1\/(?:items|sections|collections)\/[^/]+$/.test(url.pathname) || url.pathname === "/api/v1/playback/sessions" || /^\/api\/v1\/playback\/(?:streams|subtitles)\/[^/]+(?:\/[^/]+)?$/.test(url.pathname)) {
+    const context = await authenticateApiContext(request);
+    if (!context) return send(401, apiV1Error("AUTHENTICATION_REQUIRED", "A valid access token is required."));
+    const { items, curated } = await readApiV1Catalogue();
+    const apiUserDataState = await readJsonFile(apiV1UserDataPath, createUserDataState());
+    const apiUserData = apiUserDataState.users?.[context.user.id] ?? null;
+    try {
+      if (url.pathname === "/api/v1/home" && request.method === "GET") return send(200, apiV1Success(authorizedHome(context.user, items, 20, curated, apiUserData)));
+      const sectionMatch = url.pathname.match(/^\/api\/v1\/sections\/([^/]+)$/);
+      if (sectionMatch && request.method === "GET") return send(200, apiV1Success(authorizedSection(context.user, items, decodeURIComponent(sectionMatch[1]), 20, curated, apiUserData)));
+      const collectionMatch = url.pathname.match(/^\/api\/v1\/collections\/([^/]+)$/);
+      if (collectionMatch && request.method === "GET") return send(200, apiV1Success(authorizedCollection(context.user, items, decodeURIComponent(collectionMatch[1]), 200, curated)));
+      if (url.pathname === "/api/v1/search" && request.method === "GET") return send(200, apiV1Success(authorizedSearch(context.user, items, url.searchParams.get("q"), Math.min(100, Number(url.searchParams.get("limit")) || 30), decodeCursor(url.searchParams.get("cursor")))));
+      const itemMatch = url.pathname.match(/^\/api\/v1\/items\/([^/]+)$/);
+      if (itemMatch && request.method === "GET") return send(200, apiV1Success({ item: authorizedItem(context.user, items, decodeURIComponent(itemMatch[1])) }));
+      if (url.pathname === "/api/v1/playback/sessions" && request.method === "POST") {
+        const body = await readRequestJson(request); const item = resolveAuthorizedMedia(context.user, items, body.itemId); const file = item.file;
+        const externalSubtitles = await findExternalSubtitles(file.path);
+        const streams = { ...(file.streams ?? {}), subtitles: [...(file.streams?.subtitles ?? []), ...externalSubtitles] };
+        const decision = negotiatePlayback(apiV1PlaybackState, { user: context.user, deviceSession: context.session, item, media: { sourcePath: file.path, container: path.extname(file.path).slice(1), durationSeconds: item.durationSeconds, streams }, clientCapabilities: body.capabilities, resumeSeconds: body.resumeSeconds });
+        const decisionUrl = new URL(`${request.socket.encrypted ? "https" : "http"}://${request.headers.host}/api/v1/playback/streams/${decision.sessionId}`);
+        if (decision.delivery === "transcode" && decision.resumeSeconds > 0) decisionUrl.searchParams.set("start", String(decision.resumeSeconds));
+        decision.url = decisionUrl.toString();
+        decision.tracks = decision.tracks.map((track) => track.external ? { ...track, url: `${decisionUrl.origin}/api/v1/playback/subtitles/${decision.sessionId}/${encodeURIComponent(track.id)}` } : track);
+        return send(201, apiV1Success({ decision }));
+      }
+      const streamMatch = url.pathname.match(/^\/api\/v1\/playback\/streams\/([^/]+)$/);
+      if (streamMatch && request.method === "GET") {
+        const playback = authorizePlaybackStream(apiV1PlaybackState, { sessionId: decodeURIComponent(streamMatch[1]), deviceSession: context.session });
+        const internalUrl = new URL(url); internalUrl.searchParams.set("path", playback.sourcePath); internalUrl.searchParams.set("mode", playback.profile.delivery === "transcode" ? "local-transcode" : "direct");
+        return streamPlayback(internalUrl, request, response);
+      }
+      const subtitleMatch = url.pathname.match(/^\/api\/v1\/playback\/subtitles\/([^/]+)\/([^/]+)$/);
+      if (subtitleMatch && request.method === "GET") {
+        const playback = authorizePlaybackStream(apiV1PlaybackState, { sessionId: decodeURIComponent(subtitleMatch[1]), deviceSession: context.session });
+        const subtitle = playback.subtitleSources?.find((entry) => entry.id === decodeURIComponent(subtitleMatch[2]));
+        if (!subtitle) return send(404, apiV1Error("SUBTITLE_NOT_AVAILABLE", "That subtitle track is unavailable."));
+        const internalUrl = new URL(url); internalUrl.searchParams.set("path", playback.sourcePath); internalUrl.searchParams.set("subtitleStreamIndex", subtitle.id); internalUrl.searchParams.set("subtitlePath", subtitle.path);
+        return streamSubtitle(internalUrl, response);
+      }
+      return send(405, apiV1Error("METHOD_NOT_ALLOWED", "This authorized media operation is not supported."));
+    } catch (error) { return send(error.statusCode ?? 400, apiV1Error(error.code ?? "MEDIA_NOT_AVAILABLE", error.message)); }
+  }
+  if (["/api/v1/mixtapes", "/api/v1/activity/recent"].includes(url.pathname) || /^\/api\/v1\/(?:mixtapes|ratings|progress)\//.test(url.pathname)) {
+    const authState = await readJsonFile(apiV1AuthPath, createAuthState());
+    const session = authenticateAccessToken(authState, readBearerToken(request));
+    if (!session || !(await isEnabledApiUser(session.userId))) return send(401, apiV1Error("AUTHENTICATION_REQUIRED", "A valid access token is required."));
+    const dataState = await readJsonFile(apiV1UserDataPath, createUserDataState());
+    const userDataExisted = Object.hasOwn(dataState.users ?? {}, session.userId);
+    try {
+      let result;
+      let changed = false;
+      if (url.pathname === "/api/v1/mixtapes" && request.method === "GET") result = { mixtapes: listMixtapes(dataState, session.userId) };
+      else if (url.pathname === "/api/v1/mixtapes" && request.method === "POST") { result = { mixtape: createMixtape(dataState, session.userId, (await readRequestJson(request)).name) }; changed = true; }
+      else if (url.pathname === "/api/v1/activity/recent" && request.method === "GET") result = { activity: recentActivity(dataState, session.userId, url.searchParams.get("limit")) };
+      else {
+        const mixtapeItem = url.pathname.match(/^\/api\/v1\/mixtapes\/([^/]+)\/items\/([^/]+)$/);
+        const mixtape = url.pathname.match(/^\/api\/v1\/mixtapes\/([^/]+)$/);
+        const rating = url.pathname.match(/^\/api\/v1\/ratings\/([^/]+)$/);
+        const progress = url.pathname.match(/^\/api\/v1\/progress\/([^/]+)$/);
+        if (mixtapeItem && ["PUT", "DELETE"].includes(request.method)) { const body = await readRequestJson(request); result = { mixtape: setMixtapeItem(dataState, session.userId, decodeURIComponent(mixtapeItem[1]), decodeURIComponent(mixtapeItem[2]), request.method === "PUT", body.version) }; changed = true; }
+        else if (mixtape && request.method === "PUT") { const body = await readRequestJson(request); result = { mixtape: updateMixtape(dataState, session.userId, decodeURIComponent(mixtape[1]), body, body.version) }; changed = true; }
+        else if (mixtape && request.method === "DELETE") { const body = await readRequestJson(request); result = { deleted: deleteMixtape(dataState, session.userId, decodeURIComponent(mixtape[1]), body.version) }; changed = true; }
+        else if (rating && request.method === "PUT") { result = { rating: setRating(dataState, session.userId, decodeURIComponent(rating[1]), (await readRequestJson(request)).quarterStars) }; changed = true; }
+        else if (rating && request.method === "DELETE") { result = { deleted: clearRating(dataState, session.userId, decodeURIComponent(rating[1])) }; changed = true; }
+        else if (progress && request.method === "PUT") { const body = await readRequestJson(request); result = { progress: setProgress(dataState, session.userId, { ...body, itemId: decodeURIComponent(progress[1]) }) }; changed = true; }
+        else return send(405, apiV1Error("METHOD_NOT_ALLOWED", "This user-data operation is not supported."));
+      }
+      if (changed || !userDataExisted) await writeJsonFile(apiV1UserDataPath, dataState);
+      return send(200, apiV1Success(result));
+    } catch (error) {
+      return send(error.statusCode ?? 400, apiV1Error(error.code ?? "INVALID_USER_DATA", error.message, error.details));
+    }
+  }
+  const matchingRoutes = apiV1Contract.routes.filter((route) => {
+    const pattern = route.path.replace(/\{[^/]+\}/g, "[^/]+");
+    return new RegExp(`^${pattern}$`).test(url.pathname);
+  });
+  if (matchingRoutes.some((route) => route.method === request.method)) {
+    send(501, apiV1Error("NOT_IMPLEMENTED", "This Phase 1 capability is contracted but not available yet."));
+    return;
+  }
+  if (matchingRoutes.length) {
+    send(405, apiV1Error("METHOD_NOT_ALLOWED", `Use ${matchingRoutes.map((route) => route.method).join(" or ")} for this route.`));
+    return;
+  }
+  send(404, apiV1Error("NOT_FOUND", "No API v1 route matches this request."));
+}
+
+async function readApiV1Catalogue() {
+  const paths = {
+    metadata: path.join(root, "src", "metadata.generated.json"),
+    overrides: metadataOverridesPath,
+    movies: path.join(root, "src", "movie-detail.generated.json"),
+    tv: path.join(root, "src", "tv-detail.generated.json"),
+    curated: path.join(root, "src", "curated-manifest.generated.json"),
+    mcu: path.join(root, "src", "mcu-collection.generated.json"),
+    criterion: path.join(root, "src", "criterion-collection.generated.json"),
+    collectionOverrides: collectionOverridesPath,
+  };
+  const signatures = await Promise.all(Object.values(paths).map(async (filePath) => { const info = await stat(filePath).catch(() => null); return `${filePath}:${info?.mtimeMs ?? 0}:${info?.size ?? 0}`; }));
+  const key = signatures.join("|");
+  if (apiV1CatalogueCache.key === key && apiV1CatalogueCache.items) return apiV1CatalogueCache;
+  const [metadata, overrides, movieDetails, tvDetails, curatedBase, mcu, criterion, collectionOverrides] = await Promise.all([
+    readJsonFile(paths.metadata, { records: [] }), readJsonFile(paths.overrides, { items: {} }),
+    readJsonFile(paths.movies, { movies: {} }), readJsonFile(paths.tv, { shows: {} }),
+    readJsonFile(paths.curated, { collections: {} }), readJsonFile(paths.mcu, { collection: null }),
+    readJsonFile(paths.criterion, { collection: null }),
+    readJsonFile(paths.collectionOverrides, { collections: {} }),
+  ]);
+  const curated = { ...curatedBase, criterion, criterionManifest: curatedBase.criterion, collectionOverrides, specialCollections: { mcu: mcu.collection, criterion } };
+  apiV1CatalogueCache = { key, items: buildCatalogueIndex(metadata, { overrides, movieDetails: movieDetails.movies, tvDetails: tvDetails.shows }), curated };
+  return apiV1CatalogueCache;
+}
+
+function readBearerToken(request) {
+  const match = String(request.headers.authorization ?? "").match(/^Bearer\s+(.+)$/i);
+  return match?.[1] ?? "";
+}
+
+function isLoopbackRequest(request) {
+  const address = String(request.socket.remoteAddress ?? "").toLowerCase();
+  return address === "127.0.0.1" || address === "::1" || address === "::ffff:127.0.0.1";
+}
+
+async function isEnabledApiUser(userId) {
+  const users = await readJsonFile(usersPath, { users: [] });
+  return Boolean((users.users ?? []).find((user) => user.id === userId && user.enabled !== false));
+}
+
+async function authenticateApiContext(request) {
+  const authState = await readJsonFile(apiV1AuthPath, createAuthState());
+  const session = authenticateAccessToken(authState, readBearerToken(request));
+  if (!session) return null;
+  const users = await readJsonFile(usersPath, { users: [] });
+  const user = (users.users ?? []).find((entry) => entry.id === session.userId && entry.enabled !== false);
+  return user ? { session, user } : null;
+}
+
 function sendApiError(response, statusCode, error, extra = {}) {
   response.writeHead(statusCode, { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" });
   response.end(JSON.stringify({ ok: false, error, ...extra }, null, 2));
@@ -576,6 +935,7 @@ function runNodeScript(args) {
       cwd: root,
       env: process.env,
       stdio: ["ignore", "pipe", "pipe"],
+      windowsHide: true,
     });
     let stdout = "";
     let stderr = "";
@@ -591,6 +951,27 @@ function runNodeScript(args) {
       resolve({ ok: code === 0, exitCode: code, stdout: stdout.trim(), error: code === 0 ? null : stderr.trim() || `Script exited with ${code}` });
     });
   });
+}
+
+async function startTwdbRefresh(request, response) {
+  if (twdbRefreshJob.state === "running") return sendApiError(response, 409, "A TWDB refresh is already running");
+  const body = await readRequestJson(request);
+  const promotion = String(body.promotion ?? "all").toLowerCase();
+  const year = Number(body.year ?? new Date().getFullYear());
+  if (!["all", "wwe", "aew", "tna"].includes(promotion)) return sendApiError(response, 400, "Unsupported TWDB refresh scope");
+  if (!Number.isInteger(year) || year < 1900 || year > 2100) return sendApiError(response, 400, "Invalid TWDB refresh year");
+  twdbRefreshJob = { state: "running", promotion, year, startedAt: new Date().toISOString(), finishedAt: null, error: null, result: null };
+  const child = spawn(process.execPath, [path.join(root, "scripts", "refresh-twdb.mjs"), `--promotion=${promotion}`, `--year=${year}`], { cwd: root, env: process.env, windowsHide: true, stdio: ["ignore", "pipe", "pipe"] });
+  let output = "";
+  child.stdout.on("data", (chunk) => { output = `${output}${chunk}`.slice(-20000); process.stdout.write(chunk); });
+  child.stderr.on("data", (chunk) => { output = `${output}${chunk}`.slice(-20000); process.stderr.write(chunk); });
+  child.on("close", async (code) => {
+    let result = null;
+    try { result = JSON.parse(await readFile(twdbRefreshStatusPath, "utf8")); } catch {}
+    const fallbackError = output.slice(-2000) || `Refresh exited with ${code}`;
+    twdbRefreshJob = { ...twdbRefreshJob, state: code === 0 ? "ready" : "error", finishedAt: new Date().toISOString(), error: code === 0 ? null : (result?.error ?? fallbackError), result };
+  });
+  sendJson(response, { ok: true, job: twdbRefreshJob });
 }
 async function searchMetadataMatch(url, response) {
   const title = String(url.searchParams.get("title") ?? "").trim();
@@ -626,9 +1007,8 @@ async function searchMetadataMatch(url, response) {
     // Broaden only when the user leaves the year blank so exact-year matches
     // cannot be crowded out by similarly titled releases from other years.
     const searches = year ? [year] : [null];
-    const candidates = [];
-    for (const endpointType of endpointTypes) {
-      for (const searchYear of searches) {
+    const candidates = (await Promise.all(endpointTypes.flatMap((endpointType) =>
+      searches.map(async (searchYear) => {
         const target = new URL(`https://api.themoviedb.org/3/search/${endpointType}`);
         target.searchParams.set("query", title);
         target.searchParams.set("include_adult", "false");
@@ -638,9 +1018,9 @@ async function searchMetadataMatch(url, response) {
         const upstream = await fetch(target, { headers });
         if (!upstream.ok) throw new Error(`TMDB search failed: ${upstream.status}`);
         const payload = await upstream.json();
-        candidates.push(...(payload.results ?? []).map((item) => ({ ...item, _endpointType: endpointType })));
-      }
-    }
+        return (payload.results ?? []).map((item) => ({ ...item, _endpointType: endpointType }));
+      })
+    ))).flat();
     const combined = [...new Map(candidates.map((item) => [`${item._endpointType}:${item.id}`, item])).values()];
     const results = combined.slice(0, 20).map((item) => {
       const releaseDate = item.release_date ?? item.first_air_date ?? "";
@@ -653,7 +1033,9 @@ async function searchMetadataMatch(url, response) {
     });
     sendJson(response, { results, broadenedSearch: false });
   } catch (error) {
-    const detail = error?.cause?.message ?? error.message ?? String(error);
+    const detail = [error?.cause?.code, error?.cause?.message, error?.message]
+      .filter((value, index, values) => value && values.indexOf(value) === index)
+      .join(": ") || "network request failed";
     sendApiError(response, 502, `TMDB could not be reached: ${detail}`);
   }
 }
@@ -673,6 +1055,7 @@ async function hydrateMetadataMatch(request, response) {
   const mediaType = String(body.mediaType ?? "movie").toLowerCase();
   if (!itemId || !providerId) return sendApiError(response, 400, "itemId and providerId are required");
   const provider = String(body.provider ?? "TMDB").toUpperCase();
+  const isWrestlingItem = String(body.identity?.mediaType ?? "").toLowerCase() === "wrestling";
 
   try {
     let metadata;
@@ -680,31 +1063,57 @@ async function hydrateMetadataMatch(request, response) {
       metadata = await hydrateTwdbMetadata(providerId);
       const match = { ...(body.match ?? {}), provider: "TWDB", providerId, hydratedAt: new Date().toISOString() };
       const override = await updateMetadataOverride(itemId, { match, metadata, identity: body.identity ?? null, matchedFilePaths: normalizeMatchedFilePaths(body.matchedFilePaths) });
-      sendJson(response, { ok: true, itemId, match, metadata, override });
+      sendJson(response, { ok: true, itemId, match, metadata, override: withoutMetadataPayload(override) });
       return;
     }
     if (provider === "TVDB") {
+      if (isWrestlingItem) return sendApiError(response, 400, "TVDB cannot replace wrestling metadata. Use TWDB for event data or TMDB for artwork.");
       metadata = await hydrateTvdbMetadata(providerId, mediaType, body);
       const match = { ...(body.match ?? {}), provider: "TVDB", providerId, hydratedAt: new Date().toISOString() };
       const override = await updateMetadataOverride(itemId, { match, metadata, identity: body.identity ?? null, matchedFilePaths: normalizeMatchedFilePaths(body.matchedFilePaths) });
-      sendJson(response, { ok: true, itemId, match, metadata, override });
+      sendJson(response, { ok: true, itemId, match, metadata, override: withoutMetadataPayload(override) });
+      return;
+    }
+    if (isWrestlingItem) {
+      const details = await fetchTmdbJson(`/movie/${providerId}`);
+      const artwork = {
+        posterUrl: tmdbImage(details.poster_path, "w342"),
+        backdropUrl: tmdbImage(details.backdrop_path, "w780"),
+        artworkTmdbId: details.id,
+        artworkProvider: "TMDB",
+        hydratedAt: new Date().toISOString(),
+      };
+      const current = await readMetadataOverrides();
+      const existing = current.items?.[itemId] ?? {};
+      metadata = { ...(existing.metadata ?? {}), ...Object.fromEntries(Object.entries(artwork).filter(([, value]) => value != null)) };
+      const artworkMatch = { ...(body.match ?? {}), provider: "TMDB", providerId, purpose: "artwork", hydratedAt: new Date().toISOString() };
+      const override = await updateMetadataOverride(itemId, { ...existing, artworkMatch, metadata, identity: { ...(body.identity ?? {}), mediaType: "wrestling" }, matchedFilePaths: normalizeMatchedFilePaths(body.matchedFilePaths) });
+      sendJson(response, { ok: true, itemId, match: existing.match ?? null, artworkMatch, metadata, override: withoutMetadataPayload(override), artworkOnly: true });
       return;
     }
     if (mediaType === "episode") {
       const seasonNumber = Number(body.seasonNumber);
       const episodeNumber = Number(body.episodeNumber);
-      if (!seasonNumber || !episodeNumber) return sendApiError(response, 400, "Episode season and episode numbers are required");
+      if (!Number.isInteger(seasonNumber) || seasonNumber < 0 || !Number.isInteger(episodeNumber) || episodeNumber < 1) return sendApiError(response, 400, "Episode season and episode numbers are required");
       const details = await fetchTmdbJson(`/tv/${providerId}/season/${seasonNumber}/episode/${episodeNumber}`, { append_to_response: "credits,external_ids" });
       metadata = normalizeTmdbEpisode(details, body.showId, seasonNumber, episodeNumber);
     } else if (mediaType === "tv") {
       const details = await fetchTmdbJson(`/tv/${providerId}`, { append_to_response: "aggregate_credits,content_ratings,external_ids" });
-      const seasons = await Promise.all((details.seasons ?? []).filter((season) => season.season_number > 0).map(async (season) => {
-        try {
-          return await fetchTmdbJson(`/tv/${providerId}/season/${season.season_number}`, { append_to_response: "credits" });
-        } catch {
-          return season;
-        }
-      }));
+      const requestedSeasonNumbers = new Set((body.seasonNumbers ?? []).map(Number).filter((value) => Number.isInteger(value) && value >= 0));
+      const seasonStubs = (details.seasons ?? []).filter((season) =>
+        season.season_number >= 0 && (!requestedSeasonNumbers.size || requestedSeasonNumbers.has(season.season_number))
+      );
+      const seasons = [];
+      for (let index = 0; index < seasonStubs.length; index += 4) {
+        const batch = seasonStubs.slice(index, index + 4);
+        seasons.push(...await Promise.all(batch.map(async (season) => {
+          try {
+            return await fetchTmdbJson(`/tv/${providerId}/season/${season.season_number}`, { append_to_response: "credits" });
+          } catch {
+            return season;
+          }
+        })));
+      }
       metadata = normalizeTmdbShow(details, seasons, itemId);
     } else {
       const details = await fetchTmdbJson(`/movie/${providerId}`, { append_to_response: "credits,release_dates,external_ids" });
@@ -712,10 +1121,16 @@ async function hydrateMetadataMatch(request, response) {
     }
     const match = { ...(body.match ?? {}), provider: "TMDB", providerId, hydratedAt: new Date().toISOString() };
     const override = await updateMetadataOverride(itemId, { match, metadata, identity: body.identity ?? null, matchedFilePaths: normalizeMatchedFilePaths(body.matchedFilePaths) });
-    sendJson(response, { ok: true, itemId, match, metadata, override });
+    sendJson(response, { ok: true, itemId, match, metadata, override: withoutMetadataPayload(override) });
   } catch (error) {
     sendApiError(response, 502, `${provider} metadata hydration failed: ${error?.cause?.message ?? error.message ?? String(error)}`);
   }
+}
+
+function withoutMetadataPayload(override) {
+  if (!override || typeof override !== "object") return override;
+  const { metadata, ...compact } = override;
+  return compact;
 }
 
 async function sendTmdbPersonFilmography(url, response) {
@@ -823,7 +1238,10 @@ async function hydrateTwdbMetadata(providerId) {
   const db = await readTwdb();
   const record = [...(db.events ?? []), ...(db.episodes ?? [])].find((entry) => entry.id === providerId);
   if (!record) throw new Error(`TWDB record ${providerId} was not found`);
-  const matches = (db.matches ?? []).filter((match) => match.eventId === providerId).sort((a, b) => Number(a.order ?? 999) - Number(b.order ?? 999));
+  const matches = (db.matches ?? [])
+    .filter((match) => match.eventId === providerId)
+    .sort((a, b) => Number(a.order ?? 999) - Number(b.order ?? 999))
+    .map((entry) => ({ ...entry, match: entry.match ?? entry.displayText ?? entry.raw ?? "Match" }));
   const metadata = {
     mediaType: "wrestling",
     twdbId: providerId,
@@ -843,6 +1261,8 @@ async function hydrateTwdbMetadata(providerId) {
     mainEvent: record.mainEvent ?? matches.at(-1)?.displayText ?? matches.at(-1)?.match ?? null,
     matches,
     matchCount: matches.length || record.matchCount || 0,
+    inductions: record.inductions ?? [],
+    inductionCount: record.inductions?.length ?? 0,
     posterUrl: record.posterUrl ?? record.art?.posterUrl ?? undefined,
     backdropUrl: record.backdropUrl ?? record.art?.backdropUrl ?? undefined,
     hydratedAt: new Date().toISOString(),
@@ -965,13 +1385,36 @@ function normalizeTmdbShow(details, hydratedSeasons = [], showId = null) {
     genres: details.genres?.map((genre) => genre.name) ?? [], ratings: { tmdb: details.vote_average ?? null },
     tmdbId: details.id, externalIds: details.external_ids ?? {}, posterUrl: tmdbImage(details.poster_path, "w342"), backdropUrl: tmdbImage(details.backdrop_path, "w780"),
     cast: normalizeTmdbCast(details.aggregate_credits?.cast),
-    seasons: hydratedSeasons.filter((season) => season.season_number > 0).map((season) => ({
-      seasonNumber: season.season_number, title: season.name || `Season ${season.season_number}`, overview: season.overview ?? "",
+    seasons: hydratedSeasons.filter((season) => season.season_number >= 0).map((season) => ({
+      seasonNumber: season.season_number, title: season.season_number === 0 ? tvSpecialsOverrides.shows?.[showId]?.seasonTitle || season.name || "Specials" : season.name || `Season ${season.season_number}`, overview: season.overview ?? "",
       airDate: season.air_date ?? null, episodeCount: season.episodes?.length ?? season.episode_count ?? null,
       posterUrl: tmdbImage(season.poster_path, "w342"), cast: normalizeTmdbCast(season.credits?.cast),
-      episodes: (season.episodes ?? []).map((episode) => normalizeTmdbEpisode(episode, showId, season.season_number, episode.episode_number)),
+      episodes: season.season_number === 0 && tvSpecialsOverrides.shows?.[showId]?.episodes?.length
+        ? buildAggregateTmdbSpecials(showId, season.episodes ?? [], tvSpecialsOverrides.shows[showId].episodes, details)
+        : (season.episodes ?? []).map((episode) => normalizeTmdbEpisode(episode, showId, season.season_number, episode.episode_number)),
     })), hydratedAt: new Date().toISOString(),
   };
+}
+
+function buildAggregateTmdbSpecials(showId, tmdbEpisodes, overrides, details) {
+  const byNumber = new Map(tmdbEpisodes.map((episode) => [Number(episode.episode_number), episode]));
+  return overrides.map((override) => {
+    const sources = (override.tmdbEpisodes ?? []).map((number) => byNumber.get(Number(number))).filter(Boolean);
+    const first = sources[0] ?? null;
+    const runtimes = sources.map((episode) => Number(episode.runtime)).filter(Number.isFinite);
+    const episodeNumber = Number(override.episodeNumber);
+    return {
+      id: showId ? `${showId}-s00-e${String(episodeNumber).padStart(2, "0")}` : null,
+      mediaType: "episode", showId: showId ?? null, seasonNumber: 0, episodeNumber,
+      title: override.title || first?.name || `Special ${episodeNumber}`,
+      summary: override.overview ?? sources.map((episode) => episode.overview).filter(Boolean).join(" "),
+      overview: override.overview ?? sources.map((episode) => episode.overview).filter(Boolean).join(" "),
+      airDate: override.airDate ?? first?.air_date ?? null,
+      runtime: runtimes.length ? runtimes.reduce((total, runtime) => total + runtime, 0) : details.episode_run_time?.[0] ?? null,
+      stillUrl: tmdbImage(first?.still_path, "w500"), aggregate: sources.length > 1,
+      tmdbEpisodeNumbers: sources.map((episode) => episode.episode_number), hydratedAt: new Date().toISOString(),
+    };
+  });
 }
 
 function normalizeTmdbEpisode(details, showId, seasonNumber, episodeNumber) {
@@ -1029,7 +1472,7 @@ async function streamMedia(url, request, response) {
 
   if (!range) {
     response.writeHead(200, { ...headers, "content-length": fileStats.size });
-    createReadStream(filePath).pipe(response);
+    createReadStream(filePath, { highWaterMark: 1024 * 1024 }).pipe(response);
     return;
   }
 
@@ -1053,7 +1496,7 @@ async function streamMedia(url, request, response) {
     "content-length": end - start + 1,
     "content-range": `bytes ${start}-${end}/${fileStats.size}`,
   });
-  createReadStream(filePath, { start, end }).pipe(response);
+  createReadStream(filePath, { start, end, highWaterMark: 1024 * 1024 }).pipe(response);
 }
 
 async function streamPlayback(url, request, response) {
@@ -1265,6 +1708,10 @@ async function searchOpenSubtitles(url, response) {
   const target = new URL("https://api.opensubtitles.com/api/v1/subtitles");
   target.searchParams.set("query", query);
   target.searchParams.set("languages", String(url.searchParams.get("languages") ?? "en"));
+  ["type", "tmdb_id", "imdb_id", "year", "season_number", "episode_number"].forEach((name) => {
+    const value = String(url.searchParams.get(name) ?? "").trim();
+    if (value) target.searchParams.set(name, value);
+  });
   target.searchParams.set("order_by", "download_count");
   target.searchParams.set("order_direction", "desc");
   const upstream = await fetch(target, { headers: openSubtitlesHeaders() });
@@ -1279,8 +1726,19 @@ async function searchOpenSubtitles(url, response) {
       release: attributes.release || attributes.feature_details?.title || file.file_name,
       hearingImpaired: Boolean(attributes.hearing_impaired),
       downloadCount: attributes.download_count ?? 0,
+      seasonNumber: attributes.feature_details?.season_number ?? null,
+      episodeNumber: attributes.feature_details?.episode_number ?? null,
+      featureTitle: attributes.feature_details?.title ?? null,
+      featureYear: attributes.feature_details?.year ?? null,
     }));
-  }).filter((entry) => entry.fileId);
+  }).filter((entry) => entry.fileId)
+    .filter((entry) => {
+      const requestedSeason = Number(url.searchParams.get("season_number"));
+      const requestedEpisode = Number(url.searchParams.get("episode_number"));
+      if (!requestedSeason || !requestedEpisode) return true;
+      if (entry.seasonNumber == null || entry.episodeNumber == null) return true;
+      return Number(entry.seasonNumber) === requestedSeason && Number(entry.episodeNumber) === requestedEpisode;
+    });
   sendJson(response, { ok: true, results });
 }
 
@@ -1298,7 +1756,8 @@ async function downloadOpenSubtitle(request, response) {
   if (!upstream.ok || !payload.link) return sendApiError(response, upstream.status || 502, payload.message || "OpenSubtitles download failed");
   const fileResponse = await fetch(payload.link);
   if (!fileResponse.ok) return sendApiError(response, fileResponse.status, "Subtitle file download failed");
-  const outputPath = path.join(path.dirname(mediaPath), `${path.basename(mediaPath, path.extname(mediaPath))}.en.opensubtitles.srt`);
+  const language = String(body.language ?? "en").toLowerCase().replace(/[^a-z0-9-]/g, "") || "en";
+  const outputPath = path.join(path.dirname(mediaPath), `${path.basename(mediaPath, path.extname(mediaPath))}.${language}.opensubtitles.srt`);
   await writeFile(outputPath, Buffer.from(await fileResponse.arrayBuffer()));
   playbackProbeCache.delete(mediaPath);
   sendJson(response, { ok: true, subtitlePath: outputPath });
@@ -1337,8 +1796,10 @@ async function streamLocalTranscode(filePath, url, request, response) {
   const args = ["-hide_banner", "-loglevel", "error", "-fflags", "+genpts+discardcorrupt", "-err_detect", "ignore_err"];
   if (startSeconds > 0) args.push("-ss", String(startSeconds));
   args.push("-i", filePath, "-map", videoMap, "-map", audioMap, "-sn");
-  args.push("-c:v", "libx264", "-preset", "ultrafast", "-tune", "zerolatency", "-crf", "24", "-pix_fmt", "yuv420p", "-vf", "scale=min(1280\\,iw):-2:flags=fast_bilinear", "-g", "24", "-keyint_min", "24", "-sc_threshold", "0");
-  args.push("-c:a", "aac", "-ac", "2", "-b:a", "160k", "-max_muxing_queue_size", "2048", "-movflags", "frag_keyframe+empty_moov+default_base_moof", "-frag_duration", "500000", "-flush_packets", "1", "-f", "mp4", "pipe:1");
+  // A 90 kHz track clock avoids the roughly 35-minute signed 32-bit timestamp
+  // rollover that can make long-running fragmented MP4 playback jump to zero.
+  args.push("-c:v", "libx264", "-preset", "ultrafast", "-tune", "zerolatency", "-crf", "24", "-pix_fmt", "yuv420p", "-vf", "setpts=PTS-STARTPTS,scale=min(1280\\,iw):-2:flags=fast_bilinear", "-video_track_timescale", "90000", "-g", "24", "-keyint_min", "24", "-sc_threshold", "0");
+  args.push("-c:a", "aac", "-af", "asetpts=PTS-STARTPTS", "-ac", "2", "-b:a", "160k", "-max_muxing_queue_size", "2048", "-movflags", "frag_keyframe+empty_moov+default_base_moof", "-frag_duration", "500000", "-flush_packets", "1", "-f", "mp4", "pipe:1");
 
   response.writeHead(200, {
     "content-type": "video/mp4",
@@ -1689,6 +2150,7 @@ async function serveStatic(urlPath, response) {
 
   response.writeHead(200, {
     "content-type": contentType(filePath),
+    "content-length": fileStats.size,
     "cache-control": /\.(?:html|js|css|json)$/i.test(filePath) ? "no-store" : "public, max-age=3600",
   });
   createReadStream(filePath).pipe(response);
@@ -1710,15 +2172,35 @@ async function readJsonConfig(filePath) {
 }
 
 function mergeConfig(shared, local) {
-  return {
+  const merged = {
     ...shared,
     ...local,
     jellyfin: { ...(shared.jellyfin ?? {}), ...(local.jellyfin ?? {}) },
   };
+  if (local.mediaSources?.length) delete merged.mediaRoots;
+  else if (local.mediaRoots?.length) delete merged.mediaSources;
+  return merged;
 }
 
 function getAllowedMediaRoots() {
-  return (config.mediaRoots ?? []).map(resolveConfiguredPath);
+  return [
+    ...mediaSources.map((source) => resolveConfiguredPath(source.path)),
+    ...(config.playbackRoots ?? []).map(resolveConfiguredPath),
+  ];
+}
+
+function normalizeConfiguredMediaSources(value) {
+  const configured = value.mediaSources?.length
+    ? value.mediaSources
+    : (value.mediaRoots ?? []).map((sourcePath, index) => ({ id: `legacy-${index + 1}`, type: "mixed", path: sourcePath }));
+  const allowedTypes = new Set(["movie", "tv", "wrestling", "mixed"]);
+  return configured.filter((source) => source?.enabled !== false).map((source, index) => {
+    const type = String(source.type ?? "mixed").toLowerCase();
+    if (!allowedTypes.has(type)) throw new Error(`Invalid media source type: ${source.type}`);
+    if (!source.path) throw new Error(`Media source ${source.id ?? index + 1} has no path.`);
+    if (String(source.id ?? "").includes("|")) throw new Error(`Media source id cannot contain |: ${source.id}`);
+    return { id: String(source.id ?? `${type}-${index + 1}`), type, path: String(source.path) };
+  });
 }
 
 function resolveConfiguredPath(configuredPath) {

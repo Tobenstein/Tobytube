@@ -4,36 +4,40 @@ import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const referencePath = path.join(root, "src", "wrestling-reference.generated.json");
-const url = process.argv[2];
-const championshipId = getArg("--championship-id") ?? slug(url?.split("/").pop()?.replace(/^List_of_/, "").replace(/_Champions$/i, "") ?? "");
-const championshipName = getArg("--championship-name") ?? championshipId.split("-").map(capitalize).join(" ");
 
-if (!url) {
-  throw new Error("Usage: node scripts/import-wikipedia-title-reigns.mjs <wikipedia-list-url> --championship-id wcw-world-heavyweight");
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  await main();
 }
 
-const db = await readJson(referencePath, emptyDb());
-const html = await fetchText(url);
-const reigns = parseTitleReigns(html, championshipId);
+async function main() {
+  const url = process.argv[2];
+  const championshipId = getArg("--championship-id") ?? slug(url?.split("/").pop()?.replace(/^List_of_/, "").replace(/_Champions$/i, "") ?? "");
+  const championshipName = getArg("--championship-name") ?? championshipId.split("-").map(capitalize).join(" ");
 
-upsertChampionship(db.championships, {
-  id: championshipId,
-  name: championshipName,
-  externalIds: {
-    wikipedia: url,
-  },
-});
+  if (!url) {
+    throw new Error("Usage: node scripts/import-wikipedia-title-reigns.mjs <wikipedia-list-url> --championship-id wcw-world-heavyweight");
+  }
 
-db.titleReigns = db.titleReigns.filter((reign) => reign.championshipId !== championshipId);
-for (const reign of reigns) {
-  upsertById(db.titleReigns, reign);
+  const db = await readJson(referencePath, emptyDb());
+  const html = await fetchText(url);
+  const reigns = parseTitleReigns(html, championshipId);
+
+  upsertChampionship(db.championships, {
+    id: championshipId,
+    name: championshipName,
+    externalIds: { wikipedia: url },
+  });
+
+  if (reigns.length) {
+    db.titleReigns = db.titleReigns.filter((reign) => reign.championshipId !== championshipId);
+    for (const reign of reigns) upsertById(db.titleReigns, reign);
+  }
+
+  upsertSource(db.sources, "wikipedia-title-reigns");
+  db.generatedAt = new Date().toISOString();
+  await writeFile(referencePath, `${JSON.stringify(db, null, 2)}\n`);
+  console.log(`Imported ${reigns.length} reign rows for ${championshipName}.`);
 }
-
-upsertSource(db.sources, "wikipedia-title-reigns");
-db.generatedAt = new Date().toISOString();
-
-await writeFile(referencePath, `${JSON.stringify(db, null, 2)}\n`);
-console.log(`Imported ${reigns.length} reign rows for ${championshipName}.`);
 
 async function fetchText(sourceUrl) {
   const response = await fetch(sourceUrl, {
@@ -45,20 +49,20 @@ async function fetchText(sourceUrl) {
   return response.text();
 }
 
-function parseTitleReigns(html, titleId) {
+export function parseTitleReigns(html, titleId) {
   const tables = html.match(/<table[^>]*class="[^"]*wikitable[^"]*"[\s\S]*?<\/table>/gi) ?? [];
   const rows = [];
 
   for (const table of tables) {
     if (!/Champion/i.test(table) || !/Reign/i.test(table) || !/Date won|Date/i.test(table)) continue;
-    const parsedRows = parseRows(table, titleId);
+    const parsedRows = parseRows(table, titleId, /Successful defenses|Defenses/i.test(table));
     if (parsedRows.length) rows.push(...parsedRows);
   }
 
   return rows;
 }
 
-function parseRows(table, titleId) {
+function parseRows(table, titleId, hasDefenseColumn = false) {
   const output = [];
   const rowHtml = table.match(/<tr[\s\S]*?<\/tr>/gi) ?? [];
   let headers = [];
@@ -73,7 +77,7 @@ function parseRows(table, titleId) {
 
     const cells = extractAllCells(row);
     if (!cells.length || !headers.length) continue;
-    const mapped = cells.length >= 7 ? mapStandardReignCells(cells) : mapCells(headers, cells);
+    const mapped = cells.length >= 7 ? mapStandardReignCells(cells, hasDefenseColumn) : mapCells(headers, cells);
     const number = mapped.no ?? mapped.number;
     const champion = mapped.champion;
     const dateWon = mapped.date ?? mapped["date won"] ?? mapped["date won/location"] ?? mapped["championship change date"];
@@ -90,6 +94,7 @@ function parseRows(table, titleId) {
       reign: clean(mapped.reign ?? ""),
       days: parseNumber(mapped.days),
       recognizedDays: parseNumber(mapped["days recog"] ?? mapped["days recognized"] ?? mapped.recognized),
+      successfulDefenses: parseNumber(mapped["successful defenses"] ?? mapped.defenses),
       notes: clean(mapped.notes ?? mapped["event/notes"] ?? ""),
       sourceIds: ["wikipedia-title-reigns"],
     });
@@ -104,7 +109,7 @@ function extractAllCells(row) {
     .filter(Boolean);
 }
 
-function mapStandardReignCells(cells) {
+function mapStandardReignCells(cells, hasDefenseColumn = false) {
   return {
     no: cells[0],
     champion: cells[1],
@@ -113,7 +118,9 @@ function mapStandardReignCells(cells) {
     location: cells[4],
     reign: cells[5],
     days: cells[6],
-    notes: cells.slice(7).join(" "),
+    defenses: hasDefenseColumn ? cells[7] : null,
+    recognized: !hasDefenseColumn && cells.length >= 9 ? cells[7] : null,
+    notes: hasDefenseColumn ? cells.slice(8).join(" ") : cells.length >= 9 ? cells.slice(8).join(" ") : cells.slice(7).join(" "),
   };
 }
 
@@ -148,6 +155,10 @@ function htmlToText(html) {
     .replace(/<[^>]+>/g, "")
     .replace(/&nbsp;/g, " ")
     .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
     .replace(/&#160;/g, " ")
     .replace(/&#91;.*?&#93;/g, "");
 }

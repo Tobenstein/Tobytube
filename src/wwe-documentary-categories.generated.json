@@ -1,0 +1,1233 @@
+{
+  "generatedAt": "2026-07-12T19:19:00.840Z",
+  "sourceRoot": "D:\\Media\\Wrestling\\Major Promotions\\WWFE\\Documentaries",
+  "categories": [
+    {
+      "folder": "Championships",
+      "title": "Championships"
+    },
+    {
+      "folder": "Wrestler Biographies",
+      "title": "Wrestler Biographies"
+    },
+    {
+      "folder": "Wrestler Match Collections",
+      "title": "Wrestler Match Collections"
+    },
+    {
+      "folder": "Teams & Factions",
+      "title": "Teams & Factions"
+    },
+    {
+      "folder": "Promotions",
+      "title": "Promotions"
+    },
+    {
+      "folder": "Promotion Match Collections",
+      "title": "Promotion Match Collections"
+    },
+    {
+      "folder": "Show Collections",
+      "title": "Show Collections"
+    },
+    {
+      "folder": "Women in Wrestling",
+      "title": "Women in Wrestling"
+    },
+    {
+      "folder": "Coliseum Home Video",
+      "title": "Coliseum Home Video"
+    },
+    {
+      "folder": "Match Types",
+      "title": "Match Types"
+    },
+    {
+      "folder": "The WrestleMania Anthology",
+      "title": "The WrestleMania Anthology"
+    },
+    {
+      "folder": "The Royal Rumble Anthology",
+      "title": "The Royal Rumble Anthology"
+    },
+    {
+      "folder": "The Survivor Series Anthology",
+      "title": "The Survivor Series Anthology"
+    },
+    {
+      "folder": "The Summerslam Anthology",
+      "title": "The Summerslam Anthology"
+    },
+    {
+      "folder": "Others",
+      "title": "Other"
+    }
+  ],
+  "assignments": [
+    {
+      "title": "History of the WWE Championship",
+      "key": "history of the wwe championship",
+      "category": "Championships"
+    },
+    {
+      "title": "History of the World Heavyweight Championship",
+      "key": "history of the world heavyweight championship",
+      "category": "Championships"
+    },
+    {
+      "title": "History of the Intercontinental Championship",
+      "key": "history of the intercontinental championship",
+      "category": "Championships"
+    },
+    {
+      "title": "US Championship: A Legacy of Greatness",
+      "key": "us championship a legacy of greatness",
+      "category": "Championships"
+    },
+    {
+      "title": "Hardcore",
+      "key": "hardcore",
+      "category": "Championships"
+    },
+    {
+      "title": "History of the WWE Hardcore Championship: 24/7",
+      "key": "history of the wwe hardcore championship 24 7",
+      "category": "Championships"
+    },
+    {
+      "title": "3 Faces of Foley",
+      "key": "3 faces of foley",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "Batista: I Walk Alone",
+      "key": "batista i walk alone",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "Batista: The Animal Unleased",
+      "key": "batista the animal unleased",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "Big Show: A Giant's World",
+      "key": "big show a giant s world",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "20 Years Too Soon: The \"Superstar\" Billy Graham Story",
+      "key": "20 years too soon the superstar billy graham story",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "Bobby \"The Brain\"",
+      "key": "bobby the brain",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "Bret \"Hit Man\" Hart: The Best There Is, the Best There Was, the Best There Ever Will Be",
+      "key": "bret hit man hart the best there is the best there was the best there ever will be",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "Brian Pillman: Loose Cannon",
+      "key": "brian pillman loose cannon",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "Roddy Piper: Born to Controversy",
+      "key": "roddy piper born to controversy",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "Brock Lesnar: Here Comes The Pain",
+      "key": "brock lesnar here comes the pain",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "Breaking The Code: Behind the Walls of Chris Jericho",
+      "key": "breaking the code behind the walls of chris jericho",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "CM Punk: Best in the World",
+      "key": "cm punk best in the world",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "Diamond Dallas Page: Positively Living",
+      "key": "diamond dallas page positively living",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "Eric Bischoff - Sports Entertainment's Most Controversial Figure",
+      "key": "eric bischoff sports entertainment s most controversial figure",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "Hard Knocks: The Chris Benoit Story",
+      "key": "hard knocks the chris benoit story",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "It’s Good to Be King – The Jerry Lawler Story",
+      "key": "it s good to be king the jerry lawler story",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "Just Say Yes! Yes! Yes: Daniel Bryan",
+      "key": "just say yes yes yes daniel bryan",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "American Dream: The Dusty Rhodes Story",
+      "key": "american dream the dusty rhodes story",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "You Think You Know Me: The Story of Edge",
+      "key": "you think you know me the story of edge",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "Cheating Death, Stealing Life: The Eddie Guerrero Story",
+      "key": "cheating death stealing life the eddie guerrero story",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "For All Mankind: The Life & Career of Mick Foley",
+      "key": "for all mankind the life career of mick foley",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "Living on a Razor’s Edge: The Scott Hall Story",
+      "key": "living on a razor s edge the scott hall story",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "Finn Balor: For Everyone",
+      "key": "finn balor for everyone",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "Jake \"The Snake\" Roberts: Pick Your Poison",
+      "key": "jake the snake roberts pick your poison",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "WWE: Greatest Rivalries - Shawn Michaels vs Bret Hart",
+      "key": "wwe greatest rivalries shawn michaels vs bret hart",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "Ricky Steamboat: The Life Story Of The Dragon",
+      "key": "ricky steamboat the life story of the dragon",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "Road Warriors: The Life & Death of The Most Dominant Tag Team in Wrestling History",
+      "key": "road warriors the life death of the most dominant tag team in wrestling history",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "Ric Flair and The 4 Horsemen",
+      "key": "ric flair and the 4 horsemen",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "The Self-Destruction of The Ultimate Warrior",
+      "key": "the self destruction of the ultimate warrior",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "Legends of Wrestling",
+      "key": "legends of wrestling",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "WWE Legends of Wrestling Roddy Piper & Terry Funk",
+      "key": "wwe legends of wrestling roddy piper terry funk",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "WWE Legends of Wrestling Hulk Hogan & Bob Backlund",
+      "key": "wwe legends of wrestling hulk hogan bob backlund",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "WWE Legends of Wrestling Andre Giant & Iron Sheik",
+      "key": "wwe legends of wrestling andre giant iron sheik",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "WWE Legends of Wrestling Jerry the King Lawler & Junkyard Dog",
+      "key": "wwe legends of wrestling jerry the king lawler junkyard dog",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "WWE Legends of Wrestling Ric Flair & Sgt Slaughter",
+      "key": "wwe legends of wrestling ric flair sgt slaughter",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "WWE Legends of Wrestling Heat Seekers",
+      "key": "wwe legends of wrestling heat seekers",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "Before They Were WWF Superstars",
+      "key": "before they were wwf superstars",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "Before They Were WWE Superstars 2",
+      "key": "before they were wwe superstars 2",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "Stone Cold Steve Austin: The Bottom Line on the Most Popular Superstar of All",
+      "key": "stone cold steve austin the bottom line on the most popular superstar of all",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "Steve Austin – Austin Vs. McMahon: The Whole True Story",
+      "key": "steve austin austin vs mcmahon the whole true story",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "The Stone Cold Truth",
+      "key": "the stone cold truth",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "Steve Austin: What?",
+      "key": "steve austin what",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "'Cause Stone Cold Said So",
+      "key": "cause stone cold said so",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "Greatest Stars of The 80's",
+      "key": "greatest stars of the 80 s",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "Greatest Stars of The 90's",
+      "key": "greatest stars of the 90 s",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "Greatest Stars Of The 21st Century",
+      "key": "greatest stars of the 21st century",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "Ladies And Gentlemen, My Name Is Paul Heyman",
+      "key": "ladies and gentlemen my name is paul heyman",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "The Rock vs. John Cena: Once in a Lifetime",
+      "key": "the rock vs john cena once in a lifetime",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "Top 25 Rivalries",
+      "key": "top 25 rivalries",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "The World's Greatest Wrestling Managers",
+      "key": "the world s greatest wrestling managers",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "The Life and Times of Mr. Perfect",
+      "key": "the life and times of mr perfect",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "Fight Owens Fight - The Kevin Owens Story",
+      "key": "fight owens fight the kevin owens story",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "John Cena: Word Life",
+      "key": "john cena word life",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "John Cena's Greatest Rivalries",
+      "key": "john cena s greatest rivalries",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "The Shawn Michaels Story: Heartbreak & Triumph",
+      "key": "the shawn michaels story heartbreak triumph",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "Edge: You Think You Know Me",
+      "key": "edge you think you know me",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "Triple H - Thy Kingdom Come",
+      "key": "triple h thy kingdom come",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "Triple H: The Game",
+      "key": "triple h the game",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "McMahon",
+      "key": "mcmahon",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "Ultimate Warrior: Always Believe",
+      "key": "ultimate warrior always believe",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "Jeff Hardy: My Life, My Rules",
+      "key": "jeff hardy my life my rules",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "Macho Man: The Randy Savage Story",
+      "key": "macho man the randy savage story",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "Randy Orton: The Evolution of a Predator",
+      "key": "randy orton the evolution of a predator",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "Rey Mysterio: The Life of a Masked Man",
+      "key": "rey mysterio the life of a masked man",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "The Rock: The Most Electrifying Man in Sports Entertainment",
+      "key": "the rock the most electrifying man in sports entertainment",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "The Rock: The Epic Journey of Dwayne \"The Rock\" Johnson",
+      "key": "the rock the epic journey of dwayne the rock johnson",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "Lita: It Just Feels Right",
+      "key": "lita it just feels right",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "Sable Unleashed",
+      "key": "sable unleashed",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "Trish Stratus: 100% Stratusfaction Guaranteed",
+      "key": "trish stratus 100 stratusfaction guaranteed",
+      "category": "Wrestler Biographies"
+    },
+    {
+      "title": "AJ Styles: Most Phenomenal Matches",
+      "key": "aj styles most phenomenal matches",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "Bret \"Hit Man\" Hart: The Dungeon Collection",
+      "key": "bret hit man hart the dungeon collection",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "Twist of Fate: The Best of the Hardy Boyz",
+      "key": "twist of fate the best of the hardy boyz",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "Hulk Still Rules",
+      "key": "hulk still rules",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "Undertaker's Deadliest Matches",
+      "key": "undertaker s deadliest matches",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "Undertaker 15-0",
+      "key": "undertaker 15 0",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "Undertaker 20-0: The Streak (4-Disc)",
+      "key": "undertaker 20 0 the streak 4 disc",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "Undertaker: The Streak 21-1 R.I.P Edition",
+      "key": "undertaker the streak 21 1 r i p edition",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "Tombstone: The History of The Undertaker",
+      "key": "tombstone the history of the undertaker",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "The Undertaker: He Buries Them Alive",
+      "key": "the undertaker he buries them alive",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "The Undertaker: The Phenom",
+      "key": "the undertaker the phenom",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "The Undertaker: This Is My Yard",
+      "key": "the undertaker this is my yard",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "Ric Flair: The Definitive Collection",
+      "key": "ric flair the definitive collection",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "WWE Superstar Collection - Daniel Bryan",
+      "key": "wwe superstar collection daniel bryan",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "WWE Superstar Collection - Sheamus",
+      "key": "wwe superstar collection sheamus",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "WWE Superstar Collection - Randy Orton",
+      "key": "wwe superstar collection randy orton",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "WWE Superstar Collection - Kofi Kingston",
+      "key": "wwe superstar collection kofi kingston",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "WWE Superstar Collection - Rey Mysterio",
+      "key": "wwe superstar collection rey mysterio",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "WWE Superstar Collection - Shawn Michaels",
+      "key": "wwe superstar collection shawn michaels",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "Hulk Hogan: The Ultimate Anthology (4-Disc)",
+      "key": "hulk hogan the ultimate anthology 4 disc",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "Hulk Hogan: Unreleased Collector's Series",
+      "key": "hulk hogan unreleased collector s series",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "Goldberg – The Ultimate Collection",
+      "key": "goldberg the ultimate collection",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "Stone Cold Steve Austin – Hell Yeah!",
+      "key": "stone cold steve austin hell yeah",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "Austin 3:16 Uncensored",
+      "key": "austin 3 16 uncensored",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "Our Nation’s Pride: The Best of Canadian Superstars",
+      "key": "our nation s pride the best of canadian superstars",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "André the Giant",
+      "key": "andre the giant",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "Bayley: Iconic Matches",
+      "key": "bayley iconic matches",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "Brothers of Destruction : Greatest Matches",
+      "key": "brothers of destruction greatest matches",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "Shawn Michaels: Boyhood Dream",
+      "key": "shawn michaels boyhood dream",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "Shawn Michaels: From The Vault",
+      "key": "shawn michaels from the vault",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "Shawn Michaels: My Journey",
+      "key": "shawn michaels my journey",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "Sting: Into The Light",
+      "key": "sting into the light",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "Edge: A Decade of Decadence",
+      "key": "edge a decade of decadence",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "John Morrison: Rock Star",
+      "key": "john morrison rock star",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "Triple H: King of Kings – There Is Only One",
+      "key": "triple h king of kings there is only one",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "Sasha Banks: Iconic Matches",
+      "key": "sasha banks iconic matches",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "Ric Flair: The Ultimate Collection",
+      "key": "ric flair the ultimate collection",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "Rob Van Dam: One of A Kind",
+      "key": "rob van dam one of a kind",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "Rey Mysterio: The Biggest Little Man",
+      "key": "rey mysterio the biggest little man",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "Randy Orton: RKO Outta Nowhere",
+      "key": "randy orton rko outta nowhere",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "Macho Madness: The Ultimate Randy Savage Collection",
+      "key": "macho madness the ultimate randy savage collection",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "Shawn Michaels: Mr. WrestleMania",
+      "key": "shawn michaels mr wrestlemania",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "Shawn Michaels: The Showstopper Unreleased",
+      "key": "shawn michaels the showstopper unreleased",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "The Twisted, Disturbed Life of Kane",
+      "key": "the twisted disturbed life of kane",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "Kurt Angle: The Essential Collection",
+      "key": "kurt angle the essential collection",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "Mick Foley: Greatest Hits & Misses",
+      "key": "mick foley greatest hits misses",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "Ultimate Warrior (1990)",
+      "key": "ultimate warrior 1990",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "The Return Of The Ultimate Warrior",
+      "key": "the return of the ultimate warrior",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "Viva La Raza: The Legacy of Eddie Guerrero",
+      "key": "viva la raza the legacy of eddie guerrero",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "WWE: Getting Rowdy: The Unreleased Matches",
+      "key": "wwe getting rowdy the unreleased matches",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "Top 50 Superstars of All Time",
+      "key": "top 50 superstars of all time",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "Seth Rollins – Building The Architect",
+      "key": "seth rollins building the architect",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "Ultimate Warrior: The Ultimate Collection",
+      "key": "ultimate warrior the ultimate collection",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "The New and Improved DX",
+      "key": "the new and improved dx",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "Sting : The Ultimate Collection",
+      "key": "sting the ultimate collection",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "The Rock: Just Bring It",
+      "key": "the rock just bring it",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "The Rock: Know Your Role",
+      "key": "the rock know your role",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "The Rock: The People's Champ",
+      "key": "the rock the people s champ",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "Randy Savage Unreleased: The Unseen Matches of the Macho Man",
+      "key": "randy savage unreleased the unseen matches of the macho man",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "Rey Mysterio: 619",
+      "key": "rey mysterio 619",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "Mick Foley: Hard Knocks & Cheap Pops",
+      "key": "mick foley hard knocks cheap pops",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "Wrestling's Highest Flyers (2010)",
+      "key": "wrestling s highest flyers 2010",
+      "category": "Wrestler Match Collections"
+    },
+    {
+      "title": "Hart & Soul: The Hart Family Anthology",
+      "key": "hart soul the hart family anthology",
+      "category": "Teams & Factions"
+    },
+    {
+      "title": "Brothers Of Destruction",
+      "key": "brothers of destruction",
+      "category": "Teams & Factions"
+    },
+    {
+      "title": "Greatest Wrestling Factions",
+      "key": "greatest wrestling factions",
+      "category": "Teams & Factions"
+    },
+    {
+      "title": "Hardy Boyz: Leap of Faith",
+      "key": "hardy boyz leap of faith",
+      "category": "Teams & Factions"
+    },
+    {
+      "title": "Twist of Fate: The Matt & Jeff Hardy Story",
+      "key": "twist of fate the matt jeff hardy story",
+      "category": "Teams & Factions"
+    },
+    {
+      "title": "nWo – Back In Black",
+      "key": "nwo back in black",
+      "category": "Teams & Factions"
+    },
+    {
+      "title": "The Most Powerful Families In Wrestling",
+      "key": "the most powerful families in wrestling",
+      "category": "Teams & Factions"
+    },
+    {
+      "title": "Allied Powers: The World's Greatest Tag Teams",
+      "key": "allied powers the world s greatest tag teams",
+      "category": "Teams & Factions"
+    },
+    {
+      "title": "The New World Order - The Revolution",
+      "key": "the new world order the revolution",
+      "category": "Teams & Factions"
+    },
+    {
+      "title": "The Kliq Rules",
+      "key": "the kliq rules",
+      "category": "Teams & Factions"
+    },
+    {
+      "title": "The Shield: Justice For All",
+      "key": "the shield justice for all",
+      "category": "Teams & Factions"
+    },
+    {
+      "title": "Spectacular Legacy of the AWA",
+      "key": "spectacular legacy of the awa",
+      "category": "Promotions"
+    },
+    {
+      "title": "Rise and Fall of ECW",
+      "key": "rise and fall of ecw",
+      "category": "Promotions"
+    },
+    {
+      "title": "Rise and Fall of WCW",
+      "key": "rise and fall of wcw",
+      "category": "Promotions"
+    },
+    {
+      "title": "Triumph and Tragedy of WCCW",
+      "key": "triumph and tragedy of wccw",
+      "category": "Promotions"
+    },
+    {
+      "title": "The Monday Night War",
+      "key": "the monday night war",
+      "category": "Promotions"
+    },
+    {
+      "title": "Monday Night War Vol. 1: Shots Fired",
+      "key": "monday night war vol 1 shots fired",
+      "category": "Promotions"
+    },
+    {
+      "title": "The Monday Night War, Vol. 2: Know Your Role",
+      "key": "the monday night war vol 2 know your role",
+      "category": "Promotions"
+    },
+    {
+      "title": "True Story of the Royal Rumble",
+      "key": "true story of the royal rumble",
+      "category": "Promotions"
+    },
+    {
+      "title": "The True Story of WrestleMania",
+      "key": "the true story of wrestlemania",
+      "category": "Promotions"
+    },
+    {
+      "title": "History of WWE",
+      "key": "history of wwe",
+      "category": "Promotions"
+    },
+    {
+      "title": "BloodBath: Wrestling's Most Incredible Steel Cage Matches",
+      "key": "bloodbath wrestling s most incredible steel cage matches",
+      "category": "Promotion Match Collections"
+    },
+    {
+      "title": "Bloodsport: ECW's Most Violent Matches",
+      "key": "bloodsport ecw s most violent matches",
+      "category": "Promotion Match Collections"
+    },
+    {
+      "title": "ECW Extreme Rules",
+      "key": "ecw extreme rules",
+      "category": "Promotion Match Collections"
+    },
+    {
+      "title": "ECW Unreleased Vol. 1",
+      "key": "ecw unreleased vol 1",
+      "category": "Promotion Match Collections"
+    },
+    {
+      "title": "ECW Unreleased Vol. 2",
+      "key": "ecw unreleased vol 2",
+      "category": "Promotion Match Collections"
+    },
+    {
+      "title": "ECW Unreleased Vol. 3",
+      "key": "ecw unreleased vol 3",
+      "category": "Promotion Match Collections"
+    },
+    {
+      "title": "WCW Greatest PPV Matches Vol. 1",
+      "key": "wcw greatest ppv matches vol 1",
+      "category": "Promotion Match Collections"
+    },
+    {
+      "title": "History of WrestleMania (1985–1993)",
+      "key": "history of wrestlemania 1985 1993",
+      "category": "Promotion Match Collections"
+    },
+    {
+      "title": "Raw The Beginning: The Best of Seasons 1 & 2 (4-Disc)",
+      "key": "raw the beginning the best of seasons 1 2 4 disc",
+      "category": "Show Collections"
+    },
+    {
+      "title": "The Very Best Of WCW Monday Nitro",
+      "key": "the very best of wcw monday nitro",
+      "category": "Show Collections"
+    },
+    {
+      "title": "The Best of WCW Monday Nitro Volume 2",
+      "key": "the best of wcw monday nitro volume 2",
+      "category": "Show Collections"
+    },
+    {
+      "title": "The Best of WCW Nitro Vol. 3",
+      "key": "the best of wcw nitro vol 3",
+      "category": "Show Collections"
+    },
+    {
+      "title": "Starrcade: The Essential Collection",
+      "key": "starrcade the essential collection",
+      "category": "Show Collections"
+    },
+    {
+      "title": "The Attitude Era",
+      "key": "the attitude era",
+      "category": "Show Collections"
+    },
+    {
+      "title": "The Attitude Era Volume 2",
+      "key": "the attitude era volume 2",
+      "category": "Show Collections"
+    },
+    {
+      "title": "The Best of In Your House",
+      "key": "the best of in your house",
+      "category": "Show Collections"
+    },
+    {
+      "title": "The Best of WWE at Madison Square Garden",
+      "key": "the best of wwe at madison square garden",
+      "category": "Show Collections"
+    },
+    {
+      "title": "Raw 10th Anniversary",
+      "key": "raw 10th anniversary",
+      "category": "Show Collections"
+    },
+    {
+      "title": "The Best of SmackDown! 10th Anniversary",
+      "key": "the best of smackdown 10th anniversary",
+      "category": "Show Collections"
+    },
+    {
+      "title": "Smackdown 20th Anniversary",
+      "key": "smackdown 20th anniversary",
+      "category": "Show Collections"
+    },
+    {
+      "title": "The Best of Raw: 15th Anniversary",
+      "key": "the best of raw 15th anniversary",
+      "category": "Show Collections"
+    },
+    {
+      "title": "Raw 20th Anniversary Box Set - (12-disc)",
+      "key": "raw 20th anniversary box set 12 disc",
+      "category": "Show Collections"
+    },
+    {
+      "title": "RAW 25th Anniversary",
+      "key": "raw 25th anniversary",
+      "category": "Show Collections"
+    },
+    {
+      "title": "Raw 1000",
+      "key": "raw 1000",
+      "category": "Show Collections"
+    },
+    {
+      "title": "The Best of King of the Ring",
+      "key": "the best of king of the ring",
+      "category": "Show Collections"
+    },
+    {
+      "title": "The Best PPV Matches of 2011",
+      "key": "the best ppv matches of 2011",
+      "category": "Show Collections"
+    },
+    {
+      "title": "The Best PPV Matches of 2013",
+      "key": "the best ppv matches of 2013",
+      "category": "Show Collections"
+    },
+    {
+      "title": "The Best of Raw and Smackdown 2011",
+      "key": "the best of raw and smackdown 2011",
+      "category": "Show Collections"
+    },
+    {
+      "title": "The Best of RAW & Smackdown 2013",
+      "key": "the best of raw smackdown 2013",
+      "category": "Show Collections"
+    },
+    {
+      "title": "The Best of RAW & SmackDown Live 2017",
+      "key": "the best of raw smackdown live 2017",
+      "category": "Show Collections"
+    },
+    {
+      "title": "Best PPV Matches 2016",
+      "key": "best ppv matches 2016",
+      "category": "Show Collections"
+    },
+    {
+      "title": "The Best of King of the Ring",
+      "key": "the best of king of the ring",
+      "category": "Show Collections"
+    },
+    {
+      "title": "Best of NXT 2017",
+      "key": "best of nxt 2017",
+      "category": "Show Collections"
+    },
+    {
+      "title": "Best of Raw 2009",
+      "key": "best of raw 2009",
+      "category": "Show Collections"
+    },
+    {
+      "title": "Best of Raw 2010",
+      "key": "best of raw 2010",
+      "category": "Show Collections"
+    },
+    {
+      "title": "The Best Of WCW Clash of the Champions",
+      "key": "the best of wcw clash of the champions",
+      "category": "Show Collections"
+    },
+    {
+      "title": "Best of RAW: After The Show",
+      "key": "best of raw after the show",
+      "category": "Show Collections"
+    },
+    {
+      "title": "Best Pay-Per-View Matches 2017",
+      "key": "best pay per view matches 2017",
+      "category": "Show Collections"
+    },
+    {
+      "title": "The Best of Saturday Night's Main Event",
+      "key": "the best of saturday night s main event",
+      "category": "Show Collections"
+    },
+    {
+      "title": "Raw - Most Most Memorable Matches",
+      "key": "raw most most memorable matches",
+      "category": "Show Collections"
+    },
+    {
+      "title": "Smackdown - Most Most Memorable Matches",
+      "key": "smackdown most most memorable matches",
+      "category": "Show Collections"
+    },
+    {
+      "title": "30 Years of SummerSlam",
+      "key": "30 years of summerslam",
+      "category": "Show Collections"
+    },
+    {
+      "title": "WrestleMania Monday",
+      "key": "wrestlemania monday",
+      "category": "Show Collections"
+    },
+    {
+      "title": "The Best Pay-Per-View Matches Of The Year 2009–2010",
+      "key": "the best pay per view matches of the year 2009 2010",
+      "category": "Show Collections"
+    },
+    {
+      "title": "The Best of RAW & SmackDown 2016",
+      "key": "the best of raw smackdown 2016",
+      "category": "Show Collections"
+    },
+    {
+      "title": "The Greatest Superstars of WrestleMania",
+      "key": "the greatest superstars of wrestlemania",
+      "category": "Show Collections"
+    },
+    {
+      "title": "WWE 24: Best of 2019",
+      "key": "wwe 24 best of 2019",
+      "category": "Show Collections"
+    },
+    {
+      "title": "Best PPV Matches",
+      "key": "best ppv matches",
+      "category": "Show Collections"
+    },
+    {
+      "title": "United We Slam: The Best of Great American Bash",
+      "key": "united we slam the best of great american bash",
+      "category": "Show Collections"
+    },
+    {
+      "title": "Best of The 2000’s",
+      "key": "best of the 2000 s",
+      "category": "Show Collections"
+    },
+    {
+      "title": "$250,000 Raw Diva Search",
+      "key": "250 000 raw diva search",
+      "category": "Women in Wrestling"
+    },
+    {
+      "title": "Divas: Desert Heat",
+      "key": "divas desert heat",
+      "category": "Women in Wrestling"
+    },
+    {
+      "title": "Divas Do New York",
+      "key": "divas do new york",
+      "category": "Women in Wrestling"
+    },
+    {
+      "title": "Divas In Hedonism",
+      "key": "divas in hedonism",
+      "category": "Women in Wrestling"
+    },
+    {
+      "title": "Divas: South of The Border",
+      "key": "divas south of the border",
+      "category": "Women in Wrestling"
+    },
+    {
+      "title": "Divas: Tropical Pleasure",
+      "key": "divas tropical pleasure",
+      "category": "Women in Wrestling"
+    },
+    {
+      "title": "Divas Undressed",
+      "key": "divas undressed",
+      "category": "Women in Wrestling"
+    },
+    {
+      "title": "Viva Las Divas",
+      "key": "viva las divas",
+      "category": "Women in Wrestling"
+    },
+    {
+      "title": "Then, Now, Forever: The Evolution of WWE’s Women’s Division",
+      "key": "then now forever the evolution of wwe s women s division",
+      "category": "Women in Wrestling"
+    },
+    {
+      "title": "Satan's Prison: The Anthology Of The Elimination Chamber",
+      "key": "satan s prison the anthology of the elimination chamber",
+      "category": "Match Types"
+    },
+    {
+      "title": "Hell in a Cell",
+      "key": "hell in a cell",
+      "category": "Match Types"
+    },
+    {
+      "title": "Falls Count Anywhere: The Greatest Street Fights",
+      "key": "falls count anywhere the greatest street fights",
+      "category": "Match Types"
+    },
+    {
+      "title": "The Greatest Cage Matches of All Time",
+      "key": "the greatest cage matches of all time",
+      "category": "Match Types"
+    },
+    {
+      "title": "Straight to the Top: The Money In The Bank Ladder Match Anthology",
+      "key": "straight to the top the money in the bank ladder match anthology",
+      "category": "Match Types"
+    },
+    {
+      "title": "Ladder match",
+      "key": "ladder match",
+      "category": "Match Types"
+    },
+    {
+      "title": "The Ladder Match 2: Crash & Burn",
+      "key": "the ladder match 2 crash burn",
+      "category": "Match Types"
+    },
+    {
+      "title": "Best of War Games",
+      "key": "best of war games",
+      "category": "Match Types"
+    },
+    {
+      "title": "Best of Confidential Vol. 1",
+      "key": "best of confidential vol 1",
+      "category": "Others"
+    },
+    {
+      "title": "Eve of Destruction (2000)",
+      "key": "eve of destruction 2000",
+      "category": "Others"
+    },
+    {
+      "title": "OMG! The Top 50 Incidents in WWE History",
+      "key": "omg the top 50 incidents in wwe history",
+      "category": "Others"
+    },
+    {
+      "title": "OMG!2 The Top 50 Incidents in WCW History",
+      "key": "omg 2 the top 50 incidents in wcw history",
+      "category": "Others"
+    },
+    {
+      "title": "WWE Top 50 Greatest Finishing Moves",
+      "key": "wwe top 50 greatest finishing moves",
+      "category": "Others"
+    },
+    {
+      "title": "Ramped Up: WWE The Videos Vol. 1",
+      "key": "ramped up wwe the videos vol 1",
+      "category": "Others"
+    },
+    {
+      "title": "WWF Action!",
+      "key": "wwf action",
+      "category": "Others"
+    },
+    {
+      "title": "Signature Sounds: The Music of the WWE",
+      "key": "signature sounds the music of the wwe",
+      "category": "Others"
+    }
+  ]
+}

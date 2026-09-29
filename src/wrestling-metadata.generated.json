@@ -804,7 +804,7 @@
       {
         "order": 3,
         "match": "Triple H (c) (with Chyna) defeated Owen Hart",
-        "stipulation": "Singles match for the WWF European Championship <br>",
+        "stipulation": "Singles match for the WWF European Championship",
         "time": "11:29"
       },
       {
@@ -816,7 +816,7 @@
       {
         "order": 5,
         "match": "The Rock (c) (with The Nation of Domination) defeated Ken Shamrock by disqualification",
-        "stipulation": "Singles match for the WWF Intercontinental Championship <br>",
+        "stipulation": "Singles match for the WWF Intercontinental Championship",
         "time": "4:49"
       },
       {
@@ -858,7 +858,7 @@
       {
         "order": 3,
         "match": "Triple H (c) (with Chyna) vs Owen Hart",
-        "stipulation": "Singles match for the WWF European Championship <br>",
+        "stipulation": "Singles match for the WWF European Championship",
         "time": "11:29",
         "resultHidden": true,
         "originalOrder": "flipped"
@@ -874,7 +874,7 @@
       {
         "order": 5,
         "match": "The Rock (c) (with The Nation of Domination) vs Ken Shamrock",
-        "stipulation": "Singles match for the WWF Intercontinental Championship <br>",
+        "stipulation": "Singles match for the WWF Intercontinental Championship",
         "time": "4:49",
         "resultHidden": true,
         "originalOrder": "flipped"
@@ -950,13 +950,13 @@
       {
         "order": 5,
         "match": "Butterbean defeated Bart Gunn by KO",
-        "stipulation": "Brawl for All match<br>",
-        "time": "0:35<br>"
+        "stipulation": "Brawl for All match",
+        "time": "0:35"
       },
       {
         "order": 6,
         "match": "Mankind defeated Big Show by disqualification",
-        "stipulation": "Singles match<br>",
+        "stipulation": "Singles match",
         "time": "6:50"
       },
       {
@@ -992,7 +992,7 @@
       {
         "order": 12,
         "match": "Stone Cold Steve Austin defeated The Rock (c) by pinfall",
-        "stipulation": "No Disqualification match for the WWF Championship<br>",
+        "stipulation": "No Disqualification match for the WWF Championship",
         "time": "16:52"
       }
     ],
@@ -1032,15 +1032,15 @@
       {
         "order": 5,
         "match": "Butterbean vs Bart Gunn",
-        "stipulation": "Brawl for All match<br>",
-        "time": "0:35<br>",
+        "stipulation": "Brawl for All match",
+        "time": "0:35",
         "resultHidden": true,
         "originalOrder": "as-written"
       },
       {
         "order": 6,
         "match": "Big Show vs Mankind",
-        "stipulation": "Singles match<br>",
+        "stipulation": "Singles match",
         "time": "6:50",
         "resultHidden": true,
         "originalOrder": "flipped"
@@ -1088,7 +1088,7 @@
       {
         "order": 12,
         "match": "The Rock (c) vs Stone Cold Steve Austin",
-        "stipulation": "No Disqualification match for the WWF Championship<br>",
+        "stipulation": "No Disqualification match for the WWF Championship",
         "time": "16:52",
         "resultHidden": true,
         "originalOrder": "as-written"
@@ -1151,8 +1151,8 @@
       },
       {
         "order": 7,
-        "match": "First Fall (Intercontinental title):<br>Chris Benoit defeated Chris Jericho (pinned) and Kurt Angle (c)<br>Second Fall (European title):<br>Chris Jericho defeated Chris Benoit (pinned) and Kurt Angle (c)",
-        "stipulation": "Two-fall Triple threat match for the WWF Intercontinental and WWF European Championships",
+        "match": "Kurt Angle (c) vs Chris Jericho vs Chris Benoit.",
+        "stipulation": "Two-fall Triple threat match for the WWF Intercontinental (first) and WWF European (second) Championships.",
         "time": "13:48"
       },
       {
@@ -1219,8 +1219,8 @@
       },
       {
         "order": 7,
-        "match": "Kurt Angle (c)<br>Second Fall (European title):<br>Chris Jericho defeated Chris Benoit (pinned) vs First Fall (Intercontinental title):<br>Chris Benoit vs Chris Jericho (pinned) vs Kurt Angle (c)",
-        "stipulation": "Two-fall Triple threat match for the WWF Intercontinental and WWF European Championships",
+        "match": "Kurt Angle (c) vs Chris Jericho vs Chris Benoit.",
+        "stipulation": "Two-fall Triple threat match for the WWF Intercontinental (first) and WWF European (second) Championships.",
         "time": "13:48",
         "resultHidden": true,
         "originalOrder": "as-written"
@@ -1299,8 +1299,8 @@
       },
       {
         "order": 7,
-        "match": "First Fall (Intercontinental title):<br>Chris Benoit defeated Chris Jericho (pinned) and Kurt Angle (c)<br>Second Fall (European title):<br>Chris Jericho defeated Chris Benoit (pinned) and Kurt Angle (c)",
-        "stipulation": "Two-fall Triple threat match for the WWF Intercontinental and WWF European Championships",
+        "match": "Kurt Angle (c) vs Chris Jericho vs Chris Benoit.",
+        "stipulation": "Two-fall Triple threat match for the WWF Intercontinental (first) and WWF European (second) Championships.",
         "time": "13:48"
       },
       {
@@ -1367,8 +1367,8 @@
       },
       {
         "order": 7,
-        "match": "Kurt Angle (c)<br>Second Fall (European title):<br>Chris Jericho defeated Chris Benoit (pinned) vs First Fall (Intercontinental title):<br>Chris Benoit vs Chris Jericho (pinned) vs Kurt Angle (c)",
-        "stipulation": "Two-fall Triple threat match for the WWF Intercontinental and WWF European Championships",
+        "match": "Kurt Angle (c) vs Chris Jericho vs Chris Benoit.",
+        "stipulation": "Two-fall Triple threat match for the WWF Intercontinental (first) and WWF European (second) Championships.",
         "time": "13:48",
         "resultHidden": true,
         "originalOrder": "as-written"
@@ -1447,8 +1447,8 @@
       },
       {
         "order": 7,
-        "match": "First Fall (Intercontinental title):<br>Chris Benoit defeated Chris Jericho (pinned) and Kurt Angle (c)<br>Second Fall (European title):<br>Chris Jericho defeated Chris Benoit (pinned) and Kurt Angle (c)",
-        "stipulation": "Two-fall Triple threat match for the WWF Intercontinental and WWF European Championships",
+        "match": "Kurt Angle (c) vs Chris Jericho vs Chris Benoit.",
+        "stipulation": "Two-fall Triple threat match for the WWF Intercontinental (first) and WWF European (second) Championships.",
         "time": "13:48"
       },
       {
@@ -1515,8 +1515,8 @@
       },
       {
         "order": 7,
-        "match": "Kurt Angle (c)<br>Second Fall (European title):<br>Chris Jericho defeated Chris Benoit (pinned) vs First Fall (Intercontinental title):<br>Chris Benoit vs Chris Jericho (pinned) vs Kurt Angle (c)",
-        "stipulation": "Two-fall Triple threat match for the WWF Intercontinental and WWF European Championships",
+        "match": "Kurt Angle (c) vs Chris Jericho vs Chris Benoit.",
+        "stipulation": "Two-fall Triple threat match for the WWF Intercontinental (first) and WWF European (second) Championships.",
         "time": "13:48",
         "resultHidden": true,
         "originalOrder": "as-written"
@@ -1546,7 +1546,7 @@
     "summary": "WrestleMania X8, also known as WrestleMania 18, was a 2002 professional wrestling pay-per-view (PPV) event produced by the World Wrestling Federation. It was the 18th annual WrestleMania and took place on St Patrick’s Day, March 17, 2002, at the SkyDome in Toronto, Ontario, Canada, the second WrestleMania at that venue after WrestleMania VI in 1990. The event marked the last WrestleMania of the Attitude Era, the last one held under the WWF name before the company was renamed to the WWE, and the last one held before the introduction of the brand extension just a week after the event. This was the last WrestleMania to be held outside the United States until 2027 when it will be hosted in Saudi Arabia and the venue, renamed to Rogers Centre in 2005, would not host another WWE event until 2025 when Elimination Chamber took place.",
     "posterUrl": "https://upload.wikimedia.org/wikipedia/en/0/04/Wwewrestlemaniax8.jpeg",
     "caption": "Promotional poster featuring Hollywood Hulk Hogan and The Rock",
-    "tagline": "Icon vs. Icon <br> The Absolute Best Ever <br> The One and Only",
+    "tagline": "Icon vs. Icon The Absolute Best Ever The One and Only",
     "promotion": "World Wrestling Federation",
     "date": "2002-03-17",
     "venue": "SkyDome",
@@ -1736,7 +1736,7 @@
     "summary": "WrestleMania X8, also known as WrestleMania 18, was a 2002 professional wrestling pay-per-view (PPV) event produced by the World Wrestling Federation. It was the 18th annual WrestleMania and took place on St Patrick’s Day, March 17, 2002, at the SkyDome in Toronto, Ontario, Canada, the second WrestleMania at that venue after WrestleMania VI in 1990. The event marked the last WrestleMania of the Attitude Era, the last one held under the WWF name before the company was renamed to the WWE, and the last one held before the introduction of the brand extension just a week after the event. This was the last WrestleMania to be held outside the United States until 2027 when it will be hosted in Saudi Arabia and the venue, renamed to Rogers Centre in 2005, would not host another WWE event until 2025 when Elimination Chamber took place.",
     "posterUrl": "https://upload.wikimedia.org/wikipedia/en/0/04/Wwewrestlemaniax8.jpeg",
     "caption": "Promotional poster featuring Hollywood Hulk Hogan and The Rock",
-    "tagline": "Icon vs. Icon <br> The Absolute Best Ever <br> The One and Only",
+    "tagline": "Icon vs. Icon The Absolute Best Ever The One and Only",
     "promotion": "World Wrestling Federation",
     "date": "2002-03-17",
     "venue": "SkyDome",
@@ -1926,7 +1926,7 @@
     "summary": "WrestleMania X8, also known as WrestleMania 18, was a 2002 professional wrestling pay-per-view (PPV) event produced by the World Wrestling Federation. It was the 18th annual WrestleMania and took place on St Patrick’s Day, March 17, 2002, at the SkyDome in Toronto, Ontario, Canada, the second WrestleMania at that venue after WrestleMania VI in 1990. The event marked the last WrestleMania of the Attitude Era, the last one held under the WWF name before the company was renamed to the WWE, and the last one held before the introduction of the brand extension just a week after the event. This was the last WrestleMania to be held outside the United States until 2027 when it will be hosted in Saudi Arabia and the venue, renamed to Rogers Centre in 2005, would not host another WWE event until 2025 when Elimination Chamber took place.",
     "posterUrl": "https://upload.wikimedia.org/wikipedia/en/0/04/Wwewrestlemaniax8.jpeg",
     "caption": "Promotional poster featuring Hollywood Hulk Hogan and The Rock",
-    "tagline": "Icon vs. Icon <br> The Absolute Best Ever <br> The One and Only",
+    "tagline": "Icon vs. Icon The Absolute Best Ever The One and Only",
     "promotion": "World Wrestling Federation",
     "date": "2002-03-17",
     "venue": "SkyDome",
@@ -2172,7 +2172,7 @@
       {
         "order": 8,
         "match": "Hulk Hogan defeated Mr. McMahon by pinfall",
-        "stipulation": "Street Fight<br>",
+        "stipulation": "Street Fight",
         "time": "20:47"
       },
       {
@@ -2184,7 +2184,7 @@
       {
         "order": 10,
         "match": "Brock Lesnar defeated Kurt Angle (c) by pinfall",
-        "stipulation": "Singles match for the WWE Championship<br>",
+        "stipulation": "Singles match for the WWE Championship",
         "time": "21:08"
       }
     ],
@@ -2248,7 +2248,7 @@
       {
         "order": 8,
         "match": "Hulk Hogan vs Mr. McMahon",
-        "stipulation": "Street Fight<br>",
+        "stipulation": "Street Fight",
         "time": "20:47",
         "resultHidden": true,
         "originalOrder": "as-written"
@@ -2264,7 +2264,7 @@
       {
         "order": 10,
         "match": "Kurt Angle (c) vs Brock Lesnar",
-        "stipulation": "Singles match for the WWE Championship<br>",
+        "stipulation": "Singles match for the WWE Championship",
         "time": "21:08",
         "resultHidden": true,
         "originalOrder": "flipped"
@@ -2334,7 +2334,7 @@
       {
         "order": 8,
         "match": "Hulk Hogan defeated Mr. McMahon by pinfall",
-        "stipulation": "Street Fight<br>",
+        "stipulation": "Street Fight",
         "time": "20:47"
       },
       {
@@ -2346,7 +2346,7 @@
       {
         "order": 10,
         "match": "Brock Lesnar defeated Kurt Angle (c) by pinfall",
-        "stipulation": "Singles match for the WWE Championship<br>",
+        "stipulation": "Singles match for the WWE Championship",
         "time": "21:08"
       }
     ],
@@ -2410,7 +2410,7 @@
       {
         "order": 8,
         "match": "Hulk Hogan vs Mr. McMahon",
-        "stipulation": "Street Fight<br>",
+        "stipulation": "Street Fight",
         "time": "20:47",
         "resultHidden": true,
         "originalOrder": "as-written"
@@ -2426,7 +2426,7 @@
       {
         "order": 10,
         "match": "Kurt Angle (c) vs Brock Lesnar",
-        "stipulation": "Singles match for the WWE Championship<br>",
+        "stipulation": "Singles match for the WWE Championship",
         "time": "21:08",
         "resultHidden": true,
         "originalOrder": "flipped"
@@ -2496,7 +2496,7 @@
       {
         "order": 8,
         "match": "Hulk Hogan defeated Mr. McMahon by pinfall",
-        "stipulation": "Street Fight<br>",
+        "stipulation": "Street Fight",
         "time": "20:47"
       },
       {
@@ -2508,7 +2508,7 @@
       {
         "order": 10,
         "match": "Brock Lesnar defeated Kurt Angle (c) by pinfall",
-        "stipulation": "Singles match for the WWE Championship<br>",
+        "stipulation": "Singles match for the WWE Championship",
         "time": "21:08"
       }
     ],
@@ -2572,7 +2572,7 @@
       {
         "order": 8,
         "match": "Hulk Hogan vs Mr. McMahon",
-        "stipulation": "Street Fight<br>",
+        "stipulation": "Street Fight",
         "time": "20:47",
         "resultHidden": true,
         "originalOrder": "as-written"
@@ -2588,7 +2588,7 @@
       {
         "order": 10,
         "match": "Kurt Angle (c) vs Brock Lesnar",
-        "stipulation": "Singles match for the WWE Championship<br>",
+        "stipulation": "Singles match for the WWE Championship",
         "time": "21:08",
         "resultHidden": true,
         "originalOrder": "flipped"

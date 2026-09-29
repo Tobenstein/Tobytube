@@ -2,6 +2,13 @@
   "schemaVersion": 1,
   "sources": [
     {
+      "id": "official-promotion-results",
+      "name": "Official promotion announcements and results",
+      "type": "announcements-and-results",
+      "priority": 1,
+      "notes": "Highest-priority source for current cards, cancellations, night assignments, main events, and completed results. Store the exact promotion page URL on each imported record. Never treat previews or TBA cards as completed results."
+    },
+    {
       "id": "thesmackdownhotel-events",
       "name": "TheSmackDownHotel PPV & Special Events Database",
       "type": "events",

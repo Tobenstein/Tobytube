@@ -1,6 +1,14 @@
 {
   "port": 8092,
   "scanOnStartup": true,
-  "refreshProviders": true,
-  "mediaRoots": ["sample-media"]
+  "watchMediaRoots": true,
+  "watchDebounceMs": 4000,
+  "refreshProviders": false,
+  "refreshNewProviders": true,
+  "providerBackfillLimit": 25,
+  "mediaSources": [
+    { "id": "movies", "type": "movie", "path": "M:/" },
+    { "id": "tv", "type": "tv", "path": "T:/" },
+    { "id": "wrestling", "type": "wrestling", "path": "W:/" }
+  ]
 }

@@ -14997,6 +14997,18 @@ export const tvShows = [
     posterB: "#d07d73",
   },
   {
+    id: "little-britain-usa",
+    title: "Little Britain USA",
+    country: "American/British",
+    years: "2008",
+    status: "complete",
+    seasonsAvailable: 1,
+    episodesAvailable: 6,
+    episodesTotal: 6,
+    posterA: "#243b59",
+    posterB: "#c93f45",
+  },
+  {
     id: "bobs-burgers",
     title: "Bob's Burgers",
     country: "American",
@@ -20459,11 +20471,15 @@ function buildEpisodes(show, year) {
 }
 
 export function formatDisplayDate(isoDate) {
+  const value = String(isoDate ?? "").trim();
+  if (!value) return "Date pending";
+  const date = new Date(/^\d{4}-\d{2}-\d{2}$/.test(value) ? `${value}T00:00:00` : value);
+  if (Number.isNaN(date.getTime())) return value;
   return new Intl.DateTimeFormat("en", {
     month: "short",
     day: "numeric",
     year: "numeric",
-  }).format(new Date(`${isoDate}T00:00:00`));
+  }).format(date);
 }
 
 export function toIsoDate(date) {
